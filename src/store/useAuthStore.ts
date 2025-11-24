@@ -22,7 +22,8 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isAuth: false,
+  // only until backend does not work
+  isAuth: true,
   isLoading: true,
 
   setAuth: (state) => set({ isAuth: state }),

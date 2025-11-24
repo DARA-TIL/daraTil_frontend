@@ -1,107 +1,130 @@
-import { AppBar, Toolbar, Button, Box, Typography, Menu, MenuItem, IconButton } from '@mui/material'
-import LanguageIcon from '@mui/icons-material/Language'
-import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '@/store/useAuthStore'
-import { useState } from 'react'
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  Avatar,
+} from "@mui/material";
+
+import LanguageIcon from "@mui/icons-material/Language";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useState, useContext } from "react";
+
+import { LanguageMenu } from "./LanguageMenu";
+import { ProfileMenu } from "./ProfileMenu";
+
+import { ColorModeContext } from "@/layout/rootLayout/ColorModeContext";
+import { useTheme } from "@mui/material/styles";
 
 const NavBar = () => {
-  const { t, i18n } = useTranslation()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { t } = useTranslation("navbar"); // ← namespace
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const isAuth = useAuthStore((state) => state.isAuth)
-  const user = useAuthStore((state) => state.user)
-  const logout = useAuthStore((state) => state.logout)
+  // zustand auth
+  const isAuth = useAuthStore((s) => s.isAuth);
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const openLangMenu = Boolean(anchorEl)
+  // menu anchors
+  const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
+  const [profileAnchor, setProfileAnchor] = useState<null | HTMLElement>(null);
 
-  const handleOpenLangMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+  const username = user?.username || "User";
+  const initials = username.charAt(0).toUpperCase();
 
-  const handleCloseLangMenu = () => {
-    setAnchorEl(null)
-  }
-
-  const handleLanguageChange = (lng: string) => {
-    i18n.changeLanguage(lng)
-    setAnchorEl(null)
-  }
+  // dark/light theme
+  const theme = useTheme();
+  const { toggleColorMode } = useContext(ColorModeContext);
 
   const handleLoginClick = () => {
-    const next = encodeURIComponent(location.pathname + location.search)
-    navigate(`/login?next=${next}`)
-  }
+    const isAuthPage =
+      location.pathname === "/login" || location.pathname === "/register";
 
-  const handleRegisterClick = () => {
-    navigate('/register')
-  }
+    if (isAuthPage) {
+      navigate("/login");
+      return;
+    }
 
-  const handleLogoutClick = async () => {
-    await logout()
-  }
+    const next = encodeURIComponent(location.pathname + location.search);
+    navigate(`/login?next=${next}`);
+  };
 
-  const lngs: Record<string, string> = {
-    en: 'EN',
-    ru: 'RU',
-    kz: 'KZ',
-  }
+  const handleRegisterClick = () => navigate("/register");
 
   return (
     <AppBar position="static">
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        {/* logo / title */}
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Logo */}
         <Typography
           variant="h6"
-          sx={{ cursor: 'pointer' }}
-          onClick={() => navigate('/')}
+          sx={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
         >
           Dara Til
         </Typography>
 
-        {/* right side */}
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          {/* language menu */}
-          <IconButton color="inherit" onClick={handleOpenLangMenu}>
+        <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
+          {/* Theme toggle */}
+          <IconButton color="inherit" onClick={toggleColorMode}>
+            {theme.palette.mode === "light" ? (
+              <DarkModeIcon />
+            ) : (
+              <LightModeIcon />
+            )}
+          </IconButton>
+
+          {/* Language */}
+          <IconButton
+            color="inherit"
+            onClick={(e) => setLangAnchor(e.currentTarget)}
+          >
             <LanguageIcon />
           </IconButton>
 
-          <Menu anchorEl={anchorEl} open={openLangMenu} onClose={handleCloseLangMenu}>
-            {Object.keys(lngs).map((lng) => (
-              <MenuItem
-                key={lng}
-                selected={i18n.resolvedLanguage === lng}
-                onClick={() => handleLanguageChange(lng)}
-              >
-                {lngs[lng]}
-              </MenuItem>
-            ))}
-          </Menu>
+          <LanguageMenu
+            anchorEl={langAnchor}
+            onClose={() => setLangAnchor(null)}
+          />
 
-          {/* auth buttons */}
-          {isAuth && user ? (
+          {/* Auth */}
+          {isAuth ? (
             <>
-              <Typography variant="body1">{user.username}</Typography>
-              <Button color="inherit" onClick={handleLogoutClick}>
-                {t('navbar.logout')}
-              </Button>
+              <IconButton
+                color="inherit"
+                onClick={(e) => setProfileAnchor(e.currentTarget)}
+              >
+                <Avatar>{initials}</Avatar>
+              </IconButton>
+
+              <ProfileMenu
+                anchorEl={profileAnchor}
+                onClose={() => setProfileAnchor(null)}
+                username={username}
+                onLogout={logout}
+              />
             </>
           ) : (
             <>
               <Button color="inherit" onClick={handleLoginClick}>
-                {t('navbar.login')}
+                {t("login")} {/* namespace */}
               </Button>
               <Button color="inherit" onClick={handleRegisterClick}>
-                {t('navbar.register')}
+                {t("register")} {/* namespace */}
               </Button>
             </>
           )}
         </Box>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;

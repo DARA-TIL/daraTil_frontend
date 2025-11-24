@@ -1,0 +1,13 @@
+{
+  "login": "Кіру",
+  "register": "Тіркелу",
+  "logout": "Шығу",
+
+  "profile": "Профиль",
+  "dashboard": "Басты бет",
+  "lessons": "Сабақтар",
+  "map": "Карта",
+  "folklore": "Фольклор",
+  "progress": "Прогресс",
+  "settings": "Баптаулар"
+}

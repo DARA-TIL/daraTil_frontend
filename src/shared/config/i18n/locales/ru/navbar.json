@@ -1,0 +1,13 @@
+{
+  "login": "Войти",
+  "register": "Регистрация",
+  "logout": "Выйти",
+
+  "profile": "Профиль",
+  "dashboard": "Панель",
+  "lessons": "Уроки",
+  "map": "Карта",
+  "folklore": "Фольклор",
+  "progress": "Прогресс",
+  "settings": "Настройки"
+}

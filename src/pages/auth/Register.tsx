@@ -11,11 +11,12 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
 import { useTranslation } from "react-i18next";
+import OAuthButtons from "@/components/auth/OAuthButtons";
 // import { useAuthStore } from "@/store/useAuthStore"; // включишь позже, с бэком
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation("auth");
 
   const formik = useFormik({
     initialValues: {
@@ -26,18 +27,18 @@ const Register: React.FC = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .min(2, t("auth.errors.nameMin2"))
-        .max(15, t("auth.errors.nameMax15"))
-        .required(t("auth.errors.required")),
+        .min(2, t("errors.nameMin2"))
+        .max(15, t("errors.nameMax15"))
+        .required(t("errors.required")),
       email: Yup.string()
-        .email(t("auth.errors.invalidEmail"))
-        .required(t("auth.errors.required")),
+        .email(t("errors.invalidEmail"))
+        .required(t("errors.required")),
       password: Yup.string()
-        .min(8, t("auth.errors.min8"))
-        .required(t("auth.errors.required")),
+        .min(8, t("errors.min8"))
+        .required(t("errors.required")),
       confirm_password: Yup.string()
-        .oneOf([Yup.ref("password")], t("auth.errors.passwordsNotMatch"))
-        .required(t("auth.errors.required")),
+        .oneOf([Yup.ref("password")], t("errors.passwordsNotMatch"))
+        .required(t("errors.required")),
     }),
     onSubmit: async (_values, { setSubmitting }) => {
       try {
@@ -57,7 +58,7 @@ const Register: React.FC = () => {
     <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h5" component="h1" gutterBottom align="center">
-          {t("auth.registerTitle")}
+          {t("registerTitle")}
         </Typography>
 
         <Box component="form" onSubmit={formik.handleSubmit} noValidate>
@@ -65,7 +66,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="name"
-              label={t("auth.name")}
+              label={t("name")}
               variant="outlined"
               name="name"
               value={formik.values.name}
@@ -80,7 +81,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="email"
-              label={t("auth.email")}
+              label={t("email")}
               variant="outlined"
               name="email"
               value={formik.values.email}
@@ -95,7 +96,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="password"
-              label={t("auth.password")}
+              label={t("password")}
               type="password"
               variant="outlined"
               name="password"
@@ -111,7 +112,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="confirm_password"
-              label={t("auth.confirmPassword")}
+              label={t("confirmPassword")}
               type="password"
               variant="outlined"
               name="confirm_password"
@@ -123,7 +124,8 @@ const Register: React.FC = () => {
                 Boolean(formik.errors.confirm_password)
               }
               helperText={
-                formik.touched.confirm_password && formik.errors.confirm_password
+                formik.touched.confirm_password &&
+                formik.errors.confirm_password
               }
             />
           </Box>
@@ -134,8 +136,11 @@ const Register: React.FC = () => {
             fullWidth
             disabled={formik.isSubmitting}
           >
-            {t("auth.registerButton")}
+            {t("registerButton")}
           </Button>
+
+          {/* OAuth Social buttons */}
+          <OAuthButtons />
         </Box>
       </Paper>
     </Container>

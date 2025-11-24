@@ -1,0 +1,13 @@
+{
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+
+  "profile": "Profile",
+  "dashboard": "Dashboard",
+  "lessons": "Lessons",
+  "map": "Map",
+  "folklore": "Folklore",
+  "progress": "Progress",
+  "settings": "Settings"
+}
