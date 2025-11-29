@@ -1,7 +1,8 @@
+// src/shared/api/http.ts
 import axios from 'axios'
 import type { AuthResponse } from '@/models/response/AuthResponse'
 
-export const API_URL = 'http://localhost:5000/api'
+export const API_URL = 'https://daratilback.onrender.com/api'
 
 const $api = axios.create({
   withCredentials: true,
@@ -24,7 +25,7 @@ $api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
-        // backend route example: GET /api/auth/refresh
+        // refresh токена
         const response = await axios.get<AuthResponse>(`${API_URL}/auth/refresh`, {
           withCredentials: true,
         })
@@ -33,10 +34,10 @@ $api.interceptors.response.use(
         $api.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`
 
         return $api(originalRequest)
-      } catch (e) {
+      } catch {
         localStorage.setItem('lastPage', window.location.pathname)
         localStorage.removeItem('token')
-        window.location.href = '/'
+        window.location.href = '/login'
       }
     }
 

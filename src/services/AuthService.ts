@@ -7,11 +7,21 @@ export default class AuthService {
     return $api.post<AuthResponse>('/auth/login', { email, password })
   }
 
-  static async registration(username: string, email: string, password: string): Promise<AxiosResponse<AuthResponse>> {
-    return $api.post<AuthResponse>('/auth/register', { username, email, password })
+  static async registration(
+    username: string,
+    email: string,
+    password: string,
+  ): Promise<AxiosResponse<AuthResponse>> {
+    return $api.post<AuthResponse>('/auth/register', {
+      username,
+      email,
+      password,
+      role: 'user',
+    })
   }
 
   static async logout(): Promise<void> {
-    return $api.post('/auth/logout')
+    // пока бэк не сделает endpoint - ничего не делаем
+    return Promise.resolve();
   }
 }

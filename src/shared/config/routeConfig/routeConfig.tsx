@@ -1,7 +1,6 @@
 import type React from "react";
 import RootLayout from "@/layout/rootLayout/RootLayout";
 import DashboardLayout from "@/layout/dashboardLayout/DashboardLayout";
-import ProtectedRoute from "@/app/providers/router/ProtectedRoute";
 
 import Home from "@/pages/home/Home";
 import Login from "@/pages/auth/Login";
@@ -14,6 +13,7 @@ import FolklorePage from "@/pages/folklore/FolklorePage";
 import ProgressPage from "@/pages/progress/ProgressPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
 import SettingsPage from "@/pages/settings/SettingsPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 export interface AppRouteConfig {
   path?: string;

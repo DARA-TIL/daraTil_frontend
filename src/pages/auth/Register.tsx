@@ -12,11 +12,15 @@ import Paper from "@mui/material/Paper";
 
 import { useTranslation } from "react-i18next";
 import OAuthButtons from "@/components/auth/OAuthButtons";
-// import { useAuthStore } from "@/store/useAuthStore"; // включишь позже, с бэком
+import { useAuthStore } from "@/store/useAuthStore";
+import { useUiStore } from "@/store/useUiStore";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
+
+  const registerFn = useAuthStore((state) => state.register);
+  const showSnackbar = useUiStore((s) => s.showSnackbar);
 
   const formik = useFormik({
     initialValues: {
@@ -25,6 +29,7 @@ const Register: React.FC = () => {
       password: "",
       confirm_password: "",
     },
+    initialStatus: "",
     validationSchema: Yup.object({
       name: Yup.string()
         .min(2, t("errors.nameMin2"))
@@ -40,14 +45,31 @@ const Register: React.FC = () => {
         .oneOf([Yup.ref("password")], t("errors.passwordsNotMatch"))
         .required(t("errors.required")),
     }),
-    onSubmit: async (_values, { setSubmitting }) => {
-      try {
-        // ❗ Пока нет бэкенда - просто редиректим на главную
-        // Если появится бэкенд:
-        // const user = await register(values.name, values.email, values.password);
-        // if (user) navigate("/");
+    onSubmit: async (values, { setSubmitting, setStatus }) => {
+      setStatus("");
 
-        navigate("/");
+      try {
+        const user = await registerFn(
+          values.name,
+          values.email,
+          values.password
+        );
+
+        if (user) {
+          // успех
+          showSnackbar(t("registerSuccess"), "success");
+          navigate("/app");
+          return;
+        }
+
+        // если registerFn вернул null
+        const msg = t("errors.registerFailed");
+        setStatus(msg);
+        showSnackbar(msg, "error");
+      } catch {
+        const msg = t("errors.serverError");
+        setStatus(msg);
+        showSnackbar(msg, "error");
       } finally {
         setSubmitting(false);
       }
@@ -60,6 +82,16 @@ const Register: React.FC = () => {
         <Typography variant="h5" component="h1" gutterBottom align="center">
           {t("registerTitle")}
         </Typography>
+
+        {formik.status && (
+          <Typography
+            color="error"
+            variant="body2"
+            sx={{ mb: 2, textAlign: "center" }}
+          >
+            {formik.status}
+          </Typography>
+        )}
 
         <Box component="form" onSubmit={formik.handleSubmit} noValidate>
           <Box sx={{ mb: 2 }}>
@@ -139,7 +171,6 @@ const Register: React.FC = () => {
             {t("registerButton")}
           </Button>
 
-          {/* OAuth Social buttons */}
           <OAuthButtons />
         </Box>
       </Paper>

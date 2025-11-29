@@ -1,103 +1,117 @@
-import { create } from 'zustand'
-import axios from 'axios'
-import { API_URL } from '@/shared/api/http'
-import AuthService from '@/services/AuthService'
-import type { IUser } from '@/models/IUser'
-import type { AuthResponse } from '@/models/response/AuthResponse'
+// useAuthStore.ts
+import { create } from "zustand";
+import axios from "axios";
+import { API_URL } from "@/shared/api/http";
+import AuthService from "@/services/AuthService";
+import type { IUser } from "@/models/IUser";
+import type { AuthResponse } from "@/models/response/AuthResponse";
 
 interface AuthState {
-  user: IUser | null
-  isAuth: boolean
-  isLoading: boolean
+  user: IUser | null;
+  isAuth: boolean;
+  isLoading: boolean;
 
-  setAuth: (state: boolean) => void
-  setUser: (user: IUser | null) => void
-  setLoading: (state: boolean) => void
+  setAuth: (state: boolean) => void;
+  setUser: (user: IUser | null) => void;
+  setLoading: (state: boolean) => void;
 
-  login: (email: string, password: string) => Promise<IUser | null>
-  register: (name: string, email: string, password: string) => Promise<IUser | null>
-  logout: () => Promise<void>
-  checkAuth: () => Promise<void>
+  login: (email: string, password: string) => Promise<IUser | null>;
+  register: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<IUser | null>;
+  logout: () => Promise<void>;
+
+  // было: checkAuth: () => Promise<void>
+  checkAuth: () => Promise<IUser | null>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  // only until backend does not work
-  isAuth: true,
+  isAuth: false,
   isLoading: true,
 
   setAuth: (state) => set({ isAuth: state }),
   setUser: (user) => set({ user }),
   setLoading: (state) => set({ isLoading: state }),
 
-  // when backend is ready - this is real login
   login: async (email, password) => {
-    try {
-      const response = await AuthService.login(email, password)
-      localStorage.setItem('token', response.data.accessToken)
+    const response = await AuthService.login(email, password);
 
-      set({
-        isAuth: true,
-        user: response.data.user,
-      })
+    // если сюда дошли - запрос успешный (2xx)
+    localStorage.setItem("token", response.data.accessToken);
+    localStorage.removeItem("loggedOut");
 
-      return response.data.user
-    } catch (e: any) {
-      console.log(e.response?.data?.message)
-      return null
-    }
+    set({
+      isAuth: true,
+      user: response.data.user,
+    });
+
+    return response.data.user;
   },
 
   register: async (name, email, password) => {
-    try {
-      const response = await AuthService.registration(name, email, password)
-      localStorage.setItem('token', response.data.accessToken)
+    const response = await AuthService.registration(name, email, password);
 
-      set({
-        isAuth: true,
-        user: response.data.user,
-      })
+    localStorage.setItem("token", response.data.accessToken);
+    localStorage.removeItem("loggedOut");
 
-      return response.data.user
-    } catch (e: any) {
-      console.log(e.response?.data?.message)
-      return null
-    }
+    set({
+      isAuth: true,
+      user: response.data.user,
+    });
+
+    return response.data.user;
   },
-
+  // Чисто фронтовый logout
   logout: async () => {
     try {
-      await AuthService.logout()
-      localStorage.removeItem('token')
+      await AuthService.logout(); // сейчас пусто, на будущее
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.setItem("loggedOut", "true");
 
       set({
         isAuth: false,
         user: null,
         isLoading: false,
-      })
-
-      window.location.href = '/'
-    } catch (e: any) {
-      console.log(e.response?.data?.message)
+      });
     }
   },
 
   checkAuth: async () => {
-    try {
-      const response = await axios.get<AuthResponse>(`${API_URL}/auth/refresh`, {
-        withCredentials: true,
-      })
+    set({ isLoading: true });
 
-      localStorage.setItem('token', response.data.accessToken)
+    try {
+      const response = await axios.get<AuthResponse>(
+        `${API_URL}/auth/refresh`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      localStorage.setItem("token", response.data.accessToken);
+
+      const user = response.data.user;
 
       set({
         isAuth: true,
-        user: response.data.user,
-      })
+        user,
+      });
+
+      return user; // IUser
     } catch (e: any) {
-      console.log(e.response?.data?.message)
+      console.log("checkAuth error:", e.response?.data || e.message);
+
+      set({
+        isAuth: false,
+        user: null,
+      });
+
+      return null; // при ошибке возвращаем null
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
-}))
+}));

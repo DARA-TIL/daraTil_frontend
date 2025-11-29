@@ -1,7 +1,6 @@
 import { Box, Button, Stack, Divider, Typography } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import { API_URL } from "@/shared/api/http";
 import { useTranslation } from "react-i18next";
 
@@ -18,11 +17,6 @@ const OAuthButtons = () => {
       name: "GitHub",
       icon: <GitHubIcon />,
       url: `${API_URL}/auth/github`,
-    },
-    {
-      name: "Facebook",
-      icon: <FacebookIcon />,
-      url: `${API_URL}/auth/facebook`,
     },
   ];
 

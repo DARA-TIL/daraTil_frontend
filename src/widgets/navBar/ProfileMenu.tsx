@@ -14,7 +14,7 @@ interface Props {
   anchorEl: HTMLElement | null;
   onClose: () => void;
   username: string;
-  onLogout: () => void; // из Zustand
+  onLogout: () => Promise<void>; // из Zustand
 }
 
 export const ProfileMenu = ({
@@ -32,9 +32,8 @@ export const ProfileMenu = ({
     onClose();
   };
 
-  const handleLogout = () => {
-    onLogout();
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    await onLogout();
     onClose();
     navigate("/login");
   };
