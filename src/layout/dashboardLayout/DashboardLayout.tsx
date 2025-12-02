@@ -1,3 +1,4 @@
+// src/layout/dashboardLayout/DashboardLayout.tsx
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -22,14 +23,14 @@ import { useTranslation } from "react-i18next";
 import { profileMenuItems } from "@/widgets/navBar/navConfig";
 
 const expandedWidth = 260;
-const collapsedWidth = 64;
+const collapsedWidth = 68;
 
 const DashboardLayout: React.FC = () => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
-  const [isOpen, setIsOpen] = useState(true); // desktop: expanded/collapsed
-  const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer
+  const [isOpen, setIsOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const { t } = useTranslation("navbar");
   const location = useLocation();
@@ -38,7 +39,6 @@ const DashboardLayout: React.FC = () => {
   const toggleSidebar = () => setIsOpen((prev) => !prev);
   const toggleMobileSidebar = () => setMobileOpen((prev) => !prev);
 
-  // для списка: на мобильных всегда "раскрыт"
   const sidebarExpanded = isMdUp ? isOpen : true;
 
   const drawerContent = (
@@ -59,18 +59,35 @@ const DashboardLayout: React.FC = () => {
           borderBottom: "none",
         }}
       >
-        {/* кнопка сворачивания на desktop */}
+        {/* desktop - одна кнопка со стрелкой */}
         {isMdUp && (
           <IconButton
             onClick={toggleSidebar}
             size="small"
             sx={{
-              borderRadius: 2,
-              bgcolor: "background.paper",
-              boxShadow: 2,
+              borderRadius: 999,
+              bgcolor:
+                theme.palette.mode === "light"
+                  ? "rgba(255,255,255,0.9)"
+                  : "rgba(15,23,42,0.9)",
+              boxShadow:
+                theme.palette.mode === "light"
+                  ? "0 6px 16px rgba(15,23,42,0.18)"
+                  : "0 10px 22px rgba(0,0,0,0.7)",
+              border: "1px solid",
+              borderColor:
+                theme.palette.mode === "light"
+                  ? "rgba(148,163,184,0.35)"
+                  : "rgba(15,23,42,0.9)",
               "&:hover": {
-                boxShadow: 3,
-                bgcolor: "action.hover",
+                boxShadow:
+                  theme.palette.mode === "light"
+                    ? "0 10px 22px rgba(15,23,42,0.25)"
+                    : "0 14px 26px rgba(0,0,0,0.85)",
+                bgcolor:
+                  theme.palette.mode === "light"
+                    ? "rgba(248,250,252,1)"
+                    : "rgba(15,23,42,1)",
               },
             }}
           >
@@ -82,13 +99,13 @@ const DashboardLayout: React.FC = () => {
           </IconButton>
         )}
 
-        {/* кнопка закрытия на mobile */}
+        {/* mobile - крестик внутри дровера */}
         {!isMdUp && (
           <IconButton
             onClick={toggleMobileSidebar}
             size="small"
             sx={{
-              borderRadius: 2,
+              borderRadius: 999,
               bgcolor: "background.paper",
               boxShadow: 2,
               ml: "auto",
@@ -117,7 +134,10 @@ const DashboardLayout: React.FC = () => {
             backgroundColor: "transparent",
           },
           "&:hover::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(0,0,0,0.2)",
+            backgroundColor:
+              theme.palette.mode === "light"
+                ? "rgba(148,163,184,0.6)"
+                : "rgba(30,64,175,0.8)",
           },
         }}
       >
@@ -126,6 +146,7 @@ const DashboardLayout: React.FC = () => {
 
           const button = (
             <ListItemButton
+              key={item.key}
               selected={selected}
               onClick={() => {
                 navigate(item.path);
@@ -135,44 +156,56 @@ const DashboardLayout: React.FC = () => {
                 position: "relative",
                 mx: 1,
                 mb: 0.8,
-                borderRadius: 2,
+                borderRadius: 2.5,
                 justifyContent: sidebarExpanded ? "flex-start" : "center",
                 transition:
                   "background-color 0.2s ease, transform 0.2s ease, padding 0.2s ease",
+                px: sidebarExpanded ? 1.75 : 1,
+                py: 1,
                 "& .MuiListItemIcon-root": {
-                  mr: sidebarExpanded ? 2 : 0,
+                  mr: sidebarExpanded ? 1.8 : 0,
                   minWidth: "auto",
                   justifyContent: "center",
                   transition: "margin-right 0.2s ease",
                 },
+                "& .MuiListItemIcon-root svg": {
+                  fontSize: 20,
+                },
                 "&.Mui-selected": {
-                  backgroundColor: theme.palette.action.selected,
+                  backgroundImage: theme.gradients.cardSoft,
+                  color: "#f9fafb",
+                  "& .MuiListItemIcon-root svg": {
+                    color: "#f9fafb",
+                  },
                   "&:hover": {
-                    backgroundColor: theme.palette.action.selected,
+                    backgroundImage: theme.gradients.cardSoft,
                   },
                 },
                 "&:hover": {
                   transform: "translateX(2px)",
+                  backgroundColor:
+                    theme.palette.mode === "light"
+                      ? "rgba(148,163,184,0.12)"
+                      : "rgba(15,23,42,0.9)",
                 },
-                // цветная полоска слева у активного пункта
                 "&::before": {
                   content: '""',
                   position: "absolute",
-                  left: 4,
+                  left: 6,
                   top: "50%",
                   transform: "translateY(-50%)",
                   width: 3,
                   height: selected ? "60%" : "0%",
                   borderRadius: 999,
                   backgroundColor: selected
-                    ? theme.palette.primary.main
+                    ? "rgba(248,250,252,0.95)"
                     : "transparent",
                   transition: "height 0.2s ease, background-color 0.2s ease",
                 },
               }}
             >
               <ListItemIcon>
-                <item.icon fontSize="small" />
+                <item.icon />
               </ListItemIcon>
 
               {sidebarExpanded && (
@@ -181,13 +214,16 @@ const DashboardLayout: React.FC = () => {
                   sx={{
                     opacity: sidebarExpanded ? 1 : 0,
                     transition: "opacity 0.2s ease",
+                    "& .MuiTypography-root": {
+                      fontSize: 14,
+                      fontWeight: selected ? 600 : 500,
+                    },
                   }}
                 />
               )}
             </ListItemButton>
           );
 
-          // тултип только когда свернуто и только на desktop
           if (!sidebarExpanded && isMdUp) {
             return (
               <Tooltip
@@ -201,7 +237,7 @@ const DashboardLayout: React.FC = () => {
             );
           }
 
-          return <React.Fragment key={item.key}>{button}</React.Fragment>;
+          return button;
         })}
       </List>
     </Box>
@@ -209,7 +245,7 @@ const DashboardLayout: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {/* DESKTOP DRAWER (collapsible) */}
+      {/* DESKTOP DRAWER */}
       {isMdUp && (
         <Drawer
           variant="permanent"
@@ -222,13 +258,21 @@ const DashboardLayout: React.FC = () => {
               width: isOpen ? expandedWidth : collapsedWidth,
               position: "fixed",
               left: 0,
-              top: 64, // не перекрываем NavBar
+              top: 64,
               height: "calc(100% - 64px)",
               transition: "width 0.25s ease",
               boxSizing: "border-box",
               overflowX: "hidden",
               borderRight: "1px solid",
-              borderColor: "divider",
+              borderColor:
+                theme.palette.mode === "light"
+                  ? "rgba(148,163,184,0.35)"
+                  : "rgba(15,23,42,0.9)",
+              backgroundColor:
+                theme.palette.mode === "light"
+                  ? "rgba(249,250,251,0.96)"
+                  : "rgba(15,23,42,0.96)",
+              backdropFilter: "blur(18px)",
             },
           }}
         >
@@ -236,7 +280,7 @@ const DashboardLayout: React.FC = () => {
         </Drawer>
       )}
 
-      {/* MOBILE DRAWER (slide-over) */}
+      {/* MOBILE DRAWER */}
       {!isMdUp && (
         <Drawer
           variant="temporary"
@@ -258,40 +302,16 @@ const DashboardLayout: React.FC = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          px: 3,
-          pt: 6, // отступ под NavBar
-          ml: 0,
-          transition: "margin-left 0.25s",
+          px: 0,
+          pt: 10,
+          pb: 4,
+          transition: "margin-left 0.25s ease",
         }}
       >
         <Outlet />
       </Box>
 
-      {/* DESKTOP: кнопка открыть sidebar, когда он свернут */}
-      {isMdUp && !isOpen && (
-        <IconButton
-          onClick={toggleSidebar}
-          sx={{
-            position: "fixed",
-            top: 76,
-            left: 16,
-            zIndex: 1101,
-            borderRadius: 2,
-            bgcolor: "background.paper",
-            boxShadow: 3,
-            border: "1px solid",
-            borderColor: "divider",
-            "&:hover": {
-              boxShadow: 4,
-              bgcolor: "action.hover",
-            },
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-      )}
-
-      {/* MOBILE: кнопка открытия меню - “в блоке” */}
+      {/* MOBILE: одна кнопка-бургер снаружи */}
       {!isMdUp && (
         <IconButton
           onClick={toggleMobileSidebar}
@@ -299,8 +319,8 @@ const DashboardLayout: React.FC = () => {
             position: "fixed",
             top: 76,
             left: 16,
-            zIndex: 1101,
-            borderRadius: 2,
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            borderRadius: 999,
             bgcolor: "background.paper",
             boxShadow: 3,
             border: "1px solid",

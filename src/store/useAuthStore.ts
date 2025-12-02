@@ -1,10 +1,10 @@
-// useAuthStore.ts
+// src/store/useAuthStore.ts
 import { create } from "zustand";
-import axios from "axios";
-import { API_URL } from "@/shared/api/http";
-import AuthService from "@/services/AuthService";
 import type { IUser } from "@/models/IUser";
 import type { AuthResponse } from "@/models/response/AuthResponse";
+import AuthService from "@/services/AuthService";
+import $api from "@/shared/api/http";
+import { useUiStore } from "./useUiStore";
 
 interface AuthState {
   user: IUser | null;
@@ -22,85 +22,31 @@ interface AuthState {
     password: string
   ) => Promise<IUser | null>;
   logout: () => Promise<void>;
-
-  // было: checkAuth: () => Promise<void>
   checkAuth: () => Promise<IUser | null>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  isAuth: false,
-  isLoading: true,
+export const useAuthStore = create<AuthState>((set) => {
+  // чтобы несколько вызовов checkAuth не создавали несколько HTTP-запросов
+  let checkAuthPromise: Promise<IUser | null> | null = null;
 
-  setAuth: (state) => set({ isAuth: state }),
-  setUser: (user) => set({ user }),
-  setLoading: (state) => set({ isLoading: state }),
-
-  login: async (email, password) => {
-    const response = await AuthService.login(email, password);
-
-    // если сюда дошли - запрос успешный (2xx)
-    localStorage.setItem("token", response.data.accessToken);
-    localStorage.removeItem("loggedOut");
-
-    set({
-      isAuth: true,
-      user: response.data.user,
-    });
-
-    return response.data.user;
-  },
-
-  register: async (name, email, password) => {
-    const response = await AuthService.registration(name, email, password);
-
-    localStorage.setItem("token", response.data.accessToken);
-    localStorage.removeItem("loggedOut");
-
-    set({
-      isAuth: true,
-      user: response.data.user,
-    });
-
-    return response.data.user;
-  },
-  // Чисто фронтовый logout
-  logout: async () => {
-    try {
-      await AuthService.logout(); // сейчас пусто, на будущее
-    } finally {
-      localStorage.removeItem("token");
-      localStorage.setItem("loggedOut", "true");
-
-      set({
-        isAuth: false,
-        user: null,
-        isLoading: false,
-      });
-    }
-  },
-
-  checkAuth: async () => {
+  const doCheckAuth = async (): Promise<IUser | null> => {
     set({ isLoading: true });
 
     try {
-      const response = await axios.get<AuthResponse>(
-        `${API_URL}/auth/refresh`,
-        {
-          withCredentials: true,
-        }
-      );
+      // используем $api, не голый axios
+      const response = await $api.get<AuthResponse>("/auth/refresh");
 
-      localStorage.setItem("token", response.data.accessToken);
+      const { accessToken, user } = response.data;
 
-      const user = response.data.user;
+      localStorage.setItem("token", accessToken);
+      localStorage.removeItem("loggedOut");
 
       set({
         isAuth: true,
         user,
       });
 
-      return user; // IUser
+      return user;
     } catch (e: any) {
       console.log("checkAuth error:", e.response?.data || e.message);
 
@@ -109,9 +55,81 @@ export const useAuthStore = create<AuthState>((set) => ({
         user: null,
       });
 
-      return null; // при ошибке возвращаем null
+      return null;
     } finally {
       set({ isLoading: false });
     }
-  },
-}));
+  };
+
+  return {
+    user: null,
+    isAuth: false,
+    isLoading: true,
+
+    setAuth: (state) => set({ isAuth: state }),
+    setUser: (user) => set({ user }),
+    setLoading: (state) => set({ isLoading: state }),
+
+    // обычный логин
+    login: async (email, password) => {
+      const response = await AuthService.login(email, password);
+
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.removeItem("loggedOut");
+
+      set({
+        isAuth: true,
+        user: response.data.user,
+      });
+
+      return response.data.user;
+    },
+
+    // обычная регистрация
+    register: async (name, email, password) => {
+      const response = await AuthService.registration(name, email, password);
+
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.removeItem("loggedOut");
+
+      set({
+        isAuth: true,
+        user: response.data.user,
+      });
+
+      return response.data.user;
+    },
+
+    // logout - дергаем бэк, но даже если он упал, всё равно чистим стейт
+    logout: async () => {
+      try {
+        await AuthService.logout();
+      } catch (e: any) {
+        console.log("logout error:", e.response?.data || e.message);
+      } finally {
+        localStorage.removeItem("token");
+        localStorage.setItem("loggedOut", "true");
+
+        set({
+          isAuth: false,
+          user: null, 
+          isLoading: false,
+        });
+
+        useUiStore
+          .getState()
+          .showSnackbar("Logged out successfully", "success");
+      }
+    },
+
+    // checkAuth - только через один промис
+    checkAuth: async () => {
+      if (!checkAuthPromise) {
+        checkAuthPromise = doCheckAuth().finally(() => {
+          checkAuthPromise = null;
+        });
+      }
+      return checkAuthPromise;
+    },
+  };
+});

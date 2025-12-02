@@ -96,7 +96,6 @@ const RootLayout: React.FC = () => {
               <Outlet />
             </Box>
 
-            <Footer />
           </Box>
         </AppErrorBoundary>
       </ThemeProvider>

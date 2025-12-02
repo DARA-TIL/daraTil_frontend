@@ -23,16 +23,26 @@ const Login: React.FC = () => {
 
   const login = useAuthStore((state) => state.login);
   const checkAuth = useAuthStore((state) => state.checkAuth);
+  const isAuth = useAuthStore((state) => state.isAuth);
   const showSnackbar = useUiStore((s) => s.showSnackbar);
 
   const oauth = searchParams.get("oauth");
+  const oauthError = searchParams.get("error");
 
-  // 1) OAuth Google callback
+  // 1) Ошибка от OAuth (?oauth=error&error=...)
   useEffect(() => {
-    if (oauth !== "google") return;
+    if (oauth === "error" && oauthError) {
+      showSnackbar(oauthError, "error");
+    }
+  }, [oauth, oauthError, showSnackbar]);
+
+  // 2) Успешный OAuth (google / github) → дергаем /auth/refresh
+  useEffect(() => {
+    if (oauth !== "google" && oauth !== "github") return;
+    if (isAuth) return; // уже авторизован - ничего не делаем
 
     (async () => {
-      const user = await checkAuth(); // user: IUser | null
+      const user = await checkAuth(); // вернёт IUser | null
 
       if (user) {
         showSnackbar(t("loginSuccess"), "success");
@@ -41,9 +51,9 @@ const Login: React.FC = () => {
         showSnackbar(t("errors.serverError"), "error");
       }
     })();
-  }, [oauth, checkAuth, navigate, showSnackbar, t]);
+  }, [oauth, isAuth, checkAuth, navigate, showSnackbar, t]);
 
-  // 2) обычный логин по email/password
+  // 3) обычный логин по email/password
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -84,11 +94,11 @@ const Login: React.FC = () => {
 
         if (axios.isAxiosError(error) && error.response) {
           const status = error.response.status;
-
           if (status === 400 || status === 401) {
             key = "errors.invalidCredentials";
           }
         }
+
         const msg = t(key);
         setStatus(msg);
         showSnackbar(msg, "error");
