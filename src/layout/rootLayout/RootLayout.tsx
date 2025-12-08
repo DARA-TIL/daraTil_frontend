@@ -6,9 +6,7 @@ import type { PaletteMode } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 
-import NavBar from "@/widgets/navBar/NavBar";
-import { AppErrorBoundary } from "@/widgets/errorBoundary/AppErrorBoundary";
-import Footer from "@/widgets/footer/Footer";
+import { AppErrorBoundary, NavBar } from "@/widgets";
 import { ColorModeContext } from "./ColorModeContext";
 
 const THEME_STORAGE_KEY = "themeMode";

@@ -14,6 +14,7 @@ import ProgressPage from "@/pages/progress/ProgressPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
 import SettingsPage from "@/pages/settings/SettingsPage";
 import ProtectedRoute from "./ProtectedRoute";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
 
 export interface AppRouteConfig {
   path?: string;
@@ -38,6 +39,10 @@ export const routeConfig: AppRouteConfig[] = [
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />, // ← новый публичный роут
       },
 
       // приватная ветка /app

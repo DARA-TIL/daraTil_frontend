@@ -1,4 +1,3 @@
-// src/pages/dashboard/components/DailyChallengeCard.tsx
 import React from "react";
 import { Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +6,13 @@ import { useTranslation } from "react-i18next";
 export const DailyChallengeCard: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
+
+  // временные заглушки - потом можно будет брать из стора / API
+  const wordsCompleted = 0;
+  const wordsTarget = 10;
+  const storiesCompleted = 0;
+  const storiesTarget = 1;
+  const currentDay = 1;
 
   return (
     <Paper
@@ -28,7 +34,6 @@ export const DailyChallengeCard: React.FC = () => {
             ? "0 16px 34px rgba(15,23,42,0.14)"
             : "0 18px 40px rgba(0,0,0,0.9)",
         color: theme.palette.mode === "light" ? "#0f172a" : "#e5e7eb",
-        // лёгкий бликовый слой
         "&::before": {
           content: '""',
           position: "absolute",
@@ -43,10 +48,10 @@ export const DailyChallengeCard: React.FC = () => {
       <Box sx={{ position: "relative", zIndex: 1, maxWidth: "70%" }}>
         <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
           <Typography variant="h6" fontWeight={600}>
-            {t("cards.specialTitle", "Daily challenge")}
+            {t("cards.specialTitle")}
           </Typography>
           <Chip
-            label={t("cards.activityToday", "Today")}
+            label={t("cards.activityToday")}
             size="small"
             sx={{
               borderRadius: 999,
@@ -68,28 +73,23 @@ export const DailyChallengeCard: React.FC = () => {
                 : "rgba(226,232,240,0.85)",
           })}
         >
-          {t(
-            "cards.specialDesc",
-            "Complete 10 new words and 1 folklore story today.",
-          )}
+          {t("cards.specialDesc", {
+            wordsTarget,
+            storiesTarget,
+          })}
         </Typography>
 
         {/* маленькие статсы квеста */}
-        <Stack
-          direction="row"
-          spacing={2}
-          mb={1.5}
-          sx={{ fontSize: 12 }}
-        >
+        <Stack direction="row" spacing={2} mb={1.5} sx={{ fontSize: 12 }}>
           <Box>
             <Typography
               variant="caption"
               sx={{ textTransform: "uppercase", opacity: 0.75 }}
             >
-              {t("cards.statsWords", "Words")}
+              {t("cards.statsWords")}
             </Typography>
             <Typography variant="body2" fontWeight={600}>
-              0 / 10
+              {wordsCompleted} / {wordsTarget}
             </Typography>
           </Box>
 
@@ -98,10 +98,10 @@ export const DailyChallengeCard: React.FC = () => {
               variant="caption"
               sx={{ textTransform: "uppercase", opacity: 0.75 }}
             >
-              {t("cards.statsStories", "Stories")}
+              {t("cards.statsStories")}
             </Typography>
             <Typography variant="body2" fontWeight={600}>
-              0 / 1
+              {storiesCompleted} / {storiesTarget}
             </Typography>
           </Box>
         </Stack>
@@ -117,7 +117,7 @@ export const DailyChallengeCard: React.FC = () => {
           }}
           onClick={() => navigate("/app/progress")}
         >
-          {t("cards.startChallenge", "Start challenge")}
+          {t("cards.startChallenge")}
         </Button>
       </Box>
 
@@ -162,7 +162,7 @@ export const DailyChallengeCard: React.FC = () => {
           })}
         >
           <Typography variant="subtitle2" fontWeight={700}>
-            {t("cards.streakShort", "Day 1")}
+            {t("cards.streakShort", { day: currentDay })}
           </Typography>
         </Box>
       </Box>

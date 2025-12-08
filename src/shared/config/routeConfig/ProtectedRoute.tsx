@@ -1,7 +1,7 @@
 import React, { type JSX } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useUiStore } from "@/store/useUiStore";
+import { useAuthStore } from "@/features/auth/model/useAuthStore";
+import { useUiStore } from "@/shared/store/useUiStore";
 
 interface Props {
   children: JSX.Element;

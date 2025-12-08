@@ -1,13 +1,13 @@
 // src/pages/dashboard/DashboardPage.tsx
 import React from "react";
 import { Box, Grid, Stack } from "@mui/material";
-import { DashboardHeader } from "./components/DashboardHeader";
-import { LessonsMapCard } from "./components/LessonsMapCard";
-import { ProgressCard } from "./components/ProgressCard";
-import { FeaturedFolkloreCard } from "./components/FeaturedFolkloreCard";
-import { EngagingLessonsCard } from "./components/EngagingLessonsCard";
-import { DailyChallengeCard } from "./components/DailyChallengeCard";
-import { RecentActivityCard } from "./components/RecentActivityCard";
+import { DashboardHeader } from "../../features/dashboard/ui/DashboardHeader";
+import { LessonsMapCard } from "../../features/dashboard/ui/LessonsMapCard";
+import { ProgressCard } from "../../features/dashboard/ui/ProgressCard";
+import { FeaturedFolkloreCard } from "../../features/dashboard/ui/FeaturedFolkloreCard";
+import { EngagingLessonsCard } from "../../features/dashboard/ui/EngagingLessonsCard";
+import { DailyChallengeCard } from "../../features/dashboard/ui/DailyChallengeCard";
+import { RecentActivityCard } from "../../features/dashboard/ui/RecentActivityCard";
 
 const DashboardPage: React.FC = () => {
   return (

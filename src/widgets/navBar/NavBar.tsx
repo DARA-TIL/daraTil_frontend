@@ -1,4 +1,3 @@
-// src/layout/rootLayout/NavBar.tsx
 import {
   AppBar,
   Toolbar,
@@ -15,7 +14,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/features/auth/model/useAuthStore";
 import { useState, useContext } from "react";
 
 import { LanguageMenu } from "./LanguageMenu";

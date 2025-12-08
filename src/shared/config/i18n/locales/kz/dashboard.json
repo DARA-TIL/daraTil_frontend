@@ -1,0 +1,68 @@
+{
+  "title": "Басты бет",
+  "subtitle": "Саяхатыңды жалғастыр, сабақтар мен фольклорды зертте.",
+
+  "actions": {
+    "continue": "Сабақты жалғастыру",
+    "library": "Сабақтар кітапханасы",
+    "map": "Диалектілер картасы",
+    "folklore": "Фольклор",
+    "quiz": "Жылдам жаттығу"
+  },
+
+  "cards": {
+    "specialTitle": "Күнделікті тапсырма",
+    "activityToday": "Бүгін",
+    "specialDesc": "Бүгін {{wordsTarget}} жаңа сөз және {{storiesTarget}} фольклорлық әңгімені аяқта.",
+    "statsWords": "Сөздер",
+    "statsStories": "Әңгімелер",
+    "startChallenge": "Тапсырманы бастау",
+    "streakShort": "{{day}} күн",
+
+    "charactersTitle": "Қызықты сабақтар",
+    "guidesOnline": "Онлайн гидтер: {{count}}",
+    "charactersDesc": "Біздің кейіпкерлермен танысып, тоқтаған жеріңнен жалғастыр.",
+    "viewAll": "Барлығын көру",
+    "nextGuide": "{{name}}-мен жалғастыру",
+    "nextGuideMeta": "Оқиға айту • {{minutes}} минут қалды",
+    "resume": "Жалғастыру",
+
+    "folkloreTitle": "Таңдаулы фольклор",
+    "new": "Жаңа",
+    "folkloreDesc": "Оңтүстік өңірдің дәстүрлі әңгімесін тыңда.",
+    "folkloreName": "Дала әні",
+    "folkloreMeta": "{{minutes}} мин • {{region}} өңірі",
+    "listen": "Тыңдау",
+
+    "mapTitle": "Менің сабақ картам",
+    "mapSubtitle": "Өңірлер мен сабақтар бойынша жолыңды бақыла.",
+    "today": "Бүгін",
+    "mapRegionWest": "Батыс",
+    "mapRegionNorth": "Солтүстік",
+    "mapRegionSouth": "Оңтүстік",
+    "mapPlaceholder": "Интерактивті карта жақында пайда болады",
+    "nextLesson": "Келесі сабақ",
+    "nextLessonName": "Солтүстік диалектінің негіздері",
+    "nextLessonMeta": "Өңір: {{region}} • {{unit}} бөлім • {{minutes}} мин",
+    "start": "Бастау",
+
+    "progressTitle": "Сенің прогрессің",
+    "progressSubtitle": "{{level}} деңгей • {{currentXp}} / {{nextXp}} XP",
+    "levelLabel": "Деңгей",
+    "xpLabel": "XP прогресі",
+    "xpSummary": "{{progress}}% • {{currentXp}} / {{nextXp}} XP",
+    "completedLessons": "Аяқталған сабақтар",
+    "wordsLearned": "Үйренген сөздер",
+    "timeSpent": "Жұмсалған уақыт",
+    "timeShort": "{{hours}} сағ",
+    "timeFull": "{{hours}} сағ {{minutes}} мин",
+
+    "activityTitle": "Соңғы белсенділік",
+    "activityItem1Title": "Сабақ аяқталды: «{{lessonName}}»",
+    "activityItem1Meta": "{{minutes}} мин бұрын • +{{xp}} XP",
+    "activityItem2Title": "«{{storyName}}» фольклор әңгімесін тыңдадың",
+    "activityItem2Meta": "{{minutes}} мин бұрын • {{duration}} мин",
+    "activityItem3Title": "{{level}} деңгей жетістіктері ашылды",
+    "activityItem3Meta": "{{hours}} сағат бұрын"
+  }
+}

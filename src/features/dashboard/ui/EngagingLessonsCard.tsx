@@ -1,4 +1,3 @@
-// src/pages/dashboard/components/EngagingLessonsCard.tsx
 import React from "react";
 import {
   Avatar,
@@ -13,9 +12,31 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+type Guide = {
+  name: string;
+  avatarSrc?: string;
+};
+
 export const EngagingLessonsCard: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
+
+  // позже можно будет получать это из API/стора
+  const guides: Guide[] = [
+    { name: "Aruzhan", avatarSrc: "/avatars/aruzhan.png" },
+    { name: "Nursultan", avatarSrc: "/avatars/nursultan.png" },
+    { name: "Dana", avatarSrc: "/avatars/dana.png" },
+    { name: "Yerlan", avatarSrc: "/avatars/yerlan.png" },
+    { name: "Madi", avatarSrc: "/avatars/madi.png" },
+    { name: "Guest" },
+  ];
+
+  const onlineGuidesCount = guides.length - 1; // напр. без Guest
+  const currentGuide = guides[0];
+  const remainingMinutes = 5;
+
+  const title = t("cards.charactersTitle");
+  const description = t("cards.charactersDesc");
 
   return (
     <Paper
@@ -61,10 +82,10 @@ export const EngagingLessonsCard: React.FC = () => {
       >
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="h6" fontWeight={600}>
-            {t("cards.charactersTitle", "Engaging lessons")}
+            {title}
           </Typography>
           <Chip
-            label={t("cards.guidesOnline", "Guides online")}
+            label={t("cards.guidesOnline", { count: onlineGuidesCount })}
             size="small"
             sx={{
               borderRadius: 999,
@@ -83,7 +104,7 @@ export const EngagingLessonsCard: React.FC = () => {
           }}
           onClick={() => navigate("/app/lessons")}
         >
-          {t("cards.viewAll", "View all")}
+          {t("cards.viewAll")}
         </Button>
       </Stack>
 
@@ -101,10 +122,7 @@ export const EngagingLessonsCard: React.FC = () => {
               : "rgba(226,232,240,0.9)",
         })}
       >
-        {t(
-          "cards.charactersDesc",
-          "Meet your guides and continue from where you stopped.",
-        )}
+        {description}
       </Typography>
 
       {/* аватарки персонажей */}
@@ -116,17 +134,17 @@ export const EngagingLessonsCard: React.FC = () => {
               width: 42,
               height: 42,
               boxShadow: "0 6px 14px rgba(15,23,42,0.25)",
-              border:
-                "2px solid rgba(248,250,252,0.95)", // светлая окантовка кругов
+              border: "2px solid rgba(248,250,252,0.95)",
             },
           }}
         >
-          <Avatar alt="Aruzhan" src="/avatars/aruzhan.png" />
-          <Avatar alt="Nursultan" src="/avatars/nursultan.png" />
-          <Avatar alt="Dana" src="/avatars/dana.png" />
-          <Avatar alt="Yerlan" src="/avatars/yerlan.png" />
-          <Avatar alt="Madi" src="/avatars/madi.png" />
-          <Avatar alt="Guest" />
+          {guides.map((guide) => (
+            <Avatar
+              key={guide.name}
+              alt={guide.name}
+              src={guide.avatarSrc}
+            />
+          ))}
         </AvatarGroup>
       </Box>
 
@@ -139,10 +157,10 @@ export const EngagingLessonsCard: React.FC = () => {
       >
         <Box>
           <Typography variant="body2" fontWeight={500}>
-            {t("cards.nextGuide", "Continue with Aruzhan")}
+            {t("cards.nextGuide", { name: currentGuide.name })}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            {t("cards.nextGuideMeta", "Storytelling • 5 min left")}
+            {t("cards.nextGuideMeta", { minutes: remainingMinutes })}
           </Typography>
         </Box>
 
@@ -161,7 +179,7 @@ export const EngagingLessonsCard: React.FC = () => {
             },
           }}
         >
-          {t("cards.resume", "Resume")}
+          {t("cards.resume")}
         </Button>
       </Stack>
     </Paper>

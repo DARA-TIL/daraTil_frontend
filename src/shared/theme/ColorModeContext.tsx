@@ -1,4 +1,3 @@
-// src/shared/theme/ColorModeContext.tsx
 import React, {
   createContext,
   useContext,

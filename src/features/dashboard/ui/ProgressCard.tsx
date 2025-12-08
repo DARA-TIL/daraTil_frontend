@@ -1,4 +1,3 @@
-// src/pages/dashboard/components/ProgressCard.tsx
 import React from "react";
 import {
   Box,
@@ -12,10 +11,17 @@ import { useTranslation } from "react-i18next";
 export const ProgressCard: React.FC = () => {
   const { t } = useTranslation("dashboard");
 
+  // сюда потом можно подставлять данные из API / стора
   const level = 3;
   const currentXp = 1450;
   const nextXp = 2000;
   const progress = Math.round((currentXp / nextXp) * 100);
+
+  const completedLessons = 18;
+  const totalLessons = 24;
+  const wordsLearned = 320;
+  const timeHours = 5;
+  const timeMinutes = 20;
 
   return (
     <Paper
@@ -66,7 +72,7 @@ export const ProgressCard: React.FC = () => {
       >
         <Box>
           <Typography variant="h6" fontWeight={600}>
-            {t("cards.progressTitle", "Your progress")}
+            {t("cards.progressTitle")}
           </Typography>
           <Typography
             variant="body2"
@@ -78,10 +84,11 @@ export const ProgressCard: React.FC = () => {
                   : "rgba(156,163,175,0.95)",
             })}
           >
-            {t(
-              "cards.progressSubtitle",
-              `Level ${level} • ${currentXp} / ${nextXp} XP`
-            )}
+            {t("cards.progressSubtitle", {
+              level,
+              currentXp,
+              nextXp,
+            })}
           </Typography>
         </Box>
 
@@ -115,7 +122,7 @@ export const ProgressCard: React.FC = () => {
               opacity: 0.85,
             }}
           >
-            {t("cards.levelLabel", "Level")}
+            {t("cards.levelLabel")}
           </Typography>
           <Typography
             variant="h5"
@@ -156,10 +163,14 @@ export const ProgressCard: React.FC = () => {
           mt={0.6}
         >
           <Typography variant="caption" color="text.secondary">
-            {t("cards.xpLabel", "XP progress")}
+            {t("cards.xpLabel")}
           </Typography>
           <Typography variant="caption" sx={{ fontWeight: 500 }}>
-            {progress}% • {currentXp} / {nextXp} XP
+            {t("cards.xpSummary", {
+              progress,
+              currentXp,
+              nextXp,
+            })}
           </Typography>
         </Stack>
       </Box>
@@ -171,6 +182,7 @@ export const ProgressCard: React.FC = () => {
         justifyContent="space-between"
         sx={{ position: "relative", zIndex: 1 }}
       >
+        {/* Completed lessons */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
           <Box
             sx={(theme) => ({
@@ -197,18 +209,19 @@ export const ProgressCard: React.FC = () => {
                   : "#bfdbfe",
             })}
           >
-            18
+            {completedLessons}
           </Box>
           <Box>
             <Typography variant="body2" color="text.secondary">
-              {t("cards.completedLessons", "Completed lessons")}
+              {t("cards.completedLessons")}
             </Typography>
             <Typography variant="subtitle2" fontWeight={600}>
-              18 / 24
+              {completedLessons} / {totalLessons}
             </Typography>
           </Box>
         </Box>
 
+        {/* Words learned */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
           <Box
             sx={(theme) => ({
@@ -235,18 +248,19 @@ export const ProgressCard: React.FC = () => {
                   : "#bbf7d0",
             })}
           >
-            320
+            {wordsLearned}
           </Box>
           <Box>
             <Typography variant="body2" color="text.secondary">
-              {t("cards.wordsLearned", "Words learned")}
+              {t("cards.wordsLearned")}
             </Typography>
             <Typography variant="subtitle2" fontWeight={600}>
-              320
+              {wordsLearned}
             </Typography>
           </Box>
         </Box>
 
+        {/* Time spent */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
           <Box
             sx={(theme) => ({
@@ -273,14 +287,17 @@ export const ProgressCard: React.FC = () => {
                   : "#fef9c3",
             })}
           >
-            5h
+            {t("cards.timeShort", { hours: timeHours })}
           </Box>
           <Box>
             <Typography variant="body2" color="text.secondary">
-              {t("cards.timeSpent", "Time spent")}
+              {t("cards.timeSpent")}
             </Typography>
             <Typography variant="subtitle2" fontWeight={600}>
-              5h 20m
+              {t("cards.timeFull", {
+                hours: timeHours,
+                minutes: timeMinutes,
+              })}
             </Typography>
           </Box>
         </Box>

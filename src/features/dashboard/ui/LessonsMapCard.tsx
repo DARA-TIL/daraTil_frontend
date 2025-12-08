@@ -1,4 +1,3 @@
-// src/pages/dashboard/components/LessonsMapCard.tsx
 import React from "react";
 import { Box, Chip, Paper, Stack, Typography, Button } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -8,6 +7,34 @@ import { useTranslation } from "react-i18next";
 export const LessonsMapCard: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
+
+  // данные, которые потом можно будет подменить с API
+  const todayLabel = t("cards.today");
+  const mapTitle = t("cards.mapTitle");
+  const mapSubtitle = t("cards.mapSubtitle");
+
+  const mapPoints = [
+    {
+      top: "18%",
+      left: "16%",
+      label: t("cards.mapRegionWest"),
+    },
+    {
+      top: "38%",
+      left: "46%",
+      label: t("cards.mapRegionNorth"),
+    },
+    {
+      top: "64%",
+      left: "72%",
+      label: t("cards.mapRegionSouth"),
+    },
+  ];
+
+  const nextLessonName = t("cards.nextLessonName");
+  const nextLessonRegion = t("cards.mapRegionNorth");
+  const nextLessonUnit = 2;
+  const nextLessonMinutes = 15;
 
   return (
     <Paper
@@ -29,7 +56,7 @@ export const LessonsMapCard: React.FC = () => {
         boxShadow:
           theme.palette.mode === "light"
             ? "0 16px 40px rgba(15,23,42,0.12)"
-            : "0 18px 45px rgba(0,0,0,0.8)",
+            : "0 18px 45px rgba(0,0,0,0.8)"
       })}
     >
       {/* лёгкий блик поверх */}
@@ -53,7 +80,7 @@ export const LessonsMapCard: React.FC = () => {
       >
         <Box>
           <Typography variant="h6" fontWeight={600}>
-            {t("cards.mapTitle", "My lessons map")}
+            {mapTitle}
           </Typography>
           <Typography
             variant="body2"
@@ -65,15 +92,12 @@ export const LessonsMapCard: React.FC = () => {
               mt: 0.3,
             })}
           >
-            {t(
-              "cards.mapSubtitle",
-              "Track your journey across regions and lessons."
-            )}
+            {mapSubtitle}
           </Typography>
         </Box>
 
         <Chip
-          label={t("cards.today", "Today")}
+          label={todayLabel}
           size="small"
           sx={{
             borderRadius: 999,
@@ -129,13 +153,9 @@ export const LessonsMapCard: React.FC = () => {
         />
 
         {/* точки - «уроки» */}
-        {[
-          { top: "18%", left: "16%", label: "West" },
-          { top: "38%", left: "46%", label: "North" },
-          { top: "64%", left: "72%", label: "South" },
-        ].map((point, idx) => (
+        {mapPoints.map((point, idx) => (
           <Box
-            key={idx}
+            key={point.label}
             sx={() => ({
               position: "absolute",
               top: point.top,
@@ -208,7 +228,7 @@ export const LessonsMapCard: React.FC = () => {
                 : "0 1px 2px rgba(0,0,0,0.9)",
           })}
         >
-          {t("cards.mapPlaceholder", "Interactive map coming soon")}
+          {t("cards.mapPlaceholder")}
         </Box>
       </Box>
 
@@ -223,10 +243,10 @@ export const LessonsMapCard: React.FC = () => {
       >
         <Box>
           <Typography variant="body2" color="text.secondary">
-            {t("cards.nextLesson", "Next lesson")}
+            {t("cards.nextLesson")}
           </Typography>
           <Typography variant="subtitle1" fontWeight={600}>
-            {t("cards.nextLessonName", "Northern dialect basics")}
+            {nextLessonName}
           </Typography>
           <Typography
             variant="caption"
@@ -237,10 +257,11 @@ export const LessonsMapCard: React.FC = () => {
                   : "rgba(156,163,175,0.9)",
             })}
           >
-            {t(
-              "cards.nextLessonMeta",
-              "Region: North • Unit 2 • 15 min"
-            )}
+            {t("cards.nextLessonMeta", {
+              region: nextLessonRegion,
+              unit: nextLessonUnit,
+              minutes: nextLessonMinutes,
+            })}
           </Typography>
         </Box>
 
@@ -258,7 +279,7 @@ export const LessonsMapCard: React.FC = () => {
               "0 10px 24px rgba(37,99,235,0.35), 0 0 0 1px rgba(255,255,255,0.2)",
           }}
         >
-          {t("cards.start", "Start")}
+          {t("cards.start")}
         </Button>
       </Stack>
     </Paper>

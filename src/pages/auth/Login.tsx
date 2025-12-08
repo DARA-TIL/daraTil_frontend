@@ -11,9 +11,9 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
 import { useTranslation } from "react-i18next";
-import OAuthButtons from "@/components/auth/OAuthButtons";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useUiStore } from "@/store/useUiStore";
+import OAuthButtons from "@/features/auth/ui/OAuthButtons";
+import { useAuthStore } from "@/features/auth/model/useAuthStore";
+import { useUiStore } from "@/shared/store/useUiStore";
 import axios from "axios";
 
 const Login: React.FC = () => {
@@ -155,6 +155,16 @@ const Login: React.FC = () => {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
+          </Box>
+
+          <Box sx={{ mb: 1, display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              size="small"
+              onClick={() => navigate("/forgot-password")}
+              sx={{ textTransform: "none", p: 0, minWidth: "auto" }}
+            >
+              {t("forgotPasswordLink")}
+            </Button>
           </Box>
 
           <Button

@@ -1,6 +1,6 @@
 // src/shared/api/http.ts
 import axios from "axios";
-import type { AuthResponse } from "@/models/response/AuthResponse";
+import type { AuthResponse } from "@/features/auth/model/response/AuthResponse";
 
 export const API_URL = "https://daratilback.onrender.com/api";
 

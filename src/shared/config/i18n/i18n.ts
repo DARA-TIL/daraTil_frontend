@@ -7,18 +7,21 @@ import enNavbar from "./locales/en/navbar.json";
 import enAuth from "./locales/en/auth.json";
 import enHome from "./locales/en/home.json";
 import enMap from "./locales/en/map.json";
+import enDashboard from "./locales/en/dashboard.json";
 
 // RU
 import ruNavbar from "./locales/ru/navbar.json";
 import ruAuth from "./locales/ru/auth.json";
 import ruHome from "./locales/ru/home.json";
 import ruMap from "./locales/ru/map.json";
+import ruDashboard from "./locales/ru/dashboard.json";
 
 // KZ
 import kzNavbar from "./locales/kz/navbar.json";
 import kzAuth from "./locales/kz/auth.json";
 import kzHome from "./locales/kz/home.json";
 import kzMap from "./locales/kz/map.json";
+import kzDashboard from "./locales/kz/dashboard.json";
 
 i18n
   .use(LanguageDetector)
@@ -35,18 +38,21 @@ i18n
         auth: enAuth,
         home: enHome,
         map: enMap,
+        dashboard: enDashboard,
       },
       ru: {
         navbar: ruNavbar,
         auth: ruAuth,
         home: ruHome,
         map: ruMap,
+        dashboard: ruDashboard,
       },
       kz: {
         navbar: kzNavbar,
         auth: kzAuth,
         home: kzHome,
         map: kzMap,
+        dashboard: kzDashboard,
       },
     },
     ns: ["navbar", "auth", "home", "map"],

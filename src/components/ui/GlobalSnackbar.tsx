@@ -1,6 +1,6 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
-import { useUiStore } from "@/store/useUiStore";
+import { useUiStore } from "@/shared/store/useUiStore";
 
 const GlobalSnackbar: React.FC = () => {
   const snackbarOpen = useUiStore((s) => s.snackbarOpen);

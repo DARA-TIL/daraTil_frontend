@@ -1,0 +1,68 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Continue your journey, explore lessons and folklore content.",
+
+  "actions": {
+    "continue": "Continue lesson",
+    "library": "Lessons library",
+    "map": "Dialect map",
+    "folklore": "Folklore",
+    "quiz": "Quick practice"
+  },
+
+  "cards": {
+    "specialTitle": "Daily challenge",
+    "activityToday": "Today",
+    "specialDesc": "Complete {{wordsTarget}} new words and {{storiesTarget}} folklore story today.",
+    "statsWords": "Words",
+    "statsStories": "Stories",
+    "startChallenge": "Start challenge",
+    "streakShort": "Day {{day}}",
+
+    "charactersTitle": "Engaging lessons",
+    "guidesOnline": "{{count}} guides online",
+    "charactersDesc": "Meet your guides and continue from where you stopped.",
+    "viewAll": "View all",
+    "nextGuide": "Continue with {{name}}",
+    "nextGuideMeta": "Storytelling • {{minutes}} min left",
+    "resume": "Resume",
+
+    "folkloreTitle": "Featured folklore",
+    "new": "New",
+    "folkloreDesc": "Listen to a traditional story from the southern region.",
+    "folkloreName": "Song of the steppe",
+    "folkloreMeta": "{{minutes}} min • {{region}} region",
+    "listen": "Listen",
+
+    "mapTitle": "My lessons map",
+    "mapSubtitle": "Track your journey across regions and lessons.",
+    "today": "Today",
+    "mapRegionWest": "West",
+    "mapRegionNorth": "North",
+    "mapRegionSouth": "South",
+    "mapPlaceholder": "Interactive map coming soon",
+    "nextLesson": "Next lesson",
+    "nextLessonName": "Northern dialect basics",
+    "nextLessonMeta": "Region: {{region}} • Unit {{unit}} • {{minutes}} min",
+    "start": "Start",
+
+    "progressTitle": "Your progress",
+    "progressSubtitle": "Level {{level}} • {{currentXp}} / {{nextXp}} XP",
+    "levelLabel": "Level",
+    "xpLabel": "XP progress",
+    "xpSummary": "{{progress}}% • {{currentXp}} / {{nextXp}} XP",
+    "completedLessons": "Completed lessons",
+    "wordsLearned": "Words learned",
+    "timeSpent": "Time spent",
+    "timeShort": "{{hours}}h",
+    "timeFull": "{{hours}}h {{minutes}}m",
+
+    "activityTitle": "Recent activity",
+    "activityItem1Title": "Finished lesson: \"{{lessonName}}\"",
+    "activityItem1Meta": "{{minutes}} min ago • +{{xp}} XP",
+    "activityItem2Title": "Listened to folklore story \"{{storyName}}\"",
+    "activityItem2Meta": "{{minutes}} min ago • {{duration}} min",
+    "activityItem3Title": "Unlocked level {{level}} achievements",
+    "activityItem3Meta": "{{hours}} hour ago"
+  }
+}

@@ -11,9 +11,10 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
 import { useTranslation } from "react-i18next";
-import OAuthButtons from "@/components/auth/OAuthButtons";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useUiStore } from "@/store/useUiStore";
+import OAuthButtons from "@/features/auth/ui/OAuthButtons";
+import { useAuthStore } from "@/features/auth/model/useAuthStore";
+import { useUiStore } from "@/shared/store/useUiStore";
+import axios from "axios";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -66,8 +67,18 @@ const Register: React.FC = () => {
         const msg = t("errors.registerFailed");
         setStatus(msg);
         showSnackbar(msg, "error");
-      } catch {
-        const msg = t("errors.serverError");
+      } catch (error: any) {
+        console.log("register error:", error.response?.data || error);
+
+        let msg = t("errors.serverError");
+
+        if (axios.isAxiosError(error) && error.response?.data) {
+          const backendError = (error.response.data as any).error;
+          if (backendError) {
+            msg = backendError;
+          }
+        }
+
         setStatus(msg);
         showSnackbar(msg, "error");
       } finally {

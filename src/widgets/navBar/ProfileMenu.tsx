@@ -66,3 +66,5 @@ export const ProfileMenu = ({
     </Menu>
   );
 };
+
+export default ProfileMenu;

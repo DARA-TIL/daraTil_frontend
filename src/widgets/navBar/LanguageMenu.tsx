@@ -35,3 +35,5 @@ export const LanguageMenu = ({ anchorEl, onClose }: Props) => {
     </Menu>
   );
 };
+
+export default LanguageMenu;

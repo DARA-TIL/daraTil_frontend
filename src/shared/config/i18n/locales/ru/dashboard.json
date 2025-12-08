@@ -1,0 +1,68 @@
+{
+  "title": "Главная панель",
+  "subtitle": "Продолжайте путь, изучайте уроки и фольклорные материалы.",
+
+  "actions": {
+    "continue": "Продолжить урок",
+    "library": "Библиотека уроков",
+    "map": "Карта диалектов",
+    "folklore": "Фольклор",
+    "quiz": "Быстрая практика"
+  },
+
+  "cards": {
+    "specialTitle": "Ежедневное задание",
+    "activityToday": "Сегодня",
+    "specialDesc": "Завершите {{wordsTarget}} новых слов и {{storiesTarget}} фольклорную историю сегодня.",
+    "statsWords": "Слова",
+    "statsStories": "Истории",
+    "startChallenge": "Начать задание",
+    "streakShort": "{{day}} день",
+
+    "charactersTitle": "Увлекательные уроки",
+    "guidesOnline": "Гайды онлайн: {{count}}",
+    "charactersDesc": "Познакомьтесь с проводниками и продолжите с того места, где остановились.",
+    "viewAll": "Показать все",
+    "nextGuide": "Продолжить с {{name}}",
+    "nextGuideMeta": "Сторителлинг • осталось {{minutes}} минут",
+    "resume": "Продолжить",
+
+    "folkloreTitle": "Избранный фольклор",
+    "new": "Новое",
+    "folkloreDesc": "Послушайте традиционную историю южного региона.",
+    "folkloreName": "Песня степи",
+    "folkloreMeta": "{{minutes}} мин • {{region}} регион",
+    "listen": "Слушать",
+
+    "mapTitle": "Моя карта уроков",
+    "mapSubtitle": "Отслеживайте свой путь по регионам и урокам.",
+    "today": "Сегодня",
+    "mapRegionWest": "Запад",
+    "mapRegionNorth": "Север",
+    "mapRegionSouth": "Юг",
+    "mapPlaceholder": "Интерактивная карта скоро появится",
+    "nextLesson": "Следующий урок",
+    "nextLessonName": "Основы северного диалекта",
+    "nextLessonMeta": "Регион: {{region}} • Модуль {{unit}} • {{minutes}} мин",
+    "start": "Начать",
+
+    "progressTitle": "Ваш прогресс",
+    "progressSubtitle": "Уровень {{level}} • {{currentXp}} / {{nextXp}} XP",
+    "levelLabel": "Уровень",
+    "xpLabel": "Прогресс XP",
+    "xpSummary": "{{progress}}% • {{currentXp}} / {{nextXp}} XP",
+    "completedLessons": "Завершенные уроки",
+    "wordsLearned": "Выученные слова",
+    "timeSpent": "Потраченное время",
+    "timeShort": "{{hours}} ч",
+    "timeFull": "{{hours}} ч {{minutes}} мин",
+
+    "activityTitle": "Последняя активность",
+    "activityItem1Title": "Завершен урок: «{{lessonName}}»",
+    "activityItem1Meta": "{{minutes}} мин назад • +{{xp}} XP",
+    "activityItem2Title": "Прослушана фольклорная история «{{storyName}}»",
+    "activityItem2Meta": "{{minutes}} мин назад • {{duration}} мин",
+    "activityItem3Title": "Открыты достижения {{level}} уровня",
+    "activityItem3Meta": "{{hours}} час назад"
+  }
+}

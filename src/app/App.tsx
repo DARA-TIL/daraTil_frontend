@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./providers/router/AppRouter";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/features/auth/model/useAuthStore";
 import GlobalSnackbar from "@/components/ui/GlobalSnackbar";
 
 function App() {

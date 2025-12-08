@@ -1,4 +1,4 @@
-import type { IUser } from '@/models/IUser'
+import type { IUser } from '@/features/auth/model/IUser'
 
 export interface AuthResponse {
   accessToken: string

@@ -1,4 +1,3 @@
-// src/pages/dashboard/components/FeaturedFolkloreCard.tsx
 import React from "react";
 import { Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
@@ -8,6 +7,11 @@ import { useTranslation } from "react-i18next";
 export const FeaturedFolkloreCard: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
+
+  // сюда потом можно будет подставлять данные с API
+  const storyTitle = t("cards.folkloreName");
+  const minutes = 12;
+  const region = "Batys"; // можно будет взять из API, а в перевод подставляем
 
   return (
     <Paper
@@ -57,11 +61,11 @@ export const FeaturedFolkloreCard: React.FC = () => {
         sx={{ position: "relative", zIndex: 2 }}
       >
         <Typography variant="h6" fontWeight={600}>
-          {t("cards.folkloreTitle", "Featured folklore")}
+          {t("cards.folkloreTitle")}
         </Typography>
 
         <Chip
-          label={t("cards.new", "New")}
+          label={t("cards.new")}
           color="secondary"
           size="small"
           sx={{
@@ -86,10 +90,7 @@ export const FeaturedFolkloreCard: React.FC = () => {
               : "rgba(226,232,240,0.85)",
         })}
       >
-        {t(
-          "cards.folkloreDesc",
-          "Listen to a traditional story from the southern region."
-        )}
+        {t("cards.folkloreDesc")}
       </Typography>
 
       {/* Карточка истории */}
@@ -125,11 +126,11 @@ export const FeaturedFolkloreCard: React.FC = () => {
       >
         <Box>
           <Typography variant="subtitle1" fontWeight={700}>
-            {t("cards.folkloreName", "Song of the steppe")}
+            {storyTitle}
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            12 min • Batys region
+            {t("cards.folkloreMeta", { minutes, region })}
           </Typography>
         </Box>
 
@@ -150,7 +151,7 @@ export const FeaturedFolkloreCard: React.FC = () => {
             },
           }}
         >
-          {t("cards.listen", "Listen")}
+          {t("cards.listen")}
         </Button>
       </Box>
     </Paper>
