@@ -14,7 +14,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/features/auth/model/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useState, useContext } from "react";
 
 import { LanguageMenu } from "./LanguageMenu";
@@ -84,7 +84,12 @@ const NavBar = () => {
       >
         {/* Logo / brand */}
         <Box
-          sx={{ display: "flex", alignItems: "center", gap: 1.5, cursor: "pointer" }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            cursor: "pointer",
+          }}
           onClick={() => navigate("/")}
         >
           <Box
@@ -125,11 +130,16 @@ const NavBar = () => {
                   : "rgba(15,23,42,0.9)",
             }}
           >
-            {theme.palette.mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+            {theme.palette.mode === "light" ? (
+              <DarkModeIcon />
+            ) : (
+              <LightModeIcon />
+            )}
           </IconButton>
 
           {/* Language */}
           <IconButton
+            id="language"
             color="inherit"
             onClick={(e) => setLangAnchor(e.currentTarget)}
             sx={{
@@ -152,6 +162,7 @@ const NavBar = () => {
           {isAuth ? (
             <>
               <IconButton
+                id="user-icon"
                 color="inherit"
                 onClick={(e) => setProfileAnchor(e.currentTarget)}
                 sx={{

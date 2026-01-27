@@ -1,0 +1,72 @@
+{
+  "title": "Әкімші",
+  "common": {
+    "open": "Ашу",
+    "create": "Қосу",
+    "save": "Сақтау",
+    "cancel": "Болдырмау",
+    "delete": "Жою",
+    "edit": "Өңдеу",
+    "back": "Артқа",
+    "search": "Іздеу",
+    "reset": "Тазалау",
+    "loading": "Жүктелуде...",
+    "uploadFile": "Файл жүктеу",
+    "changeFile": "Файлды ауыстыру",
+    "remove": "Алып тастау",
+    "uploaded": "Жүктелді",
+    "uploading": "Жүктелуде...",
+    "all": "Барлығы",
+    "empty": "Элемент жоқ"
+  },
+  "folklore": {
+    "cardTitle": "Фольклорды басқару",
+    "cardDescription": "Фольклорды қосу, көру, өңдеу және жою. Мәтін өзгерсе, аудармаларды қайта жасауға болады.",
+    "listTitle": "Фольклор әкімші панелі",
+    "createTitle": "Фольклор қосу",
+    "editTitle": "Фольклорды өңдеу",
+    "confirmDelete": "Осы фольклорды жою керек пе?",
+    "fields": {
+      "type": "Түрі",
+      "region": "Өңір",
+      "author": "Автор",
+      "name": "Атауы (түпнұсқа)",
+      "content": "Мәтін (түпнұсқа)",
+      "imageUrl": "Сурет URL",
+      "mediaUrl": "Медиа URL"
+    },
+    "helpers": {
+      "image": "URL қоюға немесе файл жүктеуге болады. Жүктесеңіз, файл Cloudinary-ге жіберіледі.",
+      "media": "Аудио/видео Cloudinary-ге жүктеледі. Немесе тікелей сілтеме қойыңыз."
+    },
+    "validation": {
+      "imageType": "Сурет файлын таңдаңыз.",
+      "imageTooLarge": "Сурет тым үлкен (ең көбі {{max}}MB).",
+      "mediaType": "Аудио немесе видео файлын таңдаңыз.",
+      "mediaTooLarge": "Медиа тым үлкен (ең көбі {{max}}MB).",
+      "requiredName": "Атауы міндетті.",
+      "requiredContent": "Мәтін міндетті.",
+      "imageUploadFailed": "Суретті жүктеу сәтсіз болды. Қайта көріңіз.",
+      "mediaUploadFailed": "Медианы жүктеу сәтсіз болды. Қайта көріңіз."
+    },
+    "actions": {
+      "saveMetadata": "Метадеректерді сақтау",
+      "saveAndRetranslate": "Сақтау + қайта аудару"
+    },
+    "translations": {
+      "title": "Аудармалар (тек оқу, AI жасады)",
+      "empty": "Аудармалар жүктелмеген"
+    },
+    "upload": {
+      "imageLabel": "Сурет",
+      "mediaLabel": "Медиа"
+    }
+  },
+  "fileUpload": {
+    "urlLabel": "{{label}} URL",
+    "uploadFile": "Файл жүктеу",
+    "changeFile": "Файлды ауыстыру",
+    "selected": "Таңдалды: {{name}} ({{sizeKb}} KB)",
+    "uploaded": "Жүктелді: {{url}}"
+  }
+}

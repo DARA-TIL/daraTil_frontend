@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 
 import { useTranslation } from "react-i18next";
 import OAuthButtons from "@/features/auth/ui/OAuthButtons";
-import { useAuthStore } from "@/features/auth/model/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUiStore } from "@/shared/store/useUiStore";
 import axios from "axios";
 
@@ -39,10 +39,10 @@ const Login: React.FC = () => {
   // 2) Успешный OAuth (google / github) → дергаем /auth/refresh
   useEffect(() => {
     if (oauth !== "google" && oauth !== "github") return;
-    if (isAuth) return; // уже авторизован - ничего не делаем
+    if (isAuth) return;
 
     (async () => {
-      const user = await checkAuth(); // вернёт IUser | null
+      const user = await checkAuth();
 
       if (user) {
         showSnackbar(t("loginSuccess"), "success");

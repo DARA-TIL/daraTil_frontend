@@ -1,10 +1,33 @@
 // src/store/useAuthStore.ts
 import { create } from "zustand";
 import type { IUser } from "@/features/auth/model/IUser";
-import type { AuthResponse } from "@/features/auth/model/response/AuthResponse";
 import AuthService from "@/features/auth/api/AuthService";
 import $api from "@/shared/api/http";
 import { useUiStore } from "../../../shared/store/useUiStore";
+
+function normalizeUserFromBackend(payload: any): IUser | null {
+  if (!payload) return null;
+
+  // /auth/me -> { user: {...} }
+  // /auth/login, /auth/refresh могут вернуть { accessToken, user: {...} }
+  const u = payload.user ?? payload.data?.user ?? payload.data ?? payload;
+  if (!u || typeof u !== "object") return null;
+
+  const progress = u.progress ?? {};
+
+  return {
+    id: u.id ?? u.ID ?? 0,
+    username: u.username ?? "",
+    email: u.email ?? "",
+    avatar: u.avatar ?? "",
+    role: u.role ?? "",
+    level: progress.level ?? u.level ?? 0,
+    experience: progress.XpTotal ?? progress.xpTotal ?? u.experience ?? 0,
+    authProvider: u.authProvider ?? "",
+    createdAt: u.createdAt ?? u.CreatedAt,
+    updatedAt: u.updatedAt ?? u.UpdatedAt,
+  };
+}
 
 interface AuthState {
   user: IUser | null;
@@ -19,7 +42,7 @@ interface AuthState {
   register: (
     name: string,
     email: string,
-    password: string
+    password: string,
   ) => Promise<IUser | null>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<IUser | null>;
@@ -37,15 +60,16 @@ export const useAuthStore = create<AuthState>((set) => {
       // 1) если есть access токен - сначала пробуем /auth/me
       if (token) {
         try {
-          const meResponse = await $api.get<IUser>("/auth/me");
-          const user = meResponse.data;
+          const meResponse = await $api.get("/auth/me");
+          const user = normalizeUserFromBackend(meResponse.data);
 
-          set({
-            isAuth: true,
-            user,
-          });
+          if (user) {
+            set({ isAuth: true, user });
+            return user;
+          }
 
-          return user;
+          set({ isAuth: false, user: null });
+          return null;
         } catch (err: any) {
           const status = err.response?.status;
           const errorMessage =
@@ -53,7 +77,7 @@ export const useAuthStore = create<AuthState>((set) => {
 
           console.log(
             "checkAuth /auth/me error:",
-            err.response?.data || err.message
+            err.response?.data || err.message,
           );
 
           const isTokenExpired =
@@ -61,32 +85,33 @@ export const useAuthStore = create<AuthState>((set) => {
             typeof errorMessage === "string" &&
             errorMessage.toLowerCase().includes("token expired");
 
-          // если токен просто истек - пробуем рефреш ниже
+          // если токен НЕ просто истёк - значит что-то другое, сбрасываем
           if (!isTokenExpired) {
             localStorage.removeItem("token");
-
-            set({
-              isAuth: false,
-              user: null,
-            });
-
+            set({ isAuth: false, user: null });
             return null;
           }
 
-          console.log("checkAuth: access token expired, trying /auth/refresh...");
+          console.log(
+            "checkAuth: access token expired, trying /auth/refresh...",
+          );
         }
       }
 
       // 2) либо токена нет, либо он истек - пробуем /auth/refresh
       try {
-        const refreshResponse = await $api.get<AuthResponse>("/auth/refresh");
-        const { accessToken, user } = refreshResponse.data;
+        const refreshResponse = await $api.get("/auth/refresh");
 
-        localStorage.setItem("token", accessToken);
-        localStorage.removeItem("loggedOut"); // можешь вообще перестать использовать этот флаг
+        const accessToken = refreshResponse.data?.accessToken;
+        const user = normalizeUserFromBackend(refreshResponse.data);
+
+        if (accessToken) {
+          localStorage.setItem("token", accessToken);
+          localStorage.removeItem("loggedOut");
+        }
 
         set({
-          isAuth: true,
+          isAuth: Boolean(user),
           user,
         });
 
@@ -94,16 +119,11 @@ export const useAuthStore = create<AuthState>((set) => {
       } catch (refreshErr: any) {
         console.log(
           "checkAuth /auth/refresh error:",
-          refreshErr.response?.data || refreshErr.message
+          refreshErr.response?.data || refreshErr.message,
         );
 
         localStorage.removeItem("token");
-
-        set({
-          isAuth: false,
-          user: null,
-        });
-
+        set({ isAuth: false, user: null });
         return null;
       }
     } finally {
@@ -123,29 +143,37 @@ export const useAuthStore = create<AuthState>((set) => {
     login: async (email, password) => {
       const response = await AuthService.login(email, password);
 
-      localStorage.setItem("token", response.data.accessToken);
-      localStorage.removeItem("loggedOut");
+      const accessToken = response.data?.accessToken;
+      if (accessToken) {
+        localStorage.setItem("token", accessToken);
+        localStorage.removeItem("loggedOut");
+      }
 
+      const user = normalizeUserFromBackend(response.data);
       set({
-        isAuth: true,
-        user: response.data.user,
+        isAuth: Boolean(user),
+        user,
       });
 
-      return response.data.user;
+      return user;
     },
 
     register: async (name, email, password) => {
       const response = await AuthService.registration(name, email, password);
 
-      localStorage.setItem("token", response.data.accessToken);
-      localStorage.removeItem("loggedOut");
+      const accessToken = response.data?.accessToken;
+      if (accessToken) {
+        localStorage.setItem("token", accessToken);
+        localStorage.removeItem("loggedOut");
+      }
 
+      const user = normalizeUserFromBackend(response.data);
       set({
-        isAuth: true,
-        user: response.data.user,
+        isAuth: Boolean(user),
+        user,
       });
 
-      return response.data.user;
+      return user;
     },
 
     logout: async () => {
@@ -155,7 +183,7 @@ export const useAuthStore = create<AuthState>((set) => {
         console.log("logout error:", e.response?.data || e.message);
       } finally {
         localStorage.removeItem("token");
-        localStorage.setItem("loggedOut", "true"); // можешь оставить для аналитики, но логика checkAuth больше на него не смотрит
+        localStorage.setItem("loggedOut", "true");
 
         set({
           isAuth: false,

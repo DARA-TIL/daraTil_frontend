@@ -1,3 +1,4 @@
+// src/pages/dashboard/components/LessonsMapCard.tsx
 import React from "react";
 import { Box, Chip, Paper, Stack, Typography, Button } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -8,7 +9,7 @@ export const LessonsMapCard: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
 
-  // данные, которые потом можно будет подменить с API
+  // данные, которые потом можно будет подменить с API/стора
   const todayLabel = t("cards.today");
   const mapTitle = t("cards.mapTitle");
   const mapSubtitle = t("cards.mapSubtitle");
@@ -17,22 +18,22 @@ export const LessonsMapCard: React.FC = () => {
     {
       top: "18%",
       left: "16%",
-      label: t("cards.mapRegionWest"),
+      label: t("cards.mapRegionWest", "West"),
     },
     {
       top: "38%",
       left: "46%",
-      label: t("cards.mapRegionNorth"),
+      label: t("cards.mapRegionNorth", "North"),
     },
     {
       top: "64%",
       left: "72%",
-      label: t("cards.mapRegionSouth"),
+      label: t("cards.mapRegionSouth", "South"),
     },
   ];
 
   const nextLessonName = t("cards.nextLessonName");
-  const nextLessonRegion = t("cards.mapRegionNorth");
+  const nextLessonRegion = t("cards.mapRegionNorth", "North");
   const nextLessonUnit = 2;
   const nextLessonMinutes = 15;
 
@@ -47,7 +48,8 @@ export const LessonsMapCard: React.FC = () => {
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
-        backgroundImage: theme.gradients.cardSoft,
+        backgroundColor:
+          theme.palette.mode === "light" ? "#ffffff" : "rgba(15,23,42,0.9)",
         border: `1px solid ${
           theme.palette.mode === "light"
             ? "rgba(148,163,184,0.35)"
@@ -55,18 +57,22 @@ export const LessonsMapCard: React.FC = () => {
         }`,
         boxShadow:
           theme.palette.mode === "light"
-            ? "0 16px 40px rgba(15,23,42,0.12)"
-            : "0 18px 45px rgba(0,0,0,0.8)"
+            ? "0 12px 30px rgba(15,23,42,0.08)"
+            : "0 16px 40px rgba(0,0,0,0.9)",
       })}
     >
-      {/* лёгкий блик поверх */}
+      {/* мягкий блик сверху, как в ProgressCard */}
       <Box
         sx={{
           position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
+          top: -40,
+          right: -40,
+          width: 140,
+          height: 140,
+          borderRadius: "50%",
           background:
-            "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.6), transparent 55%)",
+            "radial-gradient(circle at 30% 30%, rgba(59,130,246,0.25), transparent 60%)",
+          pointerEvents: "none",
         }}
       />
 
@@ -75,8 +81,8 @@ export const LessonsMapCard: React.FC = () => {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        mb={1.5}
-        sx={{ position: "relative", zIndex: 2 }}
+        mb={2}
+        sx={{ position: "relative", zIndex: 1 }}
       >
         <Box>
           <Typography variant="h6" fontWeight={600}>
@@ -85,11 +91,11 @@ export const LessonsMapCard: React.FC = () => {
           <Typography
             variant="body2"
             sx={(theme) => ({
+              mt: 0.5,
               color:
                 theme.palette.mode === "light"
-                  ? "rgba(15,23,42,0.7)"
-                  : "rgba(226,232,240,0.75)",
-              mt: 0.3,
+                  ? "rgba(75,85,99,0.9)"
+                  : "rgba(156,163,175,0.95)",
             })}
           >
             {mapSubtitle}
@@ -102,20 +108,18 @@ export const LessonsMapCard: React.FC = () => {
           sx={{
             borderRadius: 999,
             fontWeight: 500,
-            bgcolor: "rgba(255,255,255,0.8)",
-            backdropFilter: "blur(6px)",
           }}
         />
       </Stack>
 
-      {/* псевдо-карта с маршрутом и точками */}
+      {/* псевдо-карта с маршрутом и точками, но уже как "внутренний блок" карточки */}
       <Box
         sx={(theme) => ({
           position: "relative",
           flex: 1,
           borderRadius: 3,
-          mt: 1,
-          mb: 1.5,
+          mt: 0.5,
+          mb: 2,
           overflow: "hidden",
           background:
             theme.palette.mode === "light"
@@ -156,7 +160,7 @@ export const LessonsMapCard: React.FC = () => {
         {mapPoints.map((point, idx) => (
           <Box
             key={point.label}
-            sx={() => ({
+            sx={{
               position: "absolute",
               top: point.top,
               left: point.left,
@@ -165,7 +169,7 @@ export const LessonsMapCard: React.FC = () => {
               flexDirection: "column",
               alignItems: "center",
               gap: 0.3,
-            })}
+            }}
           >
             <Box
               sx={{
@@ -197,7 +201,7 @@ export const LessonsMapCard: React.FC = () => {
                     : "rgba(226,232,240,0.85)",
                 bgcolor:
                   theme.palette.mode === "light"
-                    ? "rgba(255,255,255,0.7)"
+                    ? "rgba(255,255,255,0.8)"
                     : "rgba(15,23,42,0.9)",
               })}
             >
@@ -237,9 +241,8 @@ export const LessonsMapCard: React.FC = () => {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        mt={0.5}
         gap={2}
-        sx={{ position: "relative", zIndex: 2 }}
+        sx={{ position: "relative", zIndex: 1 }}
       >
         <Box>
           <Typography variant="body2" color="text.secondary">

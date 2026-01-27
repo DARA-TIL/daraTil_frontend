@@ -31,9 +31,7 @@ export const EngagingLessonsCard: React.FC = () => {
     { name: "Guest" },
   ];
 
-  const onlineGuidesCount = guides.length - 1; // напр. без Guest
-  const currentGuide = guides[0];
-  const remainingMinutes = 5;
+  const onlineGuidesCount = guides.length - 1;
 
   const title = t("cards.charactersTitle");
   const description = t("cards.charactersDesc");
@@ -49,7 +47,8 @@ export const EngagingLessonsCard: React.FC = () => {
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
-        backgroundImage: theme.gradients.cardSoft,
+        backgroundColor:
+          theme.palette.mode === "light" ? "#ffffff" : "rgba(15,23,42,0.9)",
         border: `1px solid ${
           theme.palette.mode === "light"
             ? "rgba(148,163,184,0.35)"
@@ -57,18 +56,22 @@ export const EngagingLessonsCard: React.FC = () => {
         }`,
         boxShadow:
           theme.palette.mode === "light"
-            ? "0 14px 32px rgba(15,23,42,0.12)"
-            : "0 18px 40px rgba(0,0,0,0.85)",
+            ? "0 12px 30px rgba(15,23,42,0.08)"
+            : "0 16px 40px rgba(0,0,0,0.9)",
       })}
     >
-      {/* лёгкий блик сверху справа */}
+      {/* мягкий блик сверху справа, как в ProgressCard */}
       <Box
         sx={{
           position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
+          top: -40,
+          right: -40,
+          width: 140,
+          height: 140,
+          borderRadius: "50%",
           background:
-            "radial-gradient(circle at 100% 0, rgba(255,255,255,0.6), transparent 55%)",
+            "radial-gradient(circle at 30% 30%, rgba(59,130,246,0.25), transparent 60%)",
+          pointerEvents: "none",
         }}
       />
 
@@ -89,7 +92,6 @@ export const EngagingLessonsCard: React.FC = () => {
             size="small"
             sx={{
               borderRadius: 999,
-              bgcolor: "rgba(255,255,255,0.9)",
               fontSize: 11,
               height: 22,
             }}
@@ -111,22 +113,37 @@ export const EngagingLessonsCard: React.FC = () => {
       {/* описание */}
       <Typography
         variant="body2"
-        color="text.secondary"
         mb={2}
         sx={(theme) => ({
           position: "relative",
           zIndex: 1,
           color:
             theme.palette.mode === "light"
-              ? "rgba(15,23,42,0.8)"
-              : "rgba(226,232,240,0.9)",
+              ? "rgba(75,85,99,0.9)"
+              : "rgba(156,163,175,0.95)",
         })}
       >
         {description}
       </Typography>
 
-      {/* аватарки персонажей */}
-      <Box sx={{ position: "relative", zIndex: 1, mb: 1.5 }}>
+      {/* аватарки персонажей в лёгком внутреннем блоке */}
+      <Box
+        sx={(theme) => ({
+          position: "relative",
+          zIndex: 1,
+          mb: 1.5,
+          borderRadius: 3,
+          p: 1.2,
+          backgroundColor:
+            theme.palette.mode === "light"
+              ? "rgba(249,250,251,0.9)"
+              : "rgba(15,23,42,0.9)",
+          border:
+            theme.palette.mode === "light"
+              ? "1px solid rgba(148,163,184,0.35)"
+              : "1px solid rgba(55,65,81,0.9)",
+        })}
+      >
         <AvatarGroup
           max={6}
           sx={{
@@ -147,41 +164,6 @@ export const EngagingLessonsCard: React.FC = () => {
           ))}
         </AvatarGroup>
       </Box>
-
-      {/* нижняя подпись и кнопка быстрого перехода */}
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ position: "relative", zIndex: 1, mt: 0.5 }}
-      >
-        <Box>
-          <Typography variant="body2" fontWeight={500}>
-            {t("cards.nextGuide", { name: currentGuide.name })}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            {t("cards.nextGuideMeta", { minutes: remainingMinutes })}
-          </Typography>
-        </Box>
-
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => navigate("/app/lessons")}
-          sx={{
-            borderRadius: 999,
-            textTransform: "none",
-            px: 2,
-            fontSize: 13,
-            bgcolor: "rgba(255,255,255,0.75)",
-            "&:hover": {
-              bgcolor: "rgba(255,255,255,0.95)",
-            },
-          }}
-        >
-          {t("cards.resume")}
-        </Button>
-      </Stack>
     </Paper>
   );
 };

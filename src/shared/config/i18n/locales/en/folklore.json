@@ -1,0 +1,49 @@
+{
+  "card": { "media": "media" },
+
+  "filters": {
+    "searchPlaceholder": "Search...",
+    "typeLabel": "Type",
+    "regionLabel": "Region",
+    "minLikesLabel": "Min likes",
+    "all": "All",
+    "reset": "Reset",
+    "apply": "Apply",
+    "active": "Active:",
+    "clearAll": "Clear all",
+    "chip": {
+      "search": "Search: {{value}}",
+      "type": "Type: {{value}}",
+      "region": "Region: {{value}}",
+      "minLikes": "Min likes: {{value}}"
+    }
+  },
+
+  "details": {
+    "loading": "Loading...",
+    "original": "Original",
+    "explanation": "Explanation"
+  },
+
+  "types": {
+    "proverb": "Proverb",
+    "story": "Story",
+    "song": "Song",
+    "legend": "Legend",
+    "aitys": "Aitys",
+    "kui": "Kui"
+  },
+  "regions": {
+    "Almaty": "Almaty",
+    "Astana": "Astana",
+    "Shymkent": "Shymkent",
+    "Batys": "West",
+    "Soltustik": "North",
+    "Ontustik": "South"
+  },
+  "page": {
+    "title": "Folklore",
+    "emptyTitle": "Nothing found",
+    "emptySubtitle": "Try changing filters or search query."
+  }
+}

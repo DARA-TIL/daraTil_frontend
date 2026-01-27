@@ -1,0 +1,49 @@
+{
+  "card": { "media": "медиа" },
+
+  "filters": {
+    "searchPlaceholder": "Іздеу...",
+    "typeLabel": "Түрі",
+    "regionLabel": "Аймақ",
+    "minLikesLabel": "Мин. лайк",
+    "all": "Барлығы",
+    "reset": "Тазалау",
+    "apply": "Қолдану",
+    "active": "Белсенді:",
+    "clearAll": "Барлығын тазалау",
+    "chip": {
+      "search": "Іздеу: {{value}}",
+      "type": "Түрі: {{value}}",
+      "region": "Аймақ: {{value}}",
+      "minLikes": "Мин. лайк: {{value}}"
+    }
+  },
+
+  "details": {
+    "loading": "Жүктелуде...",
+    "original": "Түпнұсқа",
+    "explanation": "Түсіндірме"
+  },
+
+  "types": {
+    "proverb": "Мақал-мәтел",
+    "story": "Әңгіме",
+    "song": "Ән",
+    "legend": "Аңыз",
+    "aitys": "Айтыс",
+    "kui": "Күй"
+  },
+  "regions": {
+    "Almaty": "Алматы",
+    "Astana": "Астана",
+    "Shymkent": "Шымкент",
+    "Batys": "Батыс",
+    "Soltustik": "Солтүстік",
+    "Ontustik": "Оңтүстік"
+  },
+  "page": {
+    "title": "Фольклор",
+    "emptyTitle": "Ештеңе табылмады",
+    "emptySubtitle": "Сүзгілерді немесе іздеу сұрауын өзгертіп көріңіз."
+  }
+}

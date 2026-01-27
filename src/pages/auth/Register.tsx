@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 
 import { useTranslation } from "react-i18next";
 import OAuthButtons from "@/features/auth/ui/OAuthButtons";
-import { useAuthStore } from "@/features/auth/model/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUiStore } from "@/shared/store/useUiStore";
 import axios from "axios";
 

@@ -9,6 +9,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useTranslation } from "react-i18next";
 import { profileMenuItems } from "./navConfig";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -38,6 +39,14 @@ export const ProfileMenu = ({
     navigate("/login");
   };
 
+  const user = useAuthStore((s) => s.user);
+  const role = String(user?.role ?? "").toLowerCase();
+  const isAdmin = role === "admin";
+
+  const menuItems = profileMenuItems.filter((x) =>
+    x.path.startsWith("/app/admin") ? isAdmin : true,
+  );
+
   return (
     <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
       <MenuItem disabled>
@@ -46,7 +55,7 @@ export const ProfileMenu = ({
 
       <Divider />
 
-      {profileMenuItems.map((item) => (
+      {menuItems.map((item) => (
         <MenuItem key={item.key} onClick={() => navigateTo(item.path)}>
           <ListItemIcon>
             <item.icon fontSize="small" />

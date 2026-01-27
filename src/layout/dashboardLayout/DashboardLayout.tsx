@@ -21,6 +21,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useTranslation } from "react-i18next";
 
 import { profileMenuItems } from "@/widgets/navBar/navConfig";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 const expandedWidth = 260;
 const collapsedWidth = 68;
@@ -40,6 +41,14 @@ const DashboardLayout: React.FC = () => {
   const toggleMobileSidebar = () => setMobileOpen((prev) => !prev);
 
   const sidebarExpanded = isMdUp ? isOpen : true;
+
+  const user = useAuthStore((s) => s.user);
+  const role = String(user?.role ?? "").toLowerCase();
+  const isAdmin = role === "admin";
+
+  const menuItems = profileMenuItems.filter((x) =>
+    x.path.startsWith("/app/admin") ? isAdmin : true,
+  );
 
   const drawerContent = (
     <Box
@@ -141,7 +150,7 @@ const DashboardLayout: React.FC = () => {
           },
         }}
       >
-        {profileMenuItems.map((item) => {
+        {menuItems.map((item) => {
           const selected = location.pathname === item.path;
 
           const button = (

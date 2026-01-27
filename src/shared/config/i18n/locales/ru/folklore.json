@@ -1,0 +1,49 @@
+{
+  "card": { "media": "медиа" },
+
+  "filters": {
+    "searchPlaceholder": "Поиск...",
+    "typeLabel": "Тип",
+    "regionLabel": "Регион",
+    "minLikesLabel": "Мин. лайков",
+    "all": "Все",
+    "reset": "Сброс",
+    "apply": "Применить",
+    "active": "Активные:",
+    "clearAll": "Очистить",
+    "chip": {
+      "search": "Поиск: {{value}}",
+      "type": "Тип: {{value}}",
+      "region": "Регион: {{value}}",
+      "minLikes": "Мин. лайков: {{value}}"
+    }
+  },
+
+  "details": {
+    "loading": "Загрузка...",
+    "original": "Оригинал",
+    "explanation": "Пояснение"
+  },
+
+  "types": {
+    "proverb": "Пословица",
+    "story": "История",
+    "song": "Песня",
+    "legend": "Легенда",
+    "aitys": "Айтыс",
+    "kui": "Кюй"
+  },
+  "regions": {
+    "Almaty": "Алматы",
+    "Astana": "Астана",
+    "Shymkent": "Шымкент",
+    "Batys": "Запад",
+    "Soltustik": "Север",
+    "Ontustik": "Юг"
+  },
+  "page": {
+    "title": "Фольклор",
+    "emptyTitle": "Ничего не найдено",
+    "emptySubtitle": "Попробуйте изменить фильтры или запрос."
+  }
+}

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./providers/router/AppRouter";
-import { useAuthStore } from "@/features/auth/model/useAuthStore";
-import GlobalSnackbar from "@/components/ui/GlobalSnackbar";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import GlobalSnackbar from "@/shared/lib/GlobalSnackbar";
 
 function App() {
   const checkAuth = useAuthStore((s) => s.checkAuth);

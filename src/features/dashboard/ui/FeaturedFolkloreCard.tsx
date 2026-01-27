@@ -1,3 +1,4 @@
+// src/pages/dashboard/components/FeaturedFolkloreCard.tsx
 import React from "react";
 import { Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
@@ -11,7 +12,7 @@ export const FeaturedFolkloreCard: React.FC = () => {
   // сюда потом можно будет подставлять данные с API
   const storyTitle = t("cards.folkloreName");
   const minutes = 12;
-  const region = "Batys"; // можно будет взять из API, а в перевод подставляем
+  const region = "Batys"; // позже можно брать из API
 
   return (
     <Paper
@@ -24,12 +25,8 @@ export const FeaturedFolkloreCard: React.FC = () => {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        backgroundImage: `
-          ${theme.gradients.cardSoft},
-          url('/images/folklore-bg.jpg')
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundColor:
+          theme.palette.mode === "light" ? "#ffffff" : "rgba(15,23,42,0.9)",
         border: `1px solid ${
           theme.palette.mode === "light"
             ? "rgba(148,163,184,0.35)"
@@ -37,28 +34,32 @@ export const FeaturedFolkloreCard: React.FC = () => {
         }`,
         boxShadow:
           theme.palette.mode === "light"
-            ? "0 16px 40px rgba(15,23,42,0.12)"
-            : "0 18px 45px rgba(0,0,0,0.85)",
+            ? "0 12px 30px rgba(15,23,42,0.08)"
+            : "0 16px 40px rgba(0,0,0,0.9)",
       })}
     >
-      {/* Блик поверх для красоты */}
+      {/* мягкий блик сверху, как в ProgressCard/LessonsMapCard */}
       <Box
         sx={{
           position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
+          top: -40,
+          right: -40,
+          width: 140,
+          height: 140,
+          borderRadius: "50%",
           background:
-            "radial-gradient(circle at 80% 0%, rgba(255,255,255,0.55), transparent 60%)",
+            "radial-gradient(circle at 30% 30%, rgba(147,51,234,0.28), transparent 60%)",
+          pointerEvents: "none",
         }}
       />
 
-      {/* Контейнер контента сверху */}
+      {/* заголовок + чип "New" */}
       <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        mb={1.5}
-        sx={{ position: "relative", zIndex: 2 }}
+        mb={2}
+        sx={{ position: "relative", zIndex: 1 }}
       >
         <Typography variant="h6" fontWeight={600}>
           {t("cards.folkloreTitle")}
@@ -77,29 +78,29 @@ export const FeaturedFolkloreCard: React.FC = () => {
         />
       </Stack>
 
-      {/* Описание */}
+      {/* описание */}
       <Typography
         variant="body2"
-        mb={1}
+        mb={2}
         sx={(theme) => ({
           position: "relative",
-          zIndex: 2,
+          zIndex: 1,
           color:
             theme.palette.mode === "light"
-              ? "rgba(15,23,42,0.8)"
-              : "rgba(226,232,240,0.85)",
+              ? "rgba(75,85,99,0.9)"
+              : "rgba(156,163,175,0.95)",
         })}
       >
         {t("cards.folkloreDesc")}
       </Typography>
 
-      {/* Карточка истории */}
+      {/* внутренняя карточка истории */}
       <Box
         sx={(theme) => ({
           position: "relative",
-          zIndex: 2,
+          zIndex: 1,
           flex: 1,
-          mt: 1,
+          mt: 0.5,
           borderRadius: 4,
           padding: "16px 20px",
           display: "flex",
@@ -107,13 +108,13 @@ export const FeaturedFolkloreCard: React.FC = () => {
           alignItems: "center",
           background:
             theme.palette.mode === "light"
-              ? "rgba(255,255,255,0.65)"
-              : "rgba(15,23,42,0.75)",
+              ? "rgba(249,250,251,0.9)"
+              : "rgba(15,23,42,0.9)",
           backdropFilter: "blur(6px)",
           border:
             theme.palette.mode === "light"
               ? "1px solid rgba(148,163,184,0.35)"
-              : "1px solid rgba(255,255,255,0.1)",
+              : "1px solid rgba(55,65,81,0.9)",
           transition: "0.25s ease",
           "&:hover": {
             transform: "translateY(-2px)",
@@ -125,11 +126,19 @@ export const FeaturedFolkloreCard: React.FC = () => {
         })}
       >
         <Box>
-          <Typography variant="subtitle1" fontWeight={700}>
+          <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 0.3 }}>
             {storyTitle}
           </Typography>
 
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            sx={(theme) => ({
+              color:
+                theme.palette.mode === "light"
+                  ? "rgba(75,85,99,0.9)"
+                  : "rgba(156,163,175,0.9)",
+            })}
+          >
             {t("cards.folkloreMeta", { minutes, region })}
           </Typography>
         </Box>

@@ -23,9 +23,6 @@
     "guidesOnline": "{{count}} guides online",
     "charactersDesc": "Meet your guides and continue from where you stopped.",
     "viewAll": "View all",
-    "nextGuide": "Continue with {{name}}",
-    "nextGuideMeta": "Storytelling • {{minutes}} min left",
-    "resume": "Resume",
 
     "folkloreTitle": "Featured folklore",
     "new": "New",

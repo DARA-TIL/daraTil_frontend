@@ -15,6 +15,14 @@ import ProfilePage from "@/pages/profile/ProfilePage";
 import SettingsPage from "@/pages/settings/SettingsPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
+import FolkloreAdminPage from "@/pages/admin/folklore/FolkloreAdminPage";
+import FolkloreCreatePage from "@/pages/admin/folklore/FolkloreCreatePage";
+import FolkloreEditPage from "@/pages/admin/folklore/FolkloreEditPage";
+import AdminPage from "@/pages/admin/AdminPage";
+import LessonDetailsPage from "@/pages/lessons/LessonDetailsPage";
+import LessonEditPage from "@/pages/admin/lessons/LessonEditPage";
+import LessonsAdminPage from "@/pages/admin/lessons/LessonsAdminPage";
+import LessonCreatePage from "@/pages/admin/lessons/LessonCreatePage";
 
 export interface AppRouteConfig {
   path?: string;
@@ -81,6 +89,66 @@ export const routeConfig: AppRouteConfig[] = [
           {
             path: "settings",
             element: <SettingsPage />,
+          },
+          {
+            path: "lessons/:id",
+            element: <LessonDetailsPage />,
+          },
+          {
+            path: "admin/folklore",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <FolkloreAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/folklore/new",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <FolkloreCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/folklore/:id/edit",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <FolkloreEditPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <AdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/lessons",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <LessonsAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/lessons/new",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <LessonCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/lessons/:id/edit",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <LessonEditPage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
