@@ -51,6 +51,15 @@ function getErrorMessage(e: unknown): string {
   return "Something went wrong. Please try again.";
 }
 
+function mergeFolklore(prev: Folklore, next: Partial<Folklore>): Folklore {
+  return {
+    ...prev,
+    ...next,
+    content: next.content ?? prev.content,
+    translations: next.translations ?? prev.translations,
+  };
+}
+
 export const useFolkloreStore = create<FolkloreState>((set, get) => ({
   items: [],
   loading: false,
@@ -121,7 +130,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
           .getState()
           .showSnackbar(
             "minLikes filter is not supported yet - showing results without it.",
-            "warning"
+            "warning",
           );
 
         try {
@@ -188,11 +197,16 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
     if (!hasKnownState) {
       try {
         const res = await FolkloreService.toggleLike(id);
+
         set((s) => ({
           likedIds: { ...s.likedIds, [id]: res.liked },
-          items: s.items.map((x) => (x.id === id ? { ...x, ...res.data } : x)),
+          items: s.items.map((x) =>
+            x.id === id ? mergeFolklore(x, res.data) : x,
+          ),
           selected:
-            s.selected?.id === id ? { ...s.selected, ...res.data } : s.selected,
+            s.selected?.id === id
+              ? mergeFolklore(s.selected, res.data)
+              : s.selected,
         }));
       } catch (e) {
         useUiStore.getState().showSnackbar(getErrorMessage(e), "error");
@@ -209,7 +223,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
               ...x,
               likesCount: Math.max(0, x.likesCount + (wasLiked ? -1 : 1)),
             }
-          : x
+          : x,
       ),
       selected:
         selected?.id === id
@@ -217,7 +231,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
               ...selected,
               likesCount: Math.max(
                 0,
-                selected.likesCount + (wasLiked ? -1 : 1)
+                selected.likesCount + (wasLiked ? -1 : 1),
               ),
             }
           : selected,
@@ -238,7 +252,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
         return {
           likedIds: { ...s.likedIds, [id]: res.liked },
           items: s.items.map((x) =>
-            x.id === id ? mergeFolklore(x, res.data) : x
+            x.id === id ? mergeFolklore(x, res.data) : x,
           ),
           selected:
             s.selected?.id === id
@@ -259,7 +273,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
                 ...x,
                 likesCount: Math.max(0, x.likesCount + (wasLiked ? 1 : -1)),
               }
-            : x
+            : x,
         ),
         selected:
           s.selected?.id === id
@@ -267,7 +281,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
                 ...s.selected,
                 likesCount: Math.max(
                   0,
-                  s.selected.likesCount + (wasLiked ? 1 : -1)
+                  s.selected.likesCount + (wasLiked ? 1 : -1),
                 ),
               }
             : s.selected,

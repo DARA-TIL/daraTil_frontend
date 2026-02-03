@@ -32,7 +32,7 @@ const FolkloreAdminPage: React.FC = () => {
   const { t: tFolklore } = useTranslation("folklore");
 
   const loading = useFolkloreAdminStore((s) => s.loading);
-  const fetchAll = useFolkloreAdminStore((s) => s.fetchAll);
+  const fetchAllIfNeeded = useFolkloreAdminStore((s) => s.fetchAllIfNeeded);
   const remove = useFolkloreAdminStore((s) => s.remove);
 
   const filters = useFolkloreAdminStore((s) => s.filters);
@@ -41,8 +41,8 @@ const FolkloreAdminPage: React.FC = () => {
   const getFilteredItems = useFolkloreAdminStore((s) => s.getFilteredItems);
 
   useEffect(() => {
-    fetchAll();
-  }, [fetchAll]);
+    fetchAllIfNeeded();
+  }, [fetchAllIfNeeded]);
 
   const rows = useMemo(() => getFilteredItems(), [getFilteredItems, filters]);
 

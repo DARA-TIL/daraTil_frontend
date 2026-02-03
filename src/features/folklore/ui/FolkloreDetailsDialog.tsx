@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Stack,
   Tab,
   Tabs,
   Typography,
@@ -17,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useFolkloreStore } from "../store/useFolkloreStore";
 import { getTranslationByLang, normalizeTabLang } from "../model/helpers";
 import type { FolkloreTabLang } from "../model/types";
+import { SmartMedia } from "@/widgets/SmartMedia/SmartMedia";
 
 export const FolkloreDetailsDialog: React.FC = () => {
   const { i18n, t } = useTranslation("folklore");
@@ -129,9 +129,12 @@ export const FolkloreDetailsDialog: React.FC = () => {
         ) : null}
 
         {selected?.mediaUrl ? (
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
-            <audio controls src={selected.mediaUrl} style={{ width: "100%" }} />
-          </Stack>
+          <Box sx={{ mt: 2 }}>
+            <SmartMedia
+              url={selected.mediaUrl}
+              typeHint="audio"
+            />
+          </Box>
         ) : null}
       </DialogContent>
     </Dialog>

@@ -28,13 +28,7 @@ import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
 
-const BLOCK_TYPES: LessonBlockType[] = [
-  "text",
-  "image",
-  "audio",
-  "video",
-  "youtube",
-];
+const BLOCK_TYPES: LessonBlockType[] = ["text", "image", "audio", "video"];
 
 function isTextBlock(t: string) {
   return String(t).toLowerCase() === "text";
@@ -520,35 +514,6 @@ const LessonEditPage: React.FC = () => {
                       multiline
                       minRows={5}
                     />
-                  ) : blockDraft.type === "youtube" ? (
-                    <>
-                      <TextField
-                        label="YouTube URL"
-                        value={blockDraft.contentUrl}
-                        onChange={(e) =>
-                          setBlockDraft((s) => ({
-                            ...s,
-                            contentUrl: e.target.value,
-                          }))
-                        }
-                        fullWidth
-                        helperText="Paste YouTube link (youtube.com or youtu.be)"
-                      />
-
-                      <TextField
-                        label="Caption (optional)"
-                        value={blockDraft.contentText}
-                        onChange={(e) =>
-                          setBlockDraft((s) => ({
-                            ...s,
-                            contentText: e.target.value,
-                          }))
-                        }
-                        fullWidth
-                        multiline
-                        minRows={2}
-                      />
-                    </>
                   ) : (
                     <>
                       <FileUploadField
