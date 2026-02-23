@@ -3,6 +3,7 @@ import { Box, Button, Paper, Stack, Typography, useTheme } from "@mui/material";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 const AdminPage: React.FC = () => {
   const theme = useTheme();
@@ -74,6 +75,13 @@ const AdminPage: React.FC = () => {
           subtitle="Create lessons and manage ordered blocks."
           icon={<MenuBookIcon />}
           to="/app/admin/lessons"
+        />
+
+        <Card
+          title="Users management"
+          subtitle="Search users, edit roles, update profile data."
+          icon={<PeopleAltIcon />}
+          to="/app/admin/users"
         />
       </Stack>
     </Box>

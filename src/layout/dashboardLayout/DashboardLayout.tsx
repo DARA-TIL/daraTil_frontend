@@ -1,5 +1,5 @@
 // src/layout/dashboardLayout/DashboardLayout.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -49,6 +49,16 @@ const DashboardLayout: React.FC = () => {
   const menuItems = profileMenuItems.filter((x) =>
     x.path.startsWith("/app/admin") ? isAdmin : true,
   );
+
+  const isAuth = useAuthStore((s) => s.isAuth);
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const checkAuth = useAuthStore((s) => s.checkAuth);
+
+  useEffect(() => {
+    if (isAuth && !user && !isLoading) {
+      checkAuth();
+    }
+  }, [isAuth, user, isLoading, checkAuth]);
 
   const drawerContent = (
     <Box

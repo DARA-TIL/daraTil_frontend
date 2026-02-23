@@ -23,6 +23,8 @@ import LessonDetailsPage from "@/pages/lessons/LessonDetailsPage";
 import LessonEditPage from "@/pages/admin/lessons/LessonEditPage";
 import LessonsAdminPage from "@/pages/admin/lessons/LessonsAdminPage";
 import LessonCreatePage from "@/pages/admin/lessons/LessonCreatePage";
+import UsersAdminPage from "@/pages/admin/users/UsersAdminPage";
+import UserEditAdminPage from "@/pages/admin/users/UserEditAdminPage";
 
 export interface AppRouteConfig {
   path?: string;
@@ -147,6 +149,22 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <LessonEditPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/users",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <UsersAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/users/:id/edit",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <UserEditAdminPage />
               </ProtectedRoute>
             ),
           },

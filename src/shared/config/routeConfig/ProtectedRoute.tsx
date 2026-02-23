@@ -26,14 +26,14 @@ const ProtectedRoute: React.FC<Props> = ({ children, requiredRole }) => {
 
   // ⚠️ Не запускаем checkAuth если сейчас идёт OAuth
   const search = new URLSearchParams(location.search);
-  if (search.get("oauth") === "google") return null;
+  const isOauthFlow =
+    search.get("oauth") === "google" || search.get("oauth") === "github";
 
   // если авторизован, но user ещё не подгружен - подгружаем
   useEffect(() => {
-    if (isAuth && !user && !isLoading) {
-      checkAuth();
-    }
-  }, [isAuth, user, isLoading, checkAuth]);
+    if (isOauthFlow) return;
+    if (isAuth && !user && !isLoading) checkAuth();
+  }, [isOauthFlow, isAuth, user, isLoading, checkAuth]);
 
   const required = useMemo(() => {
     if (!requiredRole) return null;

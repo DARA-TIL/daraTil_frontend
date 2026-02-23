@@ -4,28 +4,32 @@ import type { IUser } from "@/features/auth/model/IUser";
 import AuthService from "@/features/auth/api/AuthService";
 import $api from "@/shared/api/http";
 import { useUiStore } from "../../../shared/store/useUiStore";
+import ProfileService from "@/features/profile/api/ProfileService";
 
 function normalizeUserFromBackend(payload: any): IUser | null {
   if (!payload) return null;
 
-  // /auth/me -> { user: {...} }
-  // /auth/login, /auth/refresh могут вернуть { accessToken, user: {...} }
   const u = payload.user ?? payload.data?.user ?? payload.data ?? payload;
   if (!u || typeof u !== "object") return null;
 
-  const progress = u.progress ?? {};
+  const p = u.progress ?? u.Progress ?? null;
 
   return {
     id: u.id ?? u.ID ?? 0,
-    username: u.username ?? "",
-    email: u.email ?? "",
-    avatar: u.avatar ?? "",
-    role: u.role ?? "",
-    level: progress.level ?? u.level ?? 0,
-    experience: progress.XpTotal ?? progress.xpTotal ?? u.experience ?? 0,
-    authProvider: u.authProvider ?? "",
-    createdAt: u.createdAt ?? u.CreatedAt,
-    updatedAt: u.updatedAt ?? u.UpdatedAt,
+    username: u.username ?? u.Username ?? "",
+    email: u.email ?? u.Email ?? "",
+    avatar: u.avatar ?? u.Avatar ?? "",
+    role: u.role ?? u.Role ?? "",
+    authProvider: u.authProvider ?? u.AuthProvider ?? "",
+    progress: p
+      ? {
+          id: p.id ?? p.ID ?? 0,
+          level: p.level ?? p.Level ?? 0,
+          xpTotal: p.XpTotal ?? p.xpTotal ?? 0,
+          xpForNextLevel: p.XpForNextLevel ?? p.xpForNextLevel ?? 1,
+          userID: p.userID ?? p.UserID ?? 0,
+        }
+      : null,
   };
 }
 
@@ -46,6 +50,11 @@ interface AuthState {
   ) => Promise<IUser | null>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<IUser | null>;
+  updateProfile: (data: {
+    avatar?: string;
+    password?: string;
+    username?: string;
+  }) => Promise<IUser | null>;
 }
 
 export const useAuthStore = create<AuthState>((set) => {
@@ -100,7 +109,12 @@ export const useAuthStore = create<AuthState>((set) => {
 
       // 2) либо токена нет, либо он истек - пробуем /auth/refresh
       try {
-        const refreshResponse = await $api.get("/auth/refresh");
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        const refreshResponse = await $api.post(
+          "/auth/refresh",
+          refreshToken ? { refreshToken } : {},
+        );
 
         const accessToken = refreshResponse.data?.accessToken;
         const user = normalizeUserFromBackend(refreshResponse.data);
@@ -149,6 +163,9 @@ export const useAuthStore = create<AuthState>((set) => {
         localStorage.removeItem("loggedOut");
       }
 
+      const refreshToken = response.data?.refreshToken;
+      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+
       const user = normalizeUserFromBackend(response.data);
       set({
         isAuth: Boolean(user),
@@ -167,6 +184,9 @@ export const useAuthStore = create<AuthState>((set) => {
         localStorage.removeItem("loggedOut");
       }
 
+      const refreshToken = response.data?.refreshToken;
+      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+
       const user = normalizeUserFromBackend(response.data);
       set({
         isAuth: Boolean(user),
@@ -183,6 +203,7 @@ export const useAuthStore = create<AuthState>((set) => {
         console.log("logout error:", e.response?.data || e.message);
       } finally {
         localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
         localStorage.setItem("loggedOut", "true");
 
         set({
@@ -204,6 +225,18 @@ export const useAuthStore = create<AuthState>((set) => {
         });
       }
       return checkAuthPromise;
+    },
+
+    updateProfile: async (data) => {
+      try {
+        const updated = await ProfileService.updateSelf(data);
+        set({ user: updated });
+        useUiStore.getState().showSnackbar("Profile updated", "success");
+        return updated;
+      } catch (e) {
+        useUiStore.getState().showSnackbar("Failed to update profile", "error");
+        return null;
+      }
     },
   };
 });

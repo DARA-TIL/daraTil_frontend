@@ -53,7 +53,7 @@ const Register: React.FC = () => {
         const user = await registerFn(
           values.name,
           values.email,
-          values.password
+          values.password,
         );
 
         if (user) {
@@ -76,6 +76,18 @@ const Register: React.FC = () => {
           const backendError = (error.response.data as any).error;
           if (backendError) {
             msg = backendError;
+          }
+        }
+
+        // внутри catch
+        if (axios.isAxiosError(error) && error.response) {
+          const status = error.response.status;
+
+          if (status === 409) {
+            msg = t("errors.userAlreadyExists"); // добавь в i18n
+          } else {
+            const backendError = (error.response.data as any)?.error;
+            if (backendError) msg = String(backendError);
           }
         }
 

@@ -1,20 +1,16 @@
 import React from "react";
-import {
-  Box,
-  LinearProgress,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 export const ProgressCard: React.FC = () => {
   const { t } = useTranslation("dashboard");
 
-  // сюда потом можно подставлять данные из API / стора
-  const level = 3;
-  const currentXp = 1450;
-  const nextXp = 2000;
+  const user = useAuthStore((s) => s.user);
+
+  const level = user?.progress?.level ?? 0;
+  const currentXp = user?.progress?.xpTotal ?? 0;
+  const nextXp = user?.progress?.xpForNextLevel ?? 1;
   const progress = Math.round((currentXp / nextXp) * 100);
 
   const completedLessons = 18;
@@ -150,8 +146,7 @@ export const ProgressCard: React.FC = () => {
                 : "rgba(31,41,55,0.95)",
             "& .MuiLinearProgress-bar": {
               borderRadius: 999,
-              backgroundImage:
-                "linear-gradient(90deg,#22c55e,#a3e635,#facc15)",
+              backgroundImage: "linear-gradient(90deg,#22c55e,#a3e635,#facc15)",
               boxShadow: "0 0 0 1px rgba(255,255,255,0.5)",
             },
           })}
@@ -203,10 +198,7 @@ export const ProgressCard: React.FC = () => {
               justifyContent: "center",
               fontSize: 13,
               fontWeight: 600,
-              color:
-                theme.palette.mode === "light"
-                  ? "#1d4ed8"
-                  : "#bfdbfe",
+              color: theme.palette.mode === "light" ? "#1d4ed8" : "#bfdbfe",
             })}
           >
             {completedLessons}
@@ -242,10 +234,7 @@ export const ProgressCard: React.FC = () => {
               justifyContent: "center",
               fontSize: 13,
               fontWeight: 600,
-              color:
-                theme.palette.mode === "light"
-                  ? "#15803d"
-                  : "#bbf7d0",
+              color: theme.palette.mode === "light" ? "#15803d" : "#bbf7d0",
             })}
           >
             {wordsLearned}
@@ -281,10 +270,7 @@ export const ProgressCard: React.FC = () => {
               justifyContent: "center",
               fontSize: 13,
               fontWeight: 600,
-              color:
-                theme.palette.mode === "light"
-                  ? "#92400e"
-                  : "#fef9c3",
+              color: theme.palette.mode === "light" ? "#92400e" : "#fef9c3",
             })}
           >
             {t("cards.timeShort", { hours: timeHours })}
