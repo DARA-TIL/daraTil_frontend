@@ -10,6 +10,8 @@ import enMap from "./locales/en/map.json";
 import enDashboard from "./locales/en/dashboard.json";
 import enFolklore from "./locales/en/folklore.json";
 import enAdmin from "./locales/en/admin.json";
+import enLessons from "./locales/en/lessons.json";
+import enTests from "./locales/en/tests.json";
 
 // RU
 import ruNavbar from "./locales/ru/navbar.json";
@@ -19,6 +21,8 @@ import ruMap from "./locales/ru/map.json";
 import ruDashboard from "./locales/ru/dashboard.json";
 import ruFolklore from "./locales/ru/folklore.json";
 import ruAdmin from "./locales/ru/admin.json";
+import ruLessons from "./locales/ru/lessons.json";
+import ruTests from "./locales/ru/tests.json";
 
 // KZ
 import kzNavbar from "./locales/kz/navbar.json";
@@ -28,6 +32,8 @@ import kzMap from "./locales/kz/map.json";
 import kzDashboard from "./locales/kz/dashboard.json";
 import kzFolklore from "./locales/kz/folklore.json";
 import kzAdmin from "./locales/kz/admin.json";
+import kzLessons from "./locales/kz/lessons.json";
+import kzTests from "./locales/kz/tests.json";
 
 i18n
   .use(LanguageDetector)
@@ -47,6 +53,8 @@ i18n
         dashboard: enDashboard,
         folklore: enFolklore,
         admin: enAdmin,
+        lessons: enLessons,
+        tests: enTests,
       },
       ru: {
         navbar: ruNavbar,
@@ -56,6 +64,8 @@ i18n
         dashboard: ruDashboard,
         folklore: ruFolklore,
         admin: ruAdmin,
+        lessons: ruLessons,
+        tests: ruTests,
       },
       kz: {
         navbar: kzNavbar,
@@ -65,6 +75,8 @@ i18n
         dashboard: kzDashboard,
         folklore: kzFolklore,
         admin: kzAdmin,
+        lessons: kzLessons,
+        tests: kzTests,
       },
     },
     ns: ["navbar", "auth", "home", "map", "dashboard", "folklore", "admin"],

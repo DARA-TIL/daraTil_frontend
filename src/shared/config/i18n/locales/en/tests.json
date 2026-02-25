@@ -1,0 +1,116 @@
+{
+  "section": {
+    "title": "Lesson test",
+    "subtitle": "Complete the quiz to finish the lesson."
+  },
+  "actions": {
+    "startTest": "Start test",
+    "reset": "Reset",
+    "backToLessons": "Back to lessons",
+    "retryImprove": "Retry to improve",
+    "reviewBlocks": "Review lesson blocks"
+  },
+  "state": {
+    "noTest": "No test attached to this lesson yet.",
+    "loadingTest": "Loading test..."
+  },
+  "quiz": {
+    "empty": "No questions in this test yet.",
+    "progress": {
+      "question": "Question {{current}}/{{total}}",
+      "answered": "Answered {{answered}}/{{total}}"
+    },
+    "actions": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit answers",
+      "goToFirstUnanswered": "Go to first unanswered"
+    },
+    "validation": {
+      "answerAll": "Please answer all questions before submitting."
+    }
+  },
+  "finish": {
+    "xpBadge": "+{{xp}} XP",
+    "titlePassed": "Passed - score {{score}}%",
+    "titleFailed": "Failed - score {{score}}%",
+    "desc": {
+      "xpGrantedImproved": "XP granted - you improved your best result.",
+      "passedNoXp": "Passed - no XP (result not improved).",
+      "noXp": "No XP granted."
+    },
+    "stats": {
+      "xpGained": "XP gained: {{xp}}",
+      "level": "Level: {{prev}} - {{current}}"
+    }
+  },
+  "admin": {
+    "empty": {
+      "title": "Lesson test",
+      "subtitle": "This lesson has no test yet. Create one to enable quiz at the end of the lesson.",
+      "createTest": "Create test"
+    },
+    "header": {
+      "title": "Test #{{id}}",
+      "summaryLine": "Questions: {{total}} - Ready: {{ready}} - With at least 1 correct: {{withCorrect}}",
+      "rules": "Rules: each question must have >=2 options and exactly 1 correct option."
+    },
+    "badges": {
+      "unsavedChanges": "Unsaved changes",
+      "ready": "Ready",
+      "invalid": "Invalid",
+      "noQuestions": "No questions",
+      "invalidCount": "Invalid: {{count}}"
+    },
+    "actions": {
+      "resetChanges": "Reset changes",
+      "saveAllChanges": "Save all changes",
+      "deleteTest": "Delete test",
+      "deleteQuestion": "Delete question",
+      "addOption": "Add option",
+      "saveOption": "Save",
+      "deleteOption": "Delete"
+    },
+    "confirms": {
+      "deleteTest": "Delete this test? This will remove all questions.",
+      "deleteQuestion": "Delete this question and all its options?",
+      "deleteOption": "Delete this option?"
+    },
+    "addQuestion": {
+      "label": "New question",
+      "add": "Add"
+    },
+    "fields": {
+      "questionText": "Question text",
+      "optionsTitle": "Options",
+      "newOption": "New option",
+      "isCorrect": "isCorrect"
+    },
+    "validation": {
+      "minOptions": "Need at least 2 options",
+      "oneCorrect": "Need exactly 1 correct option"
+    },
+    "question": {
+      "title": "Q#{{id}}",
+      "validHint": "Single-choice question is valid.",
+      "correctCount": "Correct: {{count}}",
+      "noCorrect": "No correct",
+      "optionsCount": "Options: {{count}}"
+    },
+    "option": {
+      "label": "Option #{{id}}",
+      "correct": "correct"
+    },
+    "boolean": {
+      "true": "true",
+      "false": "false"
+    },
+    "quick": {
+      "button": "Add 3 options quickly",
+      "tooltip": "Adds 3 placeholder options quickly",
+      "optionA": "Option A",
+      "optionB": "Option B",
+      "optionC": "Option C"
+    }
+  }
+}

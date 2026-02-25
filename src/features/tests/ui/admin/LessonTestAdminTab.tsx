@@ -15,13 +15,35 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import AutoFixHighOutlinedIcon from "@mui/icons-material/AutoFixHighOutlined";
 import { useTestAdminStore } from "../../store/useTestAdminStore";
 import type { QuestionDto, QuestionOptionDto } from "../../model/types";
+import { useTranslation } from "react-i18next";
 
 type Props = { lessonId: number };
 
+type IssueKey = "minOptions" | "oneCorrect";
+
+function validateQuestion(q: QuestionDto) {
+  const opts = q.options ?? [];
+  const correctCount = opts.filter((o) => o.isCorrect).length;
+
+  const hasMinOptions = opts.length >= 2;
+  const hasSingleCorrect = correctCount === 1;
+
+  const ok = hasMinOptions && hasSingleCorrect;
+
+  const issues: IssueKey[] = [];
+  if (!hasMinOptions) issues.push("minOptions");
+  if (!hasSingleCorrect) issues.push("oneCorrect");
+
+  return { ok, issues, correctCount, optionsCount: opts.length };
+}
+
 const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
   const theme = useTheme();
+  const { t } = useTranslation("tests");
 
   const test = useTestAdminStore((s) => s.test);
   const loading = useTestAdminStore((s) => s.loading);
@@ -51,26 +73,32 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
   const [newQuestionText, setNewQuestionText] = useState("");
   const hasDraft = Boolean(draft && draft.questionsUpd?.length);
 
-  const totalQuestions = test?.questions?.length ?? 0;
+  const questions = test?.questions ?? [];
 
-  const correctCount = useMemo(() => {
-    const q = test?.questions ?? [];
-    let c = 0;
-    q.forEach((qq) => {
-      if (qq.options?.some((o) => o.isCorrect)) c += 1;
+  const summary = useMemo(() => {
+    const total = questions.length;
+    let ready = 0;
+    let invalid = 0;
+    let withCorrect = 0;
+
+    questions.forEach((q) => {
+      const v = validateQuestion(q);
+      if (v.ok) ready += 1;
+      else invalid += 1;
+      if (v.correctCount > 0) withCorrect += 1;
     });
-    return c;
-  }, [test?.questions]);
+
+    return { total, ready, invalid, withCorrect };
+  }, [questions]);
 
   if (!test) {
     return (
       <Box sx={{ p: 2.2 }}>
         <Stack gap={2}>
           <Box>
-            <Typography fontWeight={900}>Lesson test</Typography>
+            <Typography fontWeight={900}>{t("admin.empty.title")}</Typography>
             <Typography color="text.secondary">
-              This lesson has no test yet. Create one to enable quiz at the end
-              of the lesson.
+              {t("admin.empty.subtitle")}
             </Typography>
           </Box>
 
@@ -84,7 +112,7 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
               boxShadow: "0 10px 24px rgba(15,23,42,0.25)",
             }}
           >
-            Create test
+            {t("admin.empty.createTest")}
           </Button>
         </Stack>
       </Box>
@@ -94,7 +122,6 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
   return (
     <Box sx={{ p: 2.2 }}>
       <Stack gap={2}>
-        {/* Header */}
         <Paper
           elevation={0}
           sx={{
@@ -112,10 +139,85 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
             gap={2}
           >
             <Box>
-              <Typography fontWeight={900}>Test #{test.id}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Questions: {totalQuestions} - With at least 1 correct option:{" "}
-                {correctCount}
+              <Stack
+                direction="row"
+                gap={1}
+                alignItems="center"
+                flexWrap="wrap"
+                useFlexGap
+              >
+                <Typography fontWeight={900}>
+                  {t("admin.header.title", { id: test.id })}
+                </Typography>
+
+                {hasDraft && (
+                  <Chip
+                    size="small"
+                    label={t("admin.badges.unsavedChanges")}
+                    sx={{
+                      borderRadius: 999,
+                      border: "1px solid",
+                      borderColor: theme.customColors.sidebarBorder,
+                      bgcolor:
+                        theme.palette.mode === "light"
+                          ? "rgba(251,191,36,0.14)"
+                          : "rgba(251,191,36,0.22)",
+                      fontWeight: 800,
+                    }}
+                  />
+                )}
+
+                {summary.invalid === 0 && summary.total > 0 ? (
+                  <Chip
+                    size="small"
+                    icon={<CheckCircleOutlineIcon />}
+                    label={t("admin.badges.ready")}
+                    sx={{
+                      borderRadius: 999,
+                      border: "1px solid",
+                      borderColor: theme.customColors.sidebarBorder,
+                      bgcolor:
+                        theme.palette.mode === "light"
+                          ? "rgba(34,197,94,0.10)"
+                          : "rgba(34,197,94,0.18)",
+                      fontWeight: 800,
+                    }}
+                  />
+                ) : (
+                  <Chip
+                    size="small"
+                    icon={<ErrorOutlineIcon />}
+                    label={
+                      summary.total === 0
+                        ? t("admin.badges.noQuestions")
+                        : t("admin.badges.invalidCount", {
+                            count: summary.invalid,
+                          })
+                    }
+                    sx={{
+                      borderRadius: 999,
+                      border: "1px solid",
+                      borderColor: theme.customColors.sidebarBorder,
+                      bgcolor:
+                        theme.palette.mode === "light"
+                          ? "rgba(239,68,68,0.10)"
+                          : "rgba(239,68,68,0.18)",
+                      fontWeight: 800,
+                    }}
+                  />
+                )}
+              </Stack>
+
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 0.4 }}
+              >
+                {t("admin.header.summaryLine", summary)}
+              </Typography>
+
+              <Typography variant="caption" color="text.secondary">
+                {t("admin.header.rules")}
               </Typography>
             </Box>
 
@@ -124,13 +226,15 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
               gap={1}
               flexShrink={0}
               justifyContent="flex-end"
+              flexWrap="wrap"
+              useFlexGap
             >
               <Button
                 variant="outlined"
                 disabled={!hasDraft || loading}
                 onClick={clearDraft}
               >
-                Reset changes
+                {t("admin.actions.resetChanges")}
               </Button>
 
               <Button
@@ -140,7 +244,7 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
                 onClick={saveDraft}
                 sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
               >
-                Save all changes
+                {t("admin.actions.saveAllChanges")}
               </Button>
 
               <Button
@@ -149,20 +253,17 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
                 startIcon={<DeleteOutlineIcon />}
                 disabled={loading}
                 onClick={async () => {
-                  const ok = window.confirm(
-                    "Delete this test? This will remove all questions.",
-                  );
+                  const ok = window.confirm(t("admin.confirms.deleteTest"));
                   if (!ok) return;
                   await deleteTest(test.id, lessonId);
                 }}
               >
-                Delete test
+                {t("admin.actions.deleteTest")}
               </Button>
             </Stack>
           </Stack>
         </Paper>
 
-        {/* Add question */}
         <Paper
           elevation={0}
           sx={{
@@ -179,7 +280,7 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
             alignItems={{ xs: "stretch", md: "center" }}
           >
             <TextField
-              label="New question"
+              label={t("admin.addQuestion.label")}
               value={newQuestionText}
               onChange={(e) => setNewQuestionText(e.target.value)}
               fullWidth
@@ -199,14 +300,13 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
               }}
               sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
             >
-              Add
+              {t("admin.addQuestion.add")}
             </Button>
           </Stack>
         </Paper>
 
-        {/* Questions list */}
         <Stack gap={1.5}>
-          {(test.questions ?? []).map((q) => (
+          {questions.map((q) => (
             <QuestionCard
               key={q.id}
               lessonId={lessonId}
@@ -266,13 +366,22 @@ function QuestionCard(props: {
     theme,
   } = props;
 
+  const { t } = useTranslation("tests");
+
   const [qText, setQText] = useState(q.text ?? "");
   useEffect(() => setQText(q.text ?? ""), [q.text]);
 
   const [newOptText, setNewOptText] = useState("");
   const [newOptCorrect, setNewOptCorrect] = useState(false);
 
-  const hasCorrect = (q.options ?? []).some((o) => o.isCorrect);
+  const validation = useMemo(() => validateQuestion(q), [q.options, q.text]);
+  const hasCorrect = validation.correctCount > 0;
+
+  const add3Quick = async () => {
+    await onAddOption(t("admin.quick.optionA"), false);
+    await onAddOption(t("admin.quick.optionB"), false);
+    await onAddOption(t("admin.quick.optionC"), false);
+  };
 
   return (
     <Paper
@@ -281,7 +390,9 @@ function QuestionCard(props: {
         p: 2,
         borderRadius: 4,
         border: "1px solid",
-        borderColor: theme.customColors.sidebarBorder,
+        borderColor: validation.ok
+          ? theme.customColors.sidebarBorder
+          : theme.palette.error.main,
         backgroundColor: "background.paper",
       }}
     >
@@ -301,14 +412,14 @@ function QuestionCard(props: {
               useFlexGap
             >
               <Typography fontWeight={900} noWrap>
-                Q#{q.id}
+                {t("admin.question.title", { id: q.id })}
               </Typography>
 
-              {hasCorrect ? (
+              {validation.ok ? (
                 <Chip
                   size="small"
                   icon={<CheckCircleOutlineIcon />}
-                  label="Has correct option"
+                  label={t("admin.badges.ready")}
                   sx={{
                     borderRadius: 999,
                     border: "1px solid",
@@ -317,13 +428,14 @@ function QuestionCard(props: {
                       theme.palette.mode === "light"
                         ? "rgba(34,197,94,0.10)"
                         : "rgba(34,197,94,0.18)",
-                    fontWeight: 700,
+                    fontWeight: 800,
                   }}
                 />
               ) : (
                 <Chip
                   size="small"
-                  label="No correct option"
+                  icon={<ErrorOutlineIcon />}
+                  label={t("admin.badges.invalid")}
                   sx={{
                     borderRadius: 999,
                     border: "1px solid",
@@ -332,36 +444,118 @@ function QuestionCard(props: {
                       theme.palette.mode === "light"
                         ? "rgba(239,68,68,0.10)"
                         : "rgba(239,68,68,0.18)",
+                    fontWeight: 800,
+                  }}
+                />
+              )}
+
+              {hasCorrect ? (
+                <Chip
+                  size="small"
+                  icon={<CheckCircleOutlineIcon />}
+                  label={t("admin.question.correctCount", {
+                    count: validation.correctCount,
+                  })}
+                  sx={{
+                    borderRadius: 999,
+                    border: "1px solid",
+                    borderColor: theme.customColors.sidebarBorder,
+                    bgcolor:
+                      theme.palette.mode === "light"
+                        ? "rgba(34,197,94,0.08)"
+                        : "rgba(34,197,94,0.14)",
+                    fontWeight: 700,
+                  }}
+                />
+              ) : (
+                <Chip
+                  size="small"
+                  label={t("admin.question.noCorrect")}
+                  sx={{
+                    borderRadius: 999,
+                    border: "1px solid",
+                    borderColor: theme.customColors.sidebarBorder,
+                    bgcolor:
+                      theme.palette.mode === "light"
+                        ? "rgba(239,68,68,0.08)"
+                        : "rgba(239,68,68,0.14)",
                     fontWeight: 700,
                   }}
                 />
               )}
+
+              <Chip
+                size="small"
+                label={t("admin.question.optionsCount", {
+                  count: validation.optionsCount,
+                })}
+                sx={{
+                  borderRadius: 999,
+                  border: "1px solid",
+                  borderColor: theme.customColors.sidebarBorder,
+                  fontWeight: 700,
+                }}
+              />
             </Stack>
-            <Typography variant="body2" color="text.secondary">
-              Edit question text and options. Use "Save all changes" for bulk
-              edits.
-            </Typography>
+
+            {!validation.ok ? (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 0.4 }}
+              >
+                {validation.issues
+                  .map((k) => t(`admin.validation.${k}`))
+                  .join(" - ")}
+              </Typography>
+            ) : (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 0.4 }}
+              >
+                {t("admin.question.validHint")}
+              </Typography>
+            )}
           </Box>
 
-          <Button
-            variant="text"
-            color="error"
-            startIcon={<DeleteOutlineIcon />}
-            disabled={loading}
-            onClick={async () => {
-              const ok = window.confirm(
-                "Delete this question and all its options?",
-              );
-              if (!ok) return;
-              await onDelete();
-            }}
+          <Stack
+            direction="row"
+            gap={1}
+            flexShrink={0}
+            justifyContent="flex-end"
+            flexWrap="wrap"
+            useFlexGap
           >
-            Delete question
-          </Button>
+            <Button
+              variant="outlined"
+              startIcon={<AutoFixHighOutlinedIcon />}
+              disabled={loading}
+              onClick={add3Quick}
+              sx={{ borderRadius: 999 }}
+              title={t("admin.quick.tooltip")}
+            >
+              {t("admin.quick.button")}
+            </Button>
+
+            <Button
+              variant="text"
+              color="error"
+              startIcon={<DeleteOutlineIcon />}
+              disabled={loading}
+              onClick={async () => {
+                const ok = window.confirm(t("admin.confirms.deleteQuestion"));
+                if (!ok) return;
+                await onDelete();
+              }}
+            >
+              {t("admin.actions.deleteQuestion")}
+            </Button>
+          </Stack>
         </Stack>
 
         <TextField
-          label="Question text"
+          label={t("admin.fields.questionText")}
           value={qText}
           onChange={(e) => {
             const v = e.target.value;
@@ -373,7 +567,9 @@ function QuestionCard(props: {
 
         <Divider />
 
-        <Typography fontWeight={900}>Options</Typography>
+        <Typography fontWeight={900}>
+          {t("admin.fields.optionsTitle")}
+        </Typography>
 
         <Stack gap={1}>
           {(q.options ?? []).map((o) => (
@@ -393,23 +589,22 @@ function QuestionCard(props: {
 
         <Divider />
 
-        {/* Add option */}
         <Stack direction={{ xs: "column", md: "row" }} gap={2}>
           <TextField
-            label="New option"
+            label={t("admin.fields.newOption")}
             value={newOptText}
             onChange={(e) => setNewOptText(e.target.value)}
             fullWidth
           />
           <TextField
-            label="isCorrect"
+            label={t("admin.fields.isCorrect")}
             value={newOptCorrect ? "true" : "false"}
             onChange={(e) => setNewOptCorrect(e.target.value === "true")}
             select
             sx={{ minWidth: { md: 180 } }}
           >
-            <MenuItem value="false">false</MenuItem>
-            <MenuItem value="true">true</MenuItem>
+            <MenuItem value="false">{t("admin.boolean.false")}</MenuItem>
+            <MenuItem value="true">{t("admin.boolean.true")}</MenuItem>
           </TextField>
 
           <Button
@@ -427,7 +622,7 @@ function QuestionCard(props: {
             }}
             sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
           >
-            Add option
+            {t("admin.actions.addOption")}
           </Button>
         </Stack>
       </Stack>
@@ -444,6 +639,7 @@ function OptionRow(props: {
   theme: any;
 }) {
   const { opt, loading, onSave, onDelete, onDraft, theme } = props;
+  const { t } = useTranslation("tests");
 
   const [text, setText] = useState(opt.text ?? "");
   const [isCorrect, setIsCorrect] = useState(Boolean(opt.isCorrect));
@@ -460,7 +656,9 @@ function OptionRow(props: {
         p: 1.4,
         borderRadius: 3,
         border: "1px solid",
-        borderColor: theme.customColors.sidebarBorder,
+        borderColor: isCorrect
+          ? theme.palette.success.main
+          : theme.customColors.sidebarBorder,
         backgroundColor:
           theme.palette.mode === "light"
             ? "rgba(255,255,255,0.85)"
@@ -473,7 +671,7 @@ function OptionRow(props: {
         alignItems={{ md: "center" }}
       >
         <TextField
-          label={`Option #${opt.id}`}
+          label={t("admin.option.label", { id: opt.id })}
           value={text}
           onChange={(e) => {
             const v = e.target.value;
@@ -484,21 +682,40 @@ function OptionRow(props: {
           size="small"
         />
 
-        <TextField
-          label="isCorrect"
-          value={isCorrect ? "true" : "false"}
-          onChange={(e) => {
-            const v = e.target.value === "true";
-            setIsCorrect(v);
-            onDraft({ isCorrect: v });
-          }}
-          select
-          size="small"
-          sx={{ minWidth: 160 }}
-        >
-          <MenuItem value="false">false</MenuItem>
-          <MenuItem value="true">true</MenuItem>
-        </TextField>
+        <Stack direction="row" gap={1} alignItems="center" flexShrink={0}>
+          {isCorrect && (
+            <Chip
+              size="small"
+              label={t("admin.option.correct")}
+              sx={{
+                borderRadius: 999,
+                fontWeight: 900,
+                bgcolor:
+                  theme.palette.mode === "light"
+                    ? "rgba(34,197,94,0.12)"
+                    : "rgba(34,197,94,0.20)",
+                border: "1px solid",
+                borderColor: theme.customColors.sidebarBorder,
+              }}
+            />
+          )}
+
+          <TextField
+            label={t("admin.fields.isCorrect")}
+            value={isCorrect ? "true" : "false"}
+            onChange={(e) => {
+              const v = e.target.value === "true";
+              setIsCorrect(v);
+              onDraft({ isCorrect: v });
+            }}
+            select
+            size="small"
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value="false">{t("admin.boolean.false")}</MenuItem>
+            <MenuItem value="true">{t("admin.boolean.true")}</MenuItem>
+          </TextField>
+        </Stack>
 
         <Stack direction="row" gap={1} flexShrink={0} justifyContent="flex-end">
           <Button
@@ -507,7 +724,7 @@ function OptionRow(props: {
             disabled={loading}
             onClick={() => onSave(text.trim(), isCorrect)}
           >
-            Save
+            {t("admin.actions.saveOption")}
           </Button>
 
           <Button
@@ -516,12 +733,12 @@ function OptionRow(props: {
             startIcon={<DeleteOutlineIcon />}
             disabled={loading}
             onClick={async () => {
-              const ok = window.confirm("Delete this option?");
+              const ok = window.confirm(t("admin.confirms.deleteOption"));
               if (!ok) return;
               await onDelete();
             }}
           >
-            Delete
+            {t("admin.actions.deleteOption")}
           </Button>
         </Stack>
       </Stack>

@@ -1,0 +1,116 @@
+{
+  "section": {
+    "title": "Тест урока",
+    "subtitle": "Пройдите тест, чтобы завершить урок."
+  },
+  "actions": {
+    "startTest": "Начать тест",
+    "reset": "Сбросить",
+    "backToLessons": "К урокам",
+    "retryImprove": "Повторить и улучшить",
+    "reviewBlocks": "Повторить блоки урока"
+  },
+  "state": {
+    "noTest": "К этому уроку пока не привязан тест.",
+    "loadingTest": "Загрузка теста..."
+  },
+  "quiz": {
+    "empty": "В этом тесте пока нет вопросов.",
+    "progress": {
+      "question": "Вопрос {{current}}/{{total}}",
+      "answered": "Отвечено {{answered}}/{{total}}"
+    },
+    "actions": {
+      "back": "Назад",
+      "next": "Далее",
+      "submit": "Отправить ответы",
+      "goToFirstUnanswered": "К первому без ответа"
+    },
+    "validation": {
+      "answerAll": "Пожалуйста, ответьте на все вопросы перед отправкой."
+    }
+  },
+  "finish": {
+    "xpBadge": "+{{xp}} XP",
+    "titlePassed": "Пройдено - результат {{score}}%",
+    "titleFailed": "Не пройдено - результат {{score}}%",
+    "desc": {
+      "xpGrantedImproved": "XP начислено - вы улучшили лучший результат.",
+      "passedNoXp": "Тест пройден - XP не начислено (результат не улучшен).",
+      "noXp": "XP не начислено."
+    },
+    "stats": {
+      "xpGained": "Получено XP: {{xp}}",
+      "level": "Уровень: {{prev}} - {{current}}"
+    }
+  },
+  "admin": {
+    "empty": {
+      "title": "Тест урока",
+      "subtitle": "К этому уроку пока нет теста. Создайте тест, чтобы включить квиз в конце урока.",
+      "createTest": "Создать тест"
+    },
+    "header": {
+      "title": "Тест #{{id}}",
+      "summaryLine": "Вопросов: {{total}} - Готово: {{ready}} - С хотя бы 1 правильным: {{withCorrect}}",
+      "rules": "Правила: у каждого вопроса >=2 варианта и ровно 1 правильный вариант."
+    },
+    "badges": {
+      "unsavedChanges": "Есть несохранённые изменения",
+      "ready": "Готово",
+      "invalid": "Ошибка",
+      "noQuestions": "Нет вопросов",
+      "invalidCount": "Ошибок: {{count}}"
+    },
+    "actions": {
+      "resetChanges": "Сбросить изменения",
+      "saveAllChanges": "Сохранить все изменения",
+      "deleteTest": "Удалить тест",
+      "deleteQuestion": "Удалить вопрос",
+      "addOption": "Добавить вариант",
+      "saveOption": "Сохранить",
+      "deleteOption": "Удалить"
+    },
+    "confirms": {
+      "deleteTest": "Удалить этот тест? Все вопросы будут удалены.",
+      "deleteQuestion": "Удалить этот вопрос и все его варианты?",
+      "deleteOption": "Удалить этот вариант?"
+    },
+    "addQuestion": {
+      "label": "Новый вопрос",
+      "add": "Добавить"
+    },
+    "fields": {
+      "questionText": "Текст вопроса",
+      "optionsTitle": "Варианты",
+      "newOption": "Новый вариант",
+      "isCorrect": "isCorrect"
+    },
+    "validation": {
+      "minOptions": "Нужно минимум 2 варианта",
+      "oneCorrect": "Нужен ровно 1 правильный вариант"
+    },
+    "question": {
+      "title": "В#{{id}}",
+      "validHint": "Вопрос с одним правильным вариантом корректен.",
+      "correctCount": "Правильных: {{count}}",
+      "noCorrect": "Нет правильного",
+      "optionsCount": "Вариантов: {{count}}"
+    },
+    "option": {
+      "label": "Вариант #{{id}}",
+      "correct": "правильный"
+    },
+    "boolean": {
+      "true": "true",
+      "false": "false"
+    },
+    "quick": {
+      "button": "Быстро добавить 3 варианта",
+      "tooltip": "Добавляет 3 шаблонных варианта быстро",
+      "optionA": "Вариант A",
+      "optionB": "Вариант B",
+      "optionC": "Вариант C"
+    }
+  }
+}

@@ -16,10 +16,12 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useNavigate } from "react-router-dom";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
+import { useTranslation } from "react-i18next";
 
 const LessonsAdminPage: React.FC = () => {
   const theme = useTheme();
   const nav = useNavigate();
+  const { t } = useTranslation("admin");
   const showSnackbar = useUiStore((s) => s.showSnackbar);
 
   const loading = useLessonsAdminStore((s) => s.loading);
@@ -55,10 +57,10 @@ const LessonsAdminPage: React.FC = () => {
       >
         <Box>
           <Typography variant="h5" fontWeight={900}>
-            Lessons Admin
+            {t("lessons.listTitle")}
           </Typography>
           <Typography color="text.secondary">
-            Manage lessons and ordered blocks.
+            {t("lessons.listSubtitle")}
           </Typography>
         </Box>
 
@@ -68,7 +70,7 @@ const LessonsAdminPage: React.FC = () => {
           onClick={() => nav("/app/admin/lessons/new")}
           sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
         >
-          Create lesson
+          {t("lessons.actions.createLesson")}
         </Button>
       </Stack>
 
@@ -83,7 +85,7 @@ const LessonsAdminPage: React.FC = () => {
       >
         <Stack direction={{ xs: "column", md: "row" }} gap={2}>
           <TextField
-            label="Search"
+            label={t("common.search")}
             value={filters.search}
             onChange={(e) => setFilter("search", e.target.value)}
             fullWidth
@@ -93,7 +95,7 @@ const LessonsAdminPage: React.FC = () => {
             onClick={resetFilters}
             sx={{ minWidth: 140 }}
           >
-            Reset
+            {t("common.reset")}
           </Button>
         </Stack>
       </Paper>
@@ -107,9 +109,9 @@ const LessonsAdminPage: React.FC = () => {
         }}
       >
         {loading ? (
-          <Typography color="text.secondary">Loading...</Typography>
+          <Typography color="text.secondary">{t("common.loading")}</Typography>
         ) : rows.length === 0 ? (
-          <Typography color="text.secondary">No lessons</Typography>
+          <Typography color="text.secondary">{t("lessons.empty")}</Typography>
         ) : (
           <Stack gap={1.2}>
             {rows.map((x) => (
@@ -133,37 +135,46 @@ const LessonsAdminPage: React.FC = () => {
                     {x.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" noWrap>
-                    Level {x.requiredLevel} - Reward {x.reward} - Blocks{" "}
-                    {x.blocks?.length ?? 0} - {x.author}
+                    {t("lessons.rowMeta", {
+                      level: x.requiredLevel ?? 0,
+                      reward: x.reward ?? 0,
+                      blocks: x.blocks?.length ?? 0,
+                      author: x.author ?? "",
+                    })}
                   </Typography>
                 </Box>
 
                 <Stack direction="row" gap={1} flexShrink={0}>
                   <IconButton
                     onClick={() => nav(`/app/lessons/${x.ID}`)}
-                    title="Open as user"
+                    title={t("lessons.actions.openAsUser")}
                   >
                     <OpenInNewIcon />
                   </IconButton>
 
                   <IconButton
                     onClick={() => nav(`/app/admin/lessons/${x.ID}/edit`)}
-                    title="Edit"
+                    title={t("common.edit")}
                   >
                     <EditIcon />
                   </IconButton>
 
                   <IconButton
-                    title="Delete"
+                    title={t("common.delete")}
                     onClick={async () => {
                       const ok = window.confirm(
-                        `Delete lesson "${x.name}"? This will delete all blocks.`,
+                        t("lessons.confirmDeleteLesson", { name: x.name }),
                       );
                       if (!ok) return;
 
                       const success = await remove(x.ID);
-                      if (success) showSnackbar("Lesson deleted", "success");
-                      else showSnackbar("Delete failed", "error");
+                      if (success)
+                        showSnackbar(t("lessons.snackbar.deleted"), "success");
+                      else
+                        showSnackbar(
+                          t("lessons.snackbar.deleteFailed"),
+                          "error",
+                        );
                     }}
                   >
                     <DeleteOutlineIcon />

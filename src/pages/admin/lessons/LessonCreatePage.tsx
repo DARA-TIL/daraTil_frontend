@@ -14,10 +14,12 @@ import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
+import { useTranslation } from "react-i18next";
 
 const LessonCreatePage: React.FC = () => {
   const theme = useTheme();
   const nav = useNavigate();
+  const { t } = useTranslation("admin");
   const showSnackbar = useUiStore((s) => s.showSnackbar);
 
   const create = useLessonsAdminStore((s) => s.create);
@@ -42,8 +44,9 @@ const LessonCreatePage: React.FC = () => {
     const maxMb = 5;
     const sizeMb = file.size / (1024 * 1024);
     const type = (file.type || "").toLowerCase();
-    if (!type.startsWith("image/")) return "Please select an image file.";
-    if (sizeMb > maxMb) return `Image is too large (max ${maxMb}MB).`;
+    if (!type.startsWith("image/")) return t("lessons.validation.imageType");
+    if (sizeMb > maxMb)
+      return t("lessons.validation.imageTooLarge", { max: maxMb });
     return null;
   };
 
@@ -65,7 +68,7 @@ const LessonCreatePage: React.FC = () => {
       set("imageUrl", res.secureUrl);
       return res.secureUrl;
     } catch {
-      showSnackbar("Image upload failed. Please try again.", "error");
+      showSnackbar(t("lessons.snackbar.imageUploadFailed"), "error");
       return null;
     } finally {
       setImageUploading(false);
@@ -83,7 +86,7 @@ const LessonCreatePage: React.FC = () => {
         mb={2}
       >
         <Typography variant="h5" fontWeight={900}>
-          Create lesson
+          {t("lessons.createTitle")}
         </Typography>
 
         <Button
@@ -91,7 +94,7 @@ const LessonCreatePage: React.FC = () => {
           onClick={() => nav("/app/admin/lessons")}
           disabled={busy}
         >
-          Back
+          {t("common.back")}
         </Button>
       </Stack>
 
@@ -106,13 +109,13 @@ const LessonCreatePage: React.FC = () => {
         <Stack gap={2}>
           <Stack direction={{ xs: "column", md: "row" }} gap={2}>
             <TextField
-              label="Name"
+              label={t("lessons.fields.name")}
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
               fullWidth
             />
             <TextField
-              label="Author"
+              label={t("lessons.fields.author")}
               value={form.author}
               onChange={(e) => set("author", e.target.value)}
               fullWidth
@@ -120,7 +123,7 @@ const LessonCreatePage: React.FC = () => {
           </Stack>
 
           <TextField
-            label="Description"
+            label={t("lessons.fields.description")}
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
             fullWidth
@@ -130,14 +133,14 @@ const LessonCreatePage: React.FC = () => {
 
           <Stack direction={{ xs: "column", md: "row" }} gap={2}>
             <TextField
-              label="Reward (XP)"
+              label={t("lessons.fields.reward")}
               value={form.reward}
               onChange={(e) => set("reward", Number(e.target.value) || 0)}
               type="number"
               sx={{ minWidth: { md: 220 } }}
             />
             <TextField
-              label="Required level"
+              label={t("lessons.fields.requiredLevel")}
               value={form.requiredLevel}
               onChange={(e) =>
                 set("requiredLevel", Number(e.target.value) || 0)
@@ -148,7 +151,7 @@ const LessonCreatePage: React.FC = () => {
           </Stack>
 
           <FileUploadField
-            label="Image"
+            label={t("lessons.fields.image")}
             urlValue={form.imageUrl ?? ""}
             onUrlChange={(v) => set("imageUrl", v.trim() ? v.trim() : null)}
             file={imageFile}
@@ -156,7 +159,7 @@ const LessonCreatePage: React.FC = () => {
             uploading={imageUploading}
             uploadedUrl={form.imageUrl}
             accept="image/*"
-            helperText="Paste URL or upload a file. Upload will be sent to Cloudinary."
+            helperText={t("lessons.helpers.upload")}
           />
 
           <Stack direction="row" gap={1} justifyContent="flex-end">
@@ -165,11 +168,14 @@ const LessonCreatePage: React.FC = () => {
               disabled={busy}
               onClick={async () => {
                 if (!form.name.trim()) {
-                  showSnackbar("Name is required", "warning");
+                  showSnackbar(t("lessons.validation.nameRequired"), "warning");
                   return;
                 }
                 if (!form.author.trim()) {
-                  showSnackbar("Author is required", "warning");
+                  showSnackbar(
+                    t("lessons.validation.authorRequired"),
+                    "warning",
+                  );
                   return;
                 }
 
@@ -185,16 +191,16 @@ const LessonCreatePage: React.FC = () => {
                 });
 
                 if (!created) {
-                  showSnackbar("Create failed", "error");
+                  showSnackbar(t("lessons.snackbar.createFailed"), "error");
                   return;
                 }
 
-                showSnackbar("Lesson created", "success");
+                showSnackbar(t("lessons.snackbar.created"), "success");
                 nav(`/app/admin/lessons/${created.ID}/edit`);
               }}
               sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
             >
-              Create
+              {t("common.create")}
             </Button>
           </Stack>
         </Stack>

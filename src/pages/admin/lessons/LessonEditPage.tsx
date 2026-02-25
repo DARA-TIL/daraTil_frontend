@@ -28,6 +28,7 @@ import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
 import LessonTestAdminTab from "@/features/tests/ui/admin/LessonTestAdminTab";
+import { useTranslation } from "react-i18next";
 
 const BLOCK_TYPES: LessonBlockType[] = ["text", "image", "audio", "video"];
 
@@ -40,6 +41,7 @@ const LessonEditPage: React.FC = () => {
   const nav = useNavigate();
   const { id } = useParams();
   const lessonId = useMemo(() => Number(id), [id]);
+  const { t } = useTranslation("admin");
 
   const showSnackbar = useUiStore((s) => s.showSnackbar);
 
@@ -56,7 +58,6 @@ const LessonEditPage: React.FC = () => {
 
   const [tab, setTab] = useState(0);
 
-  // local editable metadata state
   const [meta, setMeta] = useState({
     name: "",
     description: "",
@@ -83,7 +84,6 @@ const LessonEditPage: React.FC = () => {
     });
   }, [selected]);
 
-  // lesson image upload
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
 
@@ -91,8 +91,9 @@ const LessonEditPage: React.FC = () => {
     const maxMb = 5;
     const sizeMb = file.size / (1024 * 1024);
     const type = (file.type || "").toLowerCase();
-    if (!type.startsWith("image/")) return "Please select an image file.";
-    if (sizeMb > maxMb) return `Image is too large (max ${maxMb}MB).`;
+    if (!type.startsWith("image/")) return t("lessons.validation.imageType");
+    if (sizeMb > maxMb)
+      return t("lessons.validation.imageTooLarge", { max: maxMb });
     return null;
   };
 
@@ -114,14 +115,13 @@ const LessonEditPage: React.FC = () => {
       setMeta((s) => ({ ...s, imageUrl: res.secureUrl }));
       return res.secureUrl;
     } catch {
-      showSnackbar("Image upload failed. Please try again.", "error");
+      showSnackbar(t("lessons.snackbar.imageUploadFailed"), "error");
       return null;
     } finally {
       setImageUploading(false);
     }
   };
 
-  // block dialogs (inline minimal)
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<LessonBlock | null>(null);
 
@@ -150,7 +150,6 @@ const LessonEditPage: React.FC = () => {
   const nextPosition =
     (blocks.length ? blocks[blocks.length - 1].position + 1 : 1) || 1;
 
-  // media upload for blocks
   const [blockFile, setBlockFile] = useState<File | null>(null);
   const [blockUploading, setBlockUploading] = useState(false);
 
@@ -165,14 +164,14 @@ const LessonEditPage: React.FC = () => {
     const type = (file.type || "").toLowerCase();
 
     if (kind === "image") {
-      if (!type.startsWith("image/")) return "Please select an image file.";
+      if (!type.startsWith("image/")) return t("lessons.validation.imageType");
       if (sizeMb > maxImageMb)
-        return `Image is too large (max ${maxImageMb}MB).`;
+        return t("lessons.validation.imageTooLarge", { max: maxImageMb });
     } else {
       if (!(type.startsWith("audio/") || type.startsWith("video/")))
-        return "Please select an audio or video file.";
+        return t("lessons.validation.mediaType");
       if (sizeMb > maxMediaMb)
-        return `Media is too large (max ${maxMediaMb}MB).`;
+        return t("lessons.validation.mediaTooLarge", { max: maxMediaMb });
     }
 
     return null;
@@ -205,7 +204,7 @@ const LessonEditPage: React.FC = () => {
       setBlockDraft((s) => ({ ...s, contentUrl: res.secureUrl }));
       return res.secureUrl;
     } catch {
-      showSnackbar("Upload failed. Please try again.", "error");
+      showSnackbar(t("lessons.snackbar.uploadFailed"), "error");
       return null;
     } finally {
       setBlockUploading(false);
@@ -218,10 +217,10 @@ const LessonEditPage: React.FC = () => {
     return (
       <Box>
         <Typography variant="h5" fontWeight={900}>
-          Edit lesson
+          {t("lessons.edit.loadingTitle")}
         </Typography>
         <Typography color="text.secondary" sx={{ mt: 1 }}>
-          Loading...
+          {t("common.loading")}
         </Typography>
       </Box>
     );
@@ -238,10 +237,13 @@ const LessonEditPage: React.FC = () => {
       >
         <Box sx={{ minWidth: 0 }}>
           <Typography variant="h5" fontWeight={900} noWrap>
-            Edit lesson #{selected.ID} - {selected.name}
+            {t("lessons.edit.titleWithId", {
+              id: selected.ID,
+              name: selected.name ?? "",
+            })}
           </Typography>
           <Typography color="text.secondary">
-            Manage metadata and ordered blocks
+            {t("lessons.edit.subtitle")}
           </Typography>
         </Box>
 
@@ -251,14 +253,14 @@ const LessonEditPage: React.FC = () => {
             onClick={() => nav("/app/admin/lessons")}
             disabled={busy}
           >
-            Back
+            {t("common.back")}
           </Button>
           <Button
             variant="contained"
             onClick={() => nav(`/app/lessons/${selected.ID}`)}
             disabled={busy}
           >
-            Open as user
+            {t("lessons.actions.openAsUser")}
           </Button>
         </Stack>
       </Stack>
@@ -272,9 +274,11 @@ const LessonEditPage: React.FC = () => {
         }}
       >
         <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 1.5 }}>
-          <Tab label="Metadata" />
-          <Tab label={`Blocks (${blocks.length})`} />
-          <Tab label="Test" />
+          <Tab label={t("lessons.edit.tabs.metadata")} />
+          <Tab
+            label={t("lessons.edit.tabs.blocks", { count: blocks.length })}
+          />
+          <Tab label={t("lessons.edit.tabs.test")} />
         </Tabs>
         <Divider />
 
@@ -284,7 +288,7 @@ const LessonEditPage: React.FC = () => {
             <Stack gap={2}>
               <Stack direction={{ xs: "column", md: "row" }} gap={2}>
                 <TextField
-                  label="Name"
+                  label={t("lessons.fields.name")}
                   value={meta.name}
                   onChange={(e) =>
                     setMeta((s) => ({ ...s, name: e.target.value }))
@@ -292,7 +296,7 @@ const LessonEditPage: React.FC = () => {
                   fullWidth
                 />
                 <TextField
-                  label="Author"
+                  label={t("lessons.fields.author")}
                   value={meta.author}
                   onChange={(e) =>
                     setMeta((s) => ({ ...s, author: e.target.value }))
@@ -302,7 +306,7 @@ const LessonEditPage: React.FC = () => {
               </Stack>
 
               <TextField
-                label="Description"
+                label={t("lessons.fields.description")}
                 value={meta.description}
                 onChange={(e) =>
                   setMeta((s) => ({ ...s, description: e.target.value }))
@@ -314,7 +318,7 @@ const LessonEditPage: React.FC = () => {
 
               <Stack direction={{ xs: "column", md: "row" }} gap={2}>
                 <TextField
-                  label="Reward (XP)"
+                  label={t("lessons.fields.reward")}
                   value={meta.reward}
                   onChange={(e) =>
                     setMeta((s) => ({
@@ -326,7 +330,7 @@ const LessonEditPage: React.FC = () => {
                   sx={{ minWidth: { md: 220 } }}
                 />
                 <TextField
-                  label="Required level"
+                  label={t("lessons.fields.requiredLevel")}
                   value={meta.requiredLevel}
                   onChange={(e) =>
                     setMeta((s) => ({
@@ -340,7 +344,7 @@ const LessonEditPage: React.FC = () => {
               </Stack>
 
               <FileUploadField
-                label="Lesson image"
+                label={t("lessons.fields.lessonImage")}
                 urlValue={meta.imageUrl ?? ""}
                 onUrlChange={(v) =>
                   setMeta((s) => ({
@@ -353,7 +357,7 @@ const LessonEditPage: React.FC = () => {
                 uploading={imageUploading}
                 uploadedUrl={meta.imageUrl ?? null}
                 accept="image/*"
-                helperText="Paste URL or upload. Upload will be sent to Cloudinary."
+                helperText={t("lessons.helpers.upload")}
               />
 
               <Stack direction="row" gap={1} justifyContent="flex-end">
@@ -362,7 +366,10 @@ const LessonEditPage: React.FC = () => {
                   disabled={busy}
                   onClick={async () => {
                     if (!meta.name.trim()) {
-                      showSnackbar("Name is required", "warning");
+                      showSnackbar(
+                        t("lessons.validation.nameRequired"),
+                        "warning",
+                      );
                       return;
                     }
 
@@ -378,12 +385,14 @@ const LessonEditPage: React.FC = () => {
                       imageUrl: img ?? meta.imageUrl ?? null,
                     });
 
-                    if (ok) showSnackbar("Saved", "success");
-                    else showSnackbar("Save failed", "error");
+                    if (ok)
+                      showSnackbar(t("lessons.snackbar.saved"), "success");
+                    else
+                      showSnackbar(t("lessons.snackbar.saveFailed"), "error");
                   }}
                   sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
                 >
-                  Save
+                  {t("common.save")}
                 </Button>
               </Stack>
             </Stack>
@@ -401,9 +410,11 @@ const LessonEditPage: React.FC = () => {
               mb={2}
             >
               <Box>
-                <Typography fontWeight={900}>Lesson blocks</Typography>
+                <Typography fontWeight={900}>
+                  {t("lessons.blocks.title")}
+                </Typography>
                 <Typography color="text.secondary">
-                  Positions are always normalized by backend (1..N).
+                  {t("lessons.blocks.subtitle")}
                 </Typography>
               </Box>
 
@@ -418,11 +429,10 @@ const LessonEditPage: React.FC = () => {
                 }}
                 sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
               >
-                Add block
+                {t("lessons.blocks.addBlock")}
               </Button>
             </Stack>
 
-            {/* Create/Edit panel */}
             {(creating || editing) && (
               <Paper
                 elevation={0}
@@ -442,7 +452,9 @@ const LessonEditPage: React.FC = () => {
                   mb={1}
                 >
                   <Typography fontWeight={900}>
-                    {editing ? `Edit block #${editing.id}` : "Create block"}
+                    {editing
+                      ? t("lessons.blocks.editBlockTitle", { id: editing.id })
+                      : t("lessons.blocks.createBlockTitle")}
                   </Typography>
 
                   <Button
@@ -454,14 +466,14 @@ const LessonEditPage: React.FC = () => {
                       setBlockFile(null);
                     }}
                   >
-                    Close
+                    {t("common.close")}
                   </Button>
                 </Stack>
 
                 <Stack gap={2}>
                   <Stack direction={{ xs: "column", md: "row" }} gap={2}>
                     <TextField
-                      label="Title"
+                      label={t("lessons.blocks.fields.title")}
                       value={blockDraft.name}
                       onChange={(e) =>
                         setBlockDraft((s) => ({ ...s, name: e.target.value }))
@@ -470,7 +482,7 @@ const LessonEditPage: React.FC = () => {
                     />
 
                     <TextField
-                      label="Type"
+                      label={t("lessons.blocks.fields.type")}
                       value={blockDraft.type}
                       onChange={(e) => {
                         const v = e.target.value as LessonBlockType;
@@ -480,15 +492,15 @@ const LessonEditPage: React.FC = () => {
                       select
                       sx={{ minWidth: { md: 220 } }}
                     >
-                      {BLOCK_TYPES.map((t) => (
-                        <MenuItem key={t} value={t}>
-                          {t}
+                      {BLOCK_TYPES.map((tt) => (
+                        <MenuItem key={tt} value={tt}>
+                          {t(`lessons.blocks.types.${tt}`)}
                         </MenuItem>
                       ))}
                     </TextField>
 
                     <TextField
-                      label="Position"
+                      label={t("lessons.blocks.fields.position")}
                       value={blockDraft.position}
                       onChange={(e) =>
                         setBlockDraft((s) => ({
@@ -498,13 +510,13 @@ const LessonEditPage: React.FC = () => {
                       }
                       type="number"
                       sx={{ minWidth: { md: 180 } }}
-                      helperText="If occupied, backend swaps and normalizes."
+                      helperText={t("lessons.blocks.positionHelper")}
                     />
                   </Stack>
 
                   {blockDraft.type === "text" ? (
                     <TextField
-                      label="Text content"
+                      label={t("lessons.blocks.fields.textContent")}
                       value={blockDraft.contentText}
                       onChange={(e) =>
                         setBlockDraft((s) => ({
@@ -519,7 +531,7 @@ const LessonEditPage: React.FC = () => {
                   ) : (
                     <>
                       <FileUploadField
-                        label="Media"
+                        label={t("lessons.blocks.fields.media")}
                         urlValue={blockDraft.contentUrl}
                         onUrlChange={(v) =>
                           setBlockDraft((s) => ({ ...s, contentUrl: v }))
@@ -537,11 +549,11 @@ const LessonEditPage: React.FC = () => {
                             ? "image/*"
                             : "audio/*,video/*"
                         }
-                        helperText="Paste URL or upload. Upload will be sent to Cloudinary."
+                        helperText={t("lessons.helpers.upload")}
                       />
 
                       <TextField
-                        label="Caption (optional)"
+                        label={t("lessons.blocks.fields.captionOptional")}
                         value={blockDraft.contentText}
                         onChange={(e) =>
                           setBlockDraft((s) => ({
@@ -566,7 +578,7 @@ const LessonEditPage: React.FC = () => {
                         setBlockFile(null);
                       }}
                     >
-                      Cancel
+                      {t("common.cancel")}
                     </Button>
 
                     <Button
@@ -574,11 +586,13 @@ const LessonEditPage: React.FC = () => {
                       disabled={busy}
                       onClick={async () => {
                         if (!blockDraft.name.trim()) {
-                          showSnackbar("Block title is required", "warning");
+                          showSnackbar(
+                            t("lessons.validation.blockTitleRequired"),
+                            "warning",
+                          );
                           return;
                         }
 
-                        // for media blocks: ensure url exists (either pasted or uploaded)
                         let finalUrl: string | null = null;
                         if (
                           blockDraft.type !== "text" &&
@@ -590,7 +604,7 @@ const LessonEditPage: React.FC = () => {
                           if (blockFile && !finalUrl) return;
                           if (!finalUrl?.trim()) {
                             showSnackbar(
-                              "Media URL is required for media blocks",
+                              t("lessons.validation.mediaUrlRequired"),
                               "warning",
                             );
                             return;
@@ -612,15 +626,20 @@ const LessonEditPage: React.FC = () => {
                           });
 
                           if (updated) {
-                            showSnackbar("Block updated", "success");
+                            showSnackbar(
+                              t("lessons.snackbar.blockUpdated"),
+                              "success",
+                            );
                             setEditing(null);
                             setCreating(false);
                             setBlockFile(null);
                             await fetchById(selected.ID);
                           } else {
-                            showSnackbar("Update failed", "error");
+                            showSnackbar(
+                              t("lessons.snackbar.updateFailed"),
+                              "error",
+                            );
                           }
-
                           return;
                         }
 
@@ -638,24 +657,31 @@ const LessonEditPage: React.FC = () => {
                         });
 
                         if (created) {
-                          showSnackbar("Block created", "success");
+                          showSnackbar(
+                            t("lessons.snackbar.blockCreated"),
+                            "success",
+                          );
                           setCreating(false);
                           setBlockFile(null);
                           await fetchById(selected.ID);
                         } else {
-                          showSnackbar("Create failed", "error");
+                          showSnackbar(
+                            t("lessons.snackbar.createFailed"),
+                            "error",
+                          );
                         }
                       }}
                       sx={{ boxShadow: "0 10px 24px rgba(15,23,42,0.25)" }}
                     >
-                      {editing ? "Save block" : "Create block"}
+                      {editing
+                        ? t("lessons.blocks.saveBlock")
+                        : t("lessons.blocks.createBlock")}
                     </Button>
                   </Stack>
                 </Stack>
               </Paper>
             )}
 
-            {/* Blocks list */}
             {blocks.length === 0 ? (
               <Paper
                 elevation={0}
@@ -667,7 +693,7 @@ const LessonEditPage: React.FC = () => {
                 }}
               >
                 <Typography color="text.secondary">
-                  No blocks yet. Click "Add block" to create the first one.
+                  {t("lessons.blocks.empty")}
                 </Typography>
               </Paper>
             ) : (
@@ -696,16 +722,17 @@ const LessonEditPage: React.FC = () => {
                           color="text.secondary"
                           fontWeight={700}
                         >
-                          - {String(b.type)}
+                          - {t(`lessons.blocks.types.${String(b.type)}`)}
                         </Typography>
                       </Typography>
 
                       <Typography variant="body2" color="text.secondary" noWrap>
                         {isTextBlock(String(b.type))
-                          ? b.contentText?.slice(0, 80) || "No text"
+                          ? b.contentText?.slice(0, 80) ||
+                            t("lessons.blocks.noText")
                           : b.type === "youtube"
-                            ? "YouTube video"
-                            : b.contentUrl || "No URL"}
+                            ? t("lessons.blocks.youtubeVideo")
+                            : b.contentUrl || t("lessons.blocks.noUrl")}
                       </Typography>
                     </Box>
 
@@ -718,14 +745,14 @@ const LessonEditPage: React.FC = () => {
                       <IconButton
                         disabled={busy || idx === 0}
                         onClick={() => moveUp(b.id)}
-                        title="Move up"
+                        title={t("lessons.blocks.actions.moveUp")}
                       >
                         <ArrowUpwardIcon />
                       </IconButton>
                       <IconButton
                         disabled={busy || idx === blocks.length - 1}
                         onClick={() => moveDown(b.id)}
-                        title="Move down"
+                        title={t("lessons.blocks.actions.moveDown")}
                       >
                         <ArrowDownwardIcon />
                       </IconButton>
@@ -750,7 +777,7 @@ const LessonEditPage: React.FC = () => {
                             position: b.position ?? 1,
                           });
                         }}
-                        title="Edit"
+                        title={t("common.edit")}
                       >
                         <EditIcon />
                       </IconButton>
@@ -759,18 +786,26 @@ const LessonEditPage: React.FC = () => {
                         disabled={busy}
                         onClick={async () => {
                           const ok = window.confirm(
-                            `Delete block "${b.name}"? Positions will be normalized.`,
+                            t("lessons.blocks.confirmDeleteBlock", {
+                              name: b.name ?? "",
+                            }),
                           );
                           if (!ok) return;
                           const success = await deleteBlock(b.id);
                           if (success) {
-                            showSnackbar("Block deleted", "success");
+                            showSnackbar(
+                              t("lessons.snackbar.blockDeleted"),
+                              "success",
+                            );
                             await fetchById(selected.ID);
                           } else {
-                            showSnackbar("Delete failed", "error");
+                            showSnackbar(
+                              t("lessons.snackbar.deleteFailed"),
+                              "error",
+                            );
                           }
                         }}
-                        title="Delete"
+                        title={t("common.delete")}
                       >
                         <DeleteOutlineIcon />
                       </IconButton>
@@ -781,6 +816,7 @@ const LessonEditPage: React.FC = () => {
             )}
           </Box>
         )}
+
         {tab === 2 && <LessonTestAdminTab lessonId={selected.ID} />}
       </Paper>
     </Box>

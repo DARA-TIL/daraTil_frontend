@@ -1,0 +1,116 @@
+{
+  "section": {
+    "title": "Сабақ тесті",
+    "subtitle": "Сабақты аяқтау үшін тестті орындаңыз."
+  },
+  "actions": {
+    "startTest": "Тестті бастау",
+    "reset": "Қалпына келтіру",
+    "backToLessons": "Сабақтарға оралу",
+    "retryImprove": "Қайта өтіп, жақсарту",
+    "reviewBlocks": "Сабақ блоктарын қайталау"
+  },
+  "state": {
+    "noTest": "Бұл сабаққа әлі тест қосылмаған.",
+    "loadingTest": "Тест жүктелуде..."
+  },
+  "quiz": {
+    "empty": "Бұл тестте әзірге сұрақ жоқ.",
+    "progress": {
+      "question": "{{total}} ішінен {{current}} сұрақ",
+      "answered": "Жауап берілді {{answered}}/{{total}}"
+    },
+    "actions": {
+      "back": "Артқа",
+      "next": "Келесі",
+      "submit": "Жауаптарды жіберу",
+      "goToFirstUnanswered": "Бірінші жауапсыз сұраққа өту"
+    },
+    "validation": {
+      "answerAll": "Жібермес бұрын барлық сұраққа жауап беріңіз."
+    }
+  },
+  "finish": {
+    "xpBadge": "+{{xp}} XP",
+    "titlePassed": "Өтілді - нәтиже {{score}}%",
+    "titleFailed": "Өтпеді - нәтиже {{score}}%",
+    "desc": {
+      "xpGrantedImproved": "XP қосылды - ең жақсы нәтиже жақсарды.",
+      "passedNoXp": "Өтілді - XP қосылмады (нәтиже жақсармады).",
+      "noXp": "XP қосылмады."
+    },
+    "stats": {
+      "xpGained": "Қосылған XP: {{xp}}",
+      "level": "Деңгей: {{prev}} - {{current}}"
+    }
+  },
+  "admin": {
+    "empty": {
+      "title": "Сабақ тесті",
+      "subtitle": "Бұл сабақта әзірге тест жоқ. Сабақ соңында квиз қосу үшін тест жасаңыз.",
+      "createTest": "Тест құру"
+    },
+    "header": {
+      "title": "Тест #{{id}}",
+      "summaryLine": "Сұрақ: {{total}} - Дайын: {{ready}} - Кемінде 1 дұрысы бар: {{withCorrect}}",
+      "rules": "Ереже: әр сұрақта >=2 нұсқа және дәл 1 дұрыс нұсқа болуы керек."
+    },
+    "badges": {
+      "unsavedChanges": "Сақталмаған өзгерістер бар",
+      "ready": "Дайын",
+      "invalid": "Қате",
+      "noQuestions": "Сұрақ жоқ",
+      "invalidCount": "Қате: {{count}}"
+    },
+    "actions": {
+      "resetChanges": "Өзгерістерді тазалау",
+      "saveAllChanges": "Барлық өзгерісті сақтау",
+      "deleteTest": "Тестті жою",
+      "deleteQuestion": "Сұрақты жою",
+      "addOption": "Нұсқа қосу",
+      "saveOption": "Сақтау",
+      "deleteOption": "Жою"
+    },
+    "confirms": {
+      "deleteTest": "Бұл тестті жою керек пе? Барлық сұрақ жойылады.",
+      "deleteQuestion": "Бұл сұрақты және барлық нұсқасын жою керек пе?",
+      "deleteOption": "Бұл нұсқаны жою керек пе?"
+    },
+    "addQuestion": {
+      "label": "Жаңа сұрақ",
+      "add": "Қосу"
+    },
+    "fields": {
+      "questionText": "Сұрақ мәтіні",
+      "optionsTitle": "Нұсқалар",
+      "newOption": "Жаңа нұсқа",
+      "isCorrect": "isCorrect"
+    },
+    "validation": {
+      "minOptions": "Кемінде 2 нұсқа керек",
+      "oneCorrect": "Дәл 1 дұрыс нұсқа керек"
+    },
+    "question": {
+      "title": "С#{{id}}",
+      "validHint": "Бір дұрыс жауабы бар сұрақ дұрыс.",
+      "correctCount": "Дұрыс: {{count}}",
+      "noCorrect": "Дұрыс жауап жоқ",
+      "optionsCount": "Нұсқа: {{count}}"
+    },
+    "option": {
+      "label": "Нұсқа #{{id}}",
+      "correct": "дұрыс"
+    },
+    "boolean": {
+      "true": "true",
+      "false": "false"
+    },
+    "quick": {
+      "button": "3 нұсқаны тез қосу",
+      "tooltip": "3 үлгі нұсқаны тез қосады",
+      "optionA": "Нұсқа A",
+      "optionB": "Нұсқа B",
+      "optionC": "Нұсқа C"
+    }
+  }
+}

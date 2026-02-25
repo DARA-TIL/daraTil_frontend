@@ -4,10 +4,12 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import { useTranslation } from "react-i18next";
 
 const AdminPage: React.FC = () => {
   const theme = useTheme();
   const nav = useNavigate();
+  const { t } = useTranslation("admin");
 
   const Card = ({
     title,
@@ -50,7 +52,7 @@ const AdminPage: React.FC = () => {
             boxShadow: "0 10px 24px rgba(15,23,42,0.25)",
           }}
         >
-          Open
+          {t("common.open")}
         </Button>
       </Stack>
     </Paper>
@@ -59,27 +61,27 @@ const AdminPage: React.FC = () => {
   return (
     <Box>
       <Typography variant="h5" fontWeight={800} mb={2}>
-        Admin
+        {t("adminPage.title")}
       </Typography>
 
       <Stack gap={2}>
         <Card
-          title="Folklore management"
-          subtitle="Create, edit, delete folklore and regenerate translations."
+          title={t("adminPage.cards.folklore.title")}
+          subtitle={t("adminPage.cards.folklore.subtitle")}
           icon={<AutoStoriesIcon />}
           to="/app/admin/folklore"
         />
 
         <Card
-          title="Lessons management"
-          subtitle="Create lessons and manage ordered blocks."
+          title={t("adminPage.cards.lessons.title")}
+          subtitle={t("adminPage.cards.lessons.subtitle")}
           icon={<MenuBookIcon />}
           to="/app/admin/lessons"
         />
 
         <Card
-          title="Users management"
-          subtitle="Search users, edit roles, update profile data."
+          title={t("adminPage.cards.users.title")}
+          subtitle={t("adminPage.cards.users.subtitle")}
           icon={<PeopleAltIcon />}
           to="/app/admin/users"
         />

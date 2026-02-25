@@ -1,0 +1,73 @@
+{
+  "common": {
+    "back": "Back",
+    "loading": "Loading..."
+  },
+  "page": {
+    "title": "Lessons",
+    "subtitle": "Learn step by step with blocks and finish with a test.",
+    "empty": "No lessons yet"
+  },
+  "search": {
+    "placeholder": "Search lessons..."
+  },
+  "status": {
+    "all": "All",
+    "available": "Available",
+    "passed": "Passed",
+    "locked": "Locked"
+  },
+  "actions": {
+    "open": "Open",
+    "locked": "Locked"
+  },
+  "tooltip": {
+    "requiredLevel": "Required level: {{level}}"
+  },
+  "card": {
+    "bestChip": "Best: {{score}}%{{mark}}",
+    "meta": "Required level {{level}} - Reward {{xp}} XP",
+    "progress": "Progress"
+  },
+  "details": {
+    "loadingTitle": "Lesson",
+    "meta": "Required level {{level}} - Reward {{xp}} XP{{hasAuthor, boolean, true { - Author {{author}} } false {}}}"
+  },
+  "locked": {
+    "title": "This lesson is locked",
+    "levels": "Your level: {{myLevel}}. Required level: {{requiredLevel}}.",
+    "hint": "Complete available lessons to gain XP and unlock this one.",
+    "goToLessons": "Go to lessons",
+    "viewAvailable": "View available lessons"
+  },
+  "description": {
+    "title": "Description",
+    "empty": "No description provided."
+  },
+  "attempts": {
+    "title": "Your attempts",
+    "subtitle": "Latest results (percentage score).",
+    "total": "{{count}} total",
+    "showAll": "Show all",
+    "hide": "Hide",
+    "empty": "No attempts yet. Pass the test to finish the lesson.",
+    "attempt": "Attempt {{n}}",
+    "scoreLine": "Score: {{score}}% - {{status}}",
+    "passed": "passed",
+    "failed": "failed",
+    "passChip": "PASS",
+    "failChip": "FAIL",
+    "hiddenMore": "+{{count}} more hidden"
+  },
+  "best": {
+    "title": "Best result",
+    "scoreLabel": "Score:",
+    "statusLabel": "Status:",
+    "passed": "passed",
+    "failed": "failed",
+    "tip": "Tip: improve your score to gain more XP.",
+    "empty": "No best result yet. Complete the test to create your first result."
+  },
+  "blocks": { "title": "Lesson blocks" },
+  "test": { "title": "Lesson test" }
+}

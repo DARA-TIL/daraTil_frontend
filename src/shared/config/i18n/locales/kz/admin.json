@@ -17,7 +17,25 @@
     "uploaded": "Жүктелді",
     "uploading": "Жүктелуде...",
     "all": "Барлығы",
-    "empty": "Элемент жоқ"
+    "empty": "Элемент жоқ",
+    "close": "Жабу"
+  },
+  "adminPage": {
+    "title": "Әкімші",
+    "cards": {
+      "folklore": {
+        "title": "Фольклорды басқару",
+        "subtitle": "Фольклорды қосу, өңдеу, жою және аудармаларды қайта жасау."
+      },
+      "lessons": {
+        "title": "Сабақтарды басқару",
+        "subtitle": "Сабақ құру және реттелген блоктарды басқару."
+      },
+      "users": {
+        "title": "Пайдаланушыларды басқару",
+        "subtitle": "Пайдаланушыларды іздеу, рөлдерді өңдеу, профильді жаңарту."
+      }
+    }
   },
   "folklore": {
     "cardTitle": "Фольклорды басқару",
@@ -68,5 +86,111 @@
     "changeFile": "Файлды ауыстыру",
     "selected": "Таңдалды: {{name}} ({{sizeKb}} KB)",
     "uploaded": "Жүктелді: {{url}}"
+  },
+  "lessons": {
+    "listTitle": "Сабақ админкасы",
+    "listSubtitle": "Сабақтарды және реттелген блоктарды басқару.",
+    "createTitle": "Сабақ құру",
+    "empty": "Сабақтар жоқ",
+    "rowMeta": "Деңгей {{level}} - Сыйақы {{reward}} - Блоктар {{blocks}} - {{author}}",
+    "confirmDeleteLesson": "\"{{name}}\" сабағын жою керек пе? Барлық блоктар жойылады.",
+
+    "fields": {
+      "name": "Атауы",
+      "author": "Автор",
+      "description": "Сипаттама",
+      "reward": "Сыйақы (XP)",
+      "requiredLevel": "Қажетті деңгей",
+      "image": "Сурет",
+      "lessonImage": "Сабақ суреті"
+    },
+
+    "helpers": {
+      "upload": "URL қойыңыз немесе файл жүктеңіз. Жүктеу Cloudinary-ге жіберіледі."
+    },
+
+    "validation": {
+      "nameRequired": "Атауы міндетті",
+      "authorRequired": "Автор міндетті",
+      "blockTitleRequired": "Блок атауы міндетті",
+      "mediaUrlRequired": "Медиа блок үшін URL қажет",
+
+      "imageType": "Сурет файлын таңдаңыз.",
+      "imageTooLarge": "Сурет тым үлкен (ең көбі {{max}}MB).",
+      "mediaType": "Аудио немесе видео файлын таңдаңыз.",
+      "mediaTooLarge": "Медиа тым үлкен (ең көбі {{max}}MB)."
+    },
+
+    "snackbar": {
+      "saved": "Сақталды",
+      "saveFailed": "Сақтау сәтсіз",
+      "deleted": "Сабақ жойылды",
+      "deleteFailed": "Жою сәтсіз",
+      "created": "Сабақ құрылды",
+      "createFailed": "Құру сәтсіз",
+      "imageUploadFailed": "Суретті жүктеу сәтсіз болды. Қайта көріңіз.",
+      "uploadFailed": "Жүктеу сәтсіз болды. Қайта көріңіз.",
+      "blockCreated": "Блок құрылды",
+      "blockUpdated": "Блок жаңартылды",
+      "blockDeleted": "Блок жойылды",
+      "updateFailed": "Жаңарту сәтсіз"
+    },
+
+    "actions": {
+      "createLesson": "Сабақ құру",
+      "openAsUser": "Пайдаланушы ретінде ашу"
+    },
+
+    "edit": {
+      "loadingTitle": "Сабақты өңдеу",
+      "titleWithId": "Сабақты өңдеу #{{id}} - {{name}}",
+      "subtitle": "Метадеректер мен блоктарды басқару",
+      "tabs": {
+        "metadata": "Метадеректер",
+        "blocks": "Блоктар ({{count}})",
+        "test": "Тест"
+      }
+    },
+
+    "blocks": {
+      "title": "Сабақ блоктары",
+      "subtitle": "Позициялар бэкендте әрқашан нормализацияланады (1..N).",
+      "addBlock": "Блок қосу",
+
+      "createBlockTitle": "Блок құру",
+      "editBlockTitle": "Блокты өңдеу #{{id}}",
+      "createBlock": "Блок құру",
+      "saveBlock": "Блокты сақтау",
+
+      "empty": "Блоктар жоқ. Біріншісін жасау үшін \"Блок қосу\" басыңыз.",
+      "noText": "Мәтін жоқ",
+      "noUrl": "URL жоқ",
+      "youtubeVideo": "YouTube видео",
+
+      "confirmDeleteBlock": "\"{{name}}\" блогын жою керек пе? Позициялар нормализацияланады.",
+      "positionHelper": "Орын бос болмаса, бэкенд ауыстырып, нормализациялайды.",
+
+      "fields": {
+        "title": "Тақырып",
+        "type": "Түрі",
+        "position": "Позиция",
+        "textContent": "Мәтін",
+        "media": "Медиа",
+        "captionOptional": "Түсіндірме (міндетті емес)"
+      },
+
+      "types": {
+        "text": "Мәтін",
+        "image": "Сурет",
+        "audio": "Аудио",
+        "video": "Видео",
+        "youtube": "YouTube"
+      },
+
+      "actions": {
+        "moveUp": "Жоғары",
+        "moveDown": "Төмен"
+      }
+    }
   }
 }
