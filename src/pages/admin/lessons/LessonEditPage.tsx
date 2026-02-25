@@ -27,6 +27,7 @@ import AddIcon from "@mui/icons-material/Add";
 import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
+import LessonTestAdminTab from "@/features/tests/ui/admin/LessonTestAdminTab";
 
 const BLOCK_TYPES: LessonBlockType[] = ["text", "image", "audio", "video"];
 
@@ -273,6 +274,7 @@ const LessonEditPage: React.FC = () => {
         <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 1.5 }}>
           <Tab label="Metadata" />
           <Tab label={`Blocks (${blocks.length})`} />
+          <Tab label="Test" />
         </Tabs>
         <Divider />
 
@@ -779,6 +781,7 @@ const LessonEditPage: React.FC = () => {
             )}
           </Box>
         )}
+        {tab === 2 && <LessonTestAdminTab lessonId={selected.ID} />}
       </Paper>
     </Box>
   );

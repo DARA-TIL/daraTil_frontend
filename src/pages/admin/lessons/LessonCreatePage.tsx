@@ -28,9 +28,8 @@ const LessonCreatePage: React.FC = () => {
     description: "",
     imageUrl: null,
     author: "",
-    reward: 50,
+    reward: 500,
     requiredLevel: 1,
-    blocks: [],
   });
 
   const set = (k: keyof LessonCreateDto, v: any) =>
@@ -169,6 +168,10 @@ const LessonCreatePage: React.FC = () => {
                   showSnackbar("Name is required", "warning");
                   return;
                 }
+                if (!form.author.trim()) {
+                  showSnackbar("Author is required", "warning");
+                  return;
+                }
 
                 const img = await uploadImageIfNeeded();
                 if (imageFile && !img) return;
@@ -179,10 +182,7 @@ const LessonCreatePage: React.FC = () => {
                   author: form.author.trim(),
                   description: form.description.trim(),
                   imageUrl: img ?? form.imageUrl ?? null,
-                  blocks: [],
                 });
-
-                console.log(created); 
 
                 if (!created) {
                   showSnackbar("Create failed", "error");

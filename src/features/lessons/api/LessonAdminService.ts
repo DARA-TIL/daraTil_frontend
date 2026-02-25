@@ -7,11 +7,16 @@ import type {
   LessonBlockCreateDto,
   LessonBlockUpdateDto,
 } from "../model/types";
+import {
+  normalizeLesson,
+  normalizeLessonBlock,
+  unwrapLessonPayload,
+} from "../model/normalize";
 
 export default class LessonsAdminService {
   static async create(payload: LessonCreateDto): Promise<Lesson> {
-    const res = await $api.post<Lesson>("/lesson/create", payload);
-    return res.data;
+    const res = await $api.post("/lesson/create", payload);
+    return normalizeLesson(unwrapLessonPayload(res.data));
   }
 
   static async update(id: number, payload: LessonUpdateDto): Promise<void> {
@@ -25,19 +30,36 @@ export default class LessonsAdminService {
   static async createBlock(
     payload: LessonBlockCreateDto,
   ): Promise<LessonBlock> {
-    const res = await $api.post<LessonBlock>("/lesson/createBlock", payload);
-    return res.data;
+    // backend ожидает lessonId, contentType
+    const body: any = {
+      name: payload.name,
+      contentType: payload.type,
+      contentUrl: payload.contentUrl ?? "",
+      contentText: payload.contentText ?? "",
+      lessonId: payload.lessonID,
+      position: payload.position,
+    };
+    const res = await $api.post("/lesson/createBlock", body);
+    const raw = unwrapLessonPayload(res.data);
+    return normalizeLessonBlock(raw);
   }
 
   static async updateBlock(
     id: number,
     payload: LessonBlockUpdateDto,
   ): Promise<LessonBlock> {
-    const res = await $api.patch<LessonBlock>(
-      `/lesson/updateBlock/${id}`,
-      payload,
-    );
-    return res.data;
+    const body: any = {};
+    if (payload.name !== undefined) body.name = payload.name;
+    if (payload.type !== undefined) body.contentType = payload.type;
+    if (payload.contentUrl !== undefined) body.contentUrl = payload.contentUrl;
+    if (payload.contentText !== undefined)
+      body.contentText = payload.contentText;
+    if (payload.position !== undefined) body.position = payload.position;
+    if (payload.lessonID !== undefined) body.lessonID = payload.lessonID; // обязательно если меняется position
+
+    const res = await $api.patch(`/lesson/updateBlock/${id}`, body);
+    const raw = unwrapLessonPayload(res.data);
+    return normalizeLessonBlock(raw);
   }
 
   static async deleteBlock(id: number): Promise<void> {

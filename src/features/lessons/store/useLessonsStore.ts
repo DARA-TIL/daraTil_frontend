@@ -33,8 +33,24 @@ export const useLessonsStore = create<State>((set) => ({
     try {
       const lesson = await LessonsService.getById(id);
       set({ selected: lesson });
-    } catch (e) {
-      set({ selected: null });
+    } catch (e: any) {
+      if (e?.code === 423) {
+        // показываем заглушку в UI
+        set({
+          selected: {
+            ID: id,
+            name: "Locked lesson",
+            reward: 0,
+            requiredLevel: 0,
+            lessonStatus: "locked",
+            blocks: [],
+            results: [],
+            bestResult: null,
+          } as any,
+        });
+      } else {
+        set({ selected: null });
+      }
     } finally {
       set({ loading: false });
     }

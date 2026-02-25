@@ -1,3 +1,20 @@
+export type LessonStatus = "locked" | "available" | "passed" | string;
+
+export type LessonResult = {
+  id: number;
+  userId: number;
+  testId: number;
+  lessonId: number;
+  result: number; // 0-100
+  pass: boolean;
+  passTime?: string; // optional, если бек начнёт отдавать
+};
+
+export type LessonBestResult = {
+  result: number;
+  pass: boolean;
+};
+
 export type LessonBlockType =
   | "text"
   | "image"
@@ -19,15 +36,24 @@ export interface LessonBlock {
 export interface Lesson {
   ID: number;
   name: string;
-  description: string;
+
+  // list может приходить без description/blocks
+  description?: string;
   imageUrl?: string | null;
-  author: string;
+  author?: string;
+
   reward: number;
   requiredLevel: number;
+
+  lessonStatus?: LessonStatus;
+
   blocks?: LessonBlock[];
+
+  results?: LessonResult[];
+  bestResult?: LessonBestResult | null;
 }
 
-// DTOs
+// DTOs admin
 export type LessonCreateDto = {
   name: string;
   description: string;
@@ -35,7 +61,6 @@ export type LessonCreateDto = {
   author: string;
   reward: number;
   requiredLevel: number;
-  blocks?: LessonBlock[];
 };
 
 export type LessonUpdateDto = Partial<
@@ -57,6 +82,36 @@ export type LessonBlockCreateDto = {
 export type LessonBlockUpdateDto = Partial<
   Pick<
     LessonBlock,
-    "lessonID" | "name" | "type" | "contentUrl" | "contentText" | "position"
+    "name" | "type" | "contentUrl" | "contentText" | "position" | "lessonID"
   >
 >;
+
+// finish lesson
+export type FinishLessonRequest = {
+  testId: number;
+  lessonId: number;
+  userAns: Record<string, number>; // questionId -> optionId
+};
+
+export type FinishLessonData = {
+  result: number;
+  pass: boolean;
+};
+
+export type FinishLessonProgress = {
+  isImproved: boolean;
+  isLvlUp: boolean;
+  xpGained?: number;
+  prevBestResult?: number;
+  maxXp?: number;
+  prevXp?: number;
+  prevLevel?: number;
+  currentXp?: number;
+  xpForNextLevel?: number;
+  currentLevel?: number;
+};
+
+export type FinishLessonResponse = {
+  data: FinishLessonData;
+  progress: FinishLessonProgress | null;
+};
