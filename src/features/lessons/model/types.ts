@@ -1,20 +1,5 @@
 export type LessonStatus = "locked" | "available" | "passed" | string;
 
-export type LessonResult = {
-  id: number;
-  userId: number;
-  testId: number;
-  lessonId: number;
-  result: number; // 0-100
-  pass: boolean;
-  passTime?: string; // optional, если бек начнёт отдавать
-};
-
-export type LessonBestResult = {
-  result: number;
-  pass: boolean;
-};
-
 export type LessonBlockType =
   | "text"
   | "image"
@@ -33,11 +18,28 @@ export interface LessonBlock {
   position: number;
 }
 
+export interface LessonResult {
+  id: number;
+  userId: number;
+  testId: number;
+  lessonId: number;
+  result: number; // 0-100
+  pass: boolean;
+
+  // бэк сейчас отдаёт "PassTime" (с большой буквы), поэтому оставим оба варианта как optional
+  PassTime?: string;
+  passTime?: string;
+}
+
+export type LessonBestResult = {
+  result: number;
+  pass: boolean;
+};
+
 export interface Lesson {
   ID: number;
   name: string;
 
-  // list может приходить без description/blocks
   description?: string;
   imageUrl?: string | null;
   author?: string;
@@ -93,25 +95,25 @@ export type FinishLessonRequest = {
   userAns: Record<string, number>; // questionId -> optionId
 };
 
-export type FinishLessonData = {
-  result: number;
-  pass: boolean;
-};
-
-export type FinishLessonProgress = {
-  isImproved: boolean;
-  isLvlUp: boolean;
-  xpGained?: number;
+export interface FinishLessonProgress {
+  // новый прогресс из бэка
+  isImproved?: boolean;
+  isLvlUp?: boolean;
   prevBestResult?: number;
-  maxXp?: number;
-  prevXp?: number;
+
+  // опционально, если бэк добавит позже
+  xpGained?: number;
   prevLevel?: number;
+  currentLevel?: number;
+  prevXp?: number;
   currentXp?: number;
   xpForNextLevel?: number;
-  currentLevel?: number;
-};
+  maxXp?: number;
+}
 
-export type FinishLessonResponse = {
-  data: FinishLessonData;
-  progress: FinishLessonProgress | null;
-};
+export interface FinishLessonResponse {
+  // важно: после нормализации LessonsService.finish это именно lessonResult
+  data: LessonResult;
+  progress?: FinishLessonProgress;
+  streak?: string;
+}

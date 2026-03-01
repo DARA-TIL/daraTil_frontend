@@ -8,12 +8,10 @@ function App() {
   const checkAuth = useAuthStore((s) => s.checkAuth);
 
   useEffect(() => {
-    // Если в localStorage есть токен - пробуем освежить сессию
-    const token = localStorage.getItem("token");
-    if (token) {
+    const loggedOut = localStorage.getItem("loggedOut") === "true";
+    if (!loggedOut) {
       checkAuth();
     } else {
-      // если токена нет - просто говорим "мы не загружаемся"
       useAuthStore.setState({ isLoading: false });
     }
   }, [checkAuth]);

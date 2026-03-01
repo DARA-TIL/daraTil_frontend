@@ -99,15 +99,27 @@ const LessonFinishResultCard: React.FC<{ res: FinishLessonResponse }> = ({
 
         {progress && (
           <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
-            <Typography variant="body2" fontWeight={900}>
-              {t("finish.stats.xpGained", { xp: progress.xpGained ?? 0 })}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {t("finish.stats.level", {
-                prev: progress.prevLevel ?? 0,
-                current: progress.currentLevel ?? 0,
-              })}
-            </Typography>
+            {typeof progress.xpGained === "number" && (
+              <Typography variant="body2" fontWeight={900}>
+                {t("finish.stats.xpGained", { xp: progress.xpGained })}
+              </Typography>
+            )}
+
+            {typeof progress.prevLevel === "number" &&
+              typeof progress.currentLevel === "number" && (
+                <Typography variant="body2" color="text.secondary">
+                  {t("finish.stats.level", {
+                    prev: progress.prevLevel,
+                    current: progress.currentLevel,
+                  })}
+                </Typography>
+              )}
+
+            {typeof progress.prevBestResult === "number" && (
+              <Typography variant="body2" color="text.secondary">
+                {t("finish.stats.prevBest", { best: progress.prevBestResult })}
+              </Typography>
+            )}
           </Box>
         )}
       </Stack>

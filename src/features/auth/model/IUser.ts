@@ -6,6 +6,13 @@ export interface IUserProgress {
   userID: number;
 }
 
+export interface IUserStreak {
+  id: number;
+  userID: number;
+  currentStreak: number;
+  longestStreak: number;
+}
+
 export interface IUser {
   id: number;
   username: string;
@@ -14,4 +21,10 @@ export interface IUser {
   role: string;
   authProvider: string;
   progress: IUserProgress | null;
+
+  // NEW
+  streak?: IUserStreak | null;
+
+  // NEW: строка сверху "streak": "NoChange"
+  streakStatus?: string;
 }

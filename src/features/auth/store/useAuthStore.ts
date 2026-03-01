@@ -1,18 +1,38 @@
-// src/store/useAuthStore.ts
 import { create } from "zustand";
 import type { IUser } from "@/features/auth/model/IUser";
 import AuthService from "@/features/auth/api/AuthService";
 import $api from "@/shared/api/http";
 import { useUiStore } from "../../../shared/store/useUiStore";
 import ProfileService from "@/features/profile/api/ProfileService";
+import type {
+  AuthResponse,
+  AuthPayload,
+} from "@/features/auth/model/response/AuthResponse";
+
+function unwrapAuth(payload: AuthResponse | any): AuthPayload | any {
+  return payload?.data ?? payload;
+}
+
+function extractAccessToken(payload: AuthResponse | any): string | null {
+  const p = unwrapAuth(payload);
+  return (p?.accessToken ?? null) as string | null;
+}
+
+function extractRefreshToken(payload: AuthResponse | any): string | null {
+  const p = unwrapAuth(payload);
+  return (p?.refreshToken ?? null) as string | null;
+}
 
 function normalizeUserFromBackend(payload: any): IUser | null {
   if (!payload) return null;
 
-  const u = payload.user ?? payload.data?.user ?? payload.data ?? payload;
+  const root = unwrapAuth(payload);
+  const u = root?.user ?? root?.data?.user ?? root;
   if (!u || typeof u !== "object") return null;
 
   const p = u.progress ?? u.Progress ?? null;
+  const st = u.streak ?? u.Streak ?? null;
+  const streakStatus = root?.streak ?? payload?.streak ?? null;
 
   return {
     id: u.id ?? u.ID ?? 0,
@@ -21,6 +41,7 @@ function normalizeUserFromBackend(payload: any): IUser | null {
     avatar: u.avatar ?? u.Avatar ?? "",
     role: u.role ?? u.Role ?? "",
     authProvider: u.authProvider ?? u.AuthProvider ?? "",
+    streakStatus: typeof streakStatus === "string" ? streakStatus : "",
     progress: p
       ? {
           id: p.id ?? p.ID ?? 0,
@@ -28,6 +49,14 @@ function normalizeUserFromBackend(payload: any): IUser | null {
           xpTotal: p.XpTotal ?? p.xpTotal ?? 0,
           xpForNextLevel: p.XpForNextLevel ?? p.xpForNextLevel ?? 1,
           userID: p.userID ?? p.UserID ?? 0,
+        }
+      : null,
+    streak: st
+      ? {
+          id: st.id ?? st.ID ?? 0,
+          userID: st.userID ?? st.UserID ?? 0,
+          currentStreak: st.currentStreak ?? st.CurrentStreak ?? 0,
+          longestStreak: st.longestStreak ?? st.LongestStreak ?? 0,
         }
       : null,
   };
@@ -64,79 +93,46 @@ export const useAuthStore = create<AuthState>((set) => {
     set({ isLoading: true });
 
     try {
-      const token = localStorage.getItem("token");
+      // 1) пробуем /auth/me (если токен валиден - сразу ok)
+      try {
+        const meResponse = await $api.get("/auth/me");
+        const user = normalizeUserFromBackend(meResponse.data);
 
-      // 1) если есть access токен - сначала пробуем /auth/me
-      if (token) {
-        try {
-          const meResponse = await $api.get("/auth/me");
-          const user = normalizeUserFromBackend(meResponse.data);
-
-          if (user) {
-            set({ isAuth: true, user });
-            return user;
-          }
-
-          set({ isAuth: false, user: null });
-          return null;
-        } catch (err: any) {
-          const status = err.response?.status;
-          const errorMessage =
-            err.response?.data?.error || err.response?.data?.message;
-
-          console.log(
-            "checkAuth /auth/me error:",
-            err.response?.data || err.message,
-          );
-
-          const isTokenExpired =
-            status === 401 &&
-            typeof errorMessage === "string" &&
-            errorMessage.toLowerCase().includes("token expired");
-
-          // если токен НЕ просто истёк - значит что-то другое, сбрасываем
-          if (!isTokenExpired) {
-            localStorage.removeItem("token");
-            set({ isAuth: false, user: null });
-            return null;
-          }
-
-          console.log(
-            "checkAuth: access token expired, trying /auth/refresh...",
-          );
+        if (user) {
+          set({ isAuth: true, user });
+          return user;
         }
+      } catch (err: any) {
+        // ничего не удаляем по тексту ошибки
+        // просто пробуем refresh ниже
       }
 
-      // 2) либо токена нет, либо он истек - пробуем /auth/refresh
+      // 2) пробуем refresh (cookie httpOnly)
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshRes = await $api.get("/auth/refresh");
+        const token = extractAccessToken(refreshRes.data);
 
-        const refreshResponse = await $api.post(
-          "/auth/refresh",
-          refreshToken ? { refreshToken } : {},
-        );
-
-        const accessToken = refreshResponse.data?.accessToken;
-        const user = normalizeUserFromBackend(refreshResponse.data);
-
-        if (accessToken) {
-          localStorage.setItem("token", accessToken);
+        if (token) {
+          localStorage.setItem("token", token);
           localStorage.removeItem("loggedOut");
         }
 
-        set({
-          isAuth: Boolean(user),
-          user,
-        });
+        // refresh может вернуть user, а может нет - подстрахуемся
+        const userFromRefresh = normalizeUserFromBackend(refreshRes.data);
+        if (userFromRefresh) {
+          set({ isAuth: true, user: userFromRefresh });
+          return userFromRefresh;
+        }
 
-        return user;
+        // 3) если refresh без user - снова /auth/me
+        const meResponse2 = await $api.get("/auth/me");
+        const user2 = normalizeUserFromBackend(meResponse2.data);
+
+        set({ isAuth: Boolean(user2), user: user2 });
+        return user2;
       } catch (refreshErr: any) {
-        console.log(
-          "checkAuth /auth/refresh error:",
-          refreshErr.response?.data || refreshErr.message,
-        );
-
         localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
         set({ isAuth: false, user: null });
         return null;
       }
@@ -157,20 +153,17 @@ export const useAuthStore = create<AuthState>((set) => {
     login: async (email, password) => {
       const response = await AuthService.login(email, password);
 
-      const accessToken = response.data?.accessToken;
+      const accessToken = extractAccessToken(response.data);
       if (accessToken) {
         localStorage.setItem("token", accessToken);
         localStorage.removeItem("loggedOut");
       }
 
-      const refreshToken = response.data?.refreshToken;
+      const refreshToken = extractRefreshToken(response.data);
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 
       const user = normalizeUserFromBackend(response.data);
-      set({
-        isAuth: Boolean(user),
-        user,
-      });
+      set({ isAuth: Boolean(user), user });
 
       return user;
     },
@@ -178,20 +171,17 @@ export const useAuthStore = create<AuthState>((set) => {
     register: async (name, email, password) => {
       const response = await AuthService.registration(name, email, password);
 
-      const accessToken = response.data?.accessToken;
+      const accessToken = extractAccessToken(response.data);
       if (accessToken) {
         localStorage.setItem("token", accessToken);
         localStorage.removeItem("loggedOut");
       }
 
-      const refreshToken = response.data?.refreshToken;
+      const refreshToken = extractRefreshToken(response.data);
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 
       const user = normalizeUserFromBackend(response.data);
-      set({
-        isAuth: Boolean(user),
-        user,
-      });
+      set({ isAuth: Boolean(user), user });
 
       return user;
     },
@@ -206,11 +196,7 @@ export const useAuthStore = create<AuthState>((set) => {
         localStorage.removeItem("refreshToken");
         localStorage.setItem("loggedOut", "true");
 
-        set({
-          isAuth: false,
-          user: null,
-          isLoading: false,
-        });
+        set({ isAuth: false, user: null, isLoading: false });
 
         useUiStore
           .getState()

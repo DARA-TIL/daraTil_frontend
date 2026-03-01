@@ -41,7 +41,8 @@
     },
     "stats": {
       "xpGained": "Получено XP: {{xp}}",
-      "level": "Уровень: {{prev}} - {{current}}"
+      "level": "Уровень: {{prev}} - {{current}}",
+      "prevBest": "Прошлый лучший: {{best}}%"
     }
   },
   "admin": {

@@ -1,7 +1,10 @@
-import type { IUser } from '@/features/auth/model/IUser'
+import type { IUser } from "@/features/auth/model/IUser";
 
-export interface AuthResponse {
-  accessToken: string
-  refreshToken?: string
-  user: IUser
+export interface AuthPayload {
+  user: IUser;
+  accessToken?: string;
+  refreshToken?: string;
+  streak?: string;
 }
+
+export type AuthResponse = AuthPayload | { data: AuthPayload };

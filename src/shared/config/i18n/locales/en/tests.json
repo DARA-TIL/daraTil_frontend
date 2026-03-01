@@ -41,7 +41,8 @@
     },
     "stats": {
       "xpGained": "XP gained: {{xp}}",
-      "level": "Level: {{prev}} - {{current}}"
+      "level": "Level: {{prev}} - {{current}}",
+      "prevBest": "Previous best: {{best}}%"
     }
   },
   "admin": {

@@ -5,33 +5,24 @@ import type {
   FolkloreUpdateDto,
 } from "../model/types";
 
-type ApiData<T> = { data: T };
-
 type FolkloreDto = {
   id?: number;
   ID?: number;
-
   type: string;
   author: string;
   region: string;
   content: string;
   name: string;
-
   mediaUrl?: string | null;
   MediaUrl?: string | null;
-
   imageUrl?: string | null;
   ImageUrl?: string | null;
-
   likesCount?: number;
   LikesCount?: number;
-
   createdAt?: string;
   CreatedAt?: string;
-
   updatedAt?: string;
   UpdatedAt?: string;
-
   translations?: any[];
 };
 
@@ -52,24 +43,45 @@ function normalizeFolklore(dto: FolkloreDto): Folklore {
   };
 }
 
+function unwrap<T = any>(payload: any): T {
+  return (payload?.data ?? payload) as T;
+}
+
+function unwrapArray(payload: any): FolkloreDto[] {
+  const v = unwrap<any>(payload);
+  return Array.isArray(v) ? (v as FolkloreDto[]) : [];
+}
+
+function unwrapFolklore(payload: any): FolkloreDto | null {
+  const v = unwrap<any>(payload);
+  if (v?.folklore) return v.folklore as FolkloreDto;
+  if (v && typeof v === "object" && (v.id || v.ID || v.name))
+    return v as FolkloreDto;
+  if (v?.data?.folklore) return v.data.folklore as FolkloreDto;
+  return null;
+}
+
 const FolkloreAdminService = {
   async getAll() {
-    const res = await $api.get<ApiData<FolkloreDto[]>>("/folklore/getAll");
-    return (res.data.data ?? []).map(normalizeFolklore);
+    const res = await $api.get<any>("/folklore/getAll");
+    if (Array.isArray(res.data))
+      return (res.data as FolkloreDto[]).map(normalizeFolklore);
+    return unwrapArray(res.data).map(normalizeFolklore);
   },
 
   async getById(id: number) {
-    const res = await $api.get<ApiData<FolkloreDto>>(`/folklore/getById/${id}`);
-    return normalizeFolklore(res.data.data);
+    const res = await $api.get<any>(`/folklore/getById/${id}`);
+    const dto = unwrapFolklore(res.data);
+    if (!dto) throw new Error("GetById: invalid response");
+    return normalizeFolklore(dto);
   },
 
-  // create: бек возвращает folklore БЕЗ translations - поэтому после create лучше сделать getById
   async create(payload: FolkloreCreateDto) {
-    const res = await $api.post<ApiData<FolkloreDto>>(
-      "/folklore/create",
-      payload,
-    );
-    const created = normalizeFolklore(res.data.data);
+    const res = await $api.post<any>("/folklore/create", payload);
+    const dto = unwrapFolklore(res.data);
+    if (!dto) throw new Error("Create: invalid response");
+    const created = normalizeFolklore(dto);
+
     try {
       return await this.getById(created.id);
     } catch {
@@ -78,16 +90,15 @@ const FolkloreAdminService = {
   },
 
   async update(id: number, payload: FolkloreUpdateDto) {
-    const res = await $api.patch<ApiData<FolkloreDto>>(
-      `/folklore/update/${id}`,
-      payload,
-    );
-    return normalizeFolklore(res.data.data);
+    const res = await $api.patch<any>(`/folklore/update/${id}`, payload);
+    const dto = unwrapFolklore(res.data);
+    if (!dto) throw new Error("Update: invalid response");
+    return normalizeFolklore(dto);
   },
 
   async remove(id: number) {
-    const res = await $api.delete<ApiData<string>>(`/folklore/delete/${id}`);
-    return res.data.data;
+    await $api.delete<any>(`/folklore/delete/${id}`);
+    return "ok";
   },
 };
 

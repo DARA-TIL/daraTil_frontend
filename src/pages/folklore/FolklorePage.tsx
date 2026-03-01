@@ -6,6 +6,7 @@ import { FolkloreFiltersBar } from "@/features/folklore/ui/FolkloreFiltersBar";
 import { FolkloreGrid } from "@/features/folklore/ui/FolkloreGrid";
 import { FolkloreDetailsDialog } from "@/features/folklore/ui/FolkloreDetailsDialog";
 import { useDebouncedValue } from "@/shared/lib/useDebouncedValue";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 const FolklorePage: React.FC = () => {
   const { t } = useTranslation("folklore");
@@ -25,6 +26,8 @@ const FolklorePage: React.FC = () => {
 
   const debouncedSearch = useDebouncedValue(search, 400);
 
+  const isAuth = useAuthStore((s) => s.isAuth);
+
   const hasAnyFilters = useMemo(() => {
     const s = debouncedSearch.trim();
     return Boolean(s || type || region);
@@ -32,8 +35,11 @@ const FolklorePage: React.FC = () => {
 
   useEffect(() => {
     fetchAll();
-    fetchLiked();
-  }, [fetchAll, fetchLiked]);
+  }, [fetchAll]);
+
+  useEffect(() => {
+    if (isAuth) fetchLiked();
+  }, [isAuth, fetchLiked]);
 
   const isFirstAutoRun = useRef(true);
 

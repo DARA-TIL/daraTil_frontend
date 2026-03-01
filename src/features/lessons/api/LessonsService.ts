@@ -36,10 +36,30 @@ export default class LessonsService {
   static async finish(
     payload: FinishLessonRequest,
   ): Promise<FinishLessonResponse> {
-    const res = await $api.post<FinishLessonResponse>(
-      "/lesson/finish",
-      payload,
-    );
-    return res.data;
+    const res = await $api.post<any>("/lesson/finish", payload);
+    const raw = res.data;
+
+    // Новый формат бэка:
+    // { data: { lessonResult: {...}, progress: {...}, streak: "NoChange" } }
+    if (raw?.data?.lessonResult) {
+      return {
+        data: raw.data.lessonResult,
+        progress: raw.data.progress,
+        streak: raw.data.streak,
+      } as FinishLessonResponse;
+    }
+
+    // На всякий случай: если когда-то вернется "двойной envelope"
+    // { data: { data: {...}, progress, streak } }
+    if (raw?.data?.data) {
+      return {
+        data: raw.data.data,
+        progress: raw.data.progress ?? raw.progress,
+        streak: raw.data.streak ?? raw.streak,
+      } as FinishLessonResponse;
+    }
+
+    // Legacy: уже "нормальный" ответ
+    return raw as FinishLessonResponse;
   }
 }

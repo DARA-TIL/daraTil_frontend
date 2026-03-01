@@ -41,7 +41,8 @@
     },
     "stats": {
       "xpGained": "Қосылған XP: {{xp}}",
-      "level": "Деңгей: {{prev}} - {{current}}"
+      "level": "Деңгей: {{prev}} - {{current}}",
+      "prevBest": "Алдыңғы ең жақсы: {{best}}%"
     }
   },
   "admin": {
