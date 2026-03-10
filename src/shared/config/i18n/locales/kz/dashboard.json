@@ -1,7 +1,6 @@
 {
   "title": "Басты бет",
   "subtitle": "Саяхатыңды жалғастыр, сабақтар мен фольклорды зертте.",
-
   "actions": {
     "continue": "Сабақты жалғастыру",
     "library": "Сабақтар кітапханасы",
@@ -9,7 +8,6 @@
     "folklore": "Фольклор",
     "quiz": "Жылдам жаттығу"
   },
-
   "cards": {
     "specialTitle": "Күнделікті тапсырма",
     "activityToday": "Бүгін",
@@ -18,19 +16,16 @@
     "statsStories": "Әңгімелер",
     "startChallenge": "Тапсырманы бастау",
     "streakShort": "{{day}} күн",
-
     "charactersTitle": "Қызықты сабақтар",
     "guidesOnline": "Онлайн гидтер: {{count}}",
     "charactersDesc": "Біздің кейіпкерлермен танысып, тоқтаған жеріңнен жалғастыр.",
     "viewAll": "Барлығын көру",
-
     "folkloreTitle": "Таңдаулы фольклор",
     "new": "Жаңа",
     "folkloreDesc": "Оңтүстік өңірдің дәстүрлі әңгімесін тыңда.",
     "folkloreName": "Дала әні",
     "folkloreMeta": "{{minutes}} мин • {{region}} өңірі",
     "listen": "Тыңдау",
-
     "mapTitle": "Менің сабақ картам",
     "mapSubtitle": "Өңірлер мен сабақтар бойынша жолыңды бақыла.",
     "today": "Бүгін",
@@ -42,7 +37,6 @@
     "nextLessonName": "Солтүстік диалектінің негіздері",
     "nextLessonMeta": "Өңір: {{region}} • {{unit}} бөлім • {{minutes}} мин",
     "start": "Бастау",
-
     "progressTitle": "Сенің прогрессің",
     "progressSubtitle": "{{level}} деңгей • {{currentXp}} / {{nextXp}} XP",
     "levelLabel": "Деңгей",
@@ -53,13 +47,37 @@
     "timeSpent": "Жұмсалған уақыт",
     "timeShort": "{{hours}} сағ",
     "timeFull": "{{hours}} сағ {{minutes}} мин",
-
     "activityTitle": "Соңғы белсенділік",
     "activityItem1Title": "Сабақ аяқталды: «{{lessonName}}»",
     "activityItem1Meta": "{{minutes}} мин бұрын • +{{xp}} XP",
     "activityItem2Title": "«{{storyName}}» фольклор әңгімесін тыңдадың",
     "activityItem2Meta": "{{minutes}} мин бұрын • {{duration}} мин",
     "activityItem3Title": "{{level}} деңгей жетістіктері ашылды",
-    "activityItem3Meta": "{{hours}} сағат бұрын"
+    "activityItem3Meta": "{{hours}} сағат бұрын",
+    "activityLoadingShort": "Updating...",
+    "activityLoading": "Loading activity...",
+    "activityEmpty": "No recent activity yet.",
+    "activityMeta": "{{timeAgo}} • {{entity}}",
+    "activityTimelineTitle": "Activity timeline",
+    "activityActionLessonCompleted": "Lesson completed",
+    "activityActionFolkloreLiked": "Folklore liked",
+    "activityActionFolkloreDisliked": "Folklore disliked",
+    "activityActionUnknown": "Activity updated",
+    "activityEntityFallback": "Entity",
+    "activityTimeUnknown": "Unknown time",
+    "activityActionFolkloreRead": "Фольклор оқылды",
+    "streakTitle": "Күнделікті серия",
+    "streakDescription": "Сабақтар мен фольклор әрекеттерін күн сайын орында.",
+    "streakCurrent": "Ағымдағы",
+    "streakLongest": "Ең ұзақ",
+    "streakCurrentValue": "{{count}} күн",
+    "streakLongestValue": "{{count}} күн",
+    "streakAction": "Серияны сақта",
+    "streakStatusIncremented": "Серия өсті: {{count}} күн",
+    "streakStatusCreated": "Серия құрылды. Жалғастыр!",
+    "streakStatusNewStart": "Жаңа серия басталды!",
+    "streakStatusReset": "Серия 0-ге түсті. Бүгін қайта баста.",
+    "profileStreak": "Серия",
+    "profileLongestStreak": "Ең ұзақ серия"
   }
 }

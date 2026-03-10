@@ -12,6 +12,11 @@ export type ToggleLikeResponse = {
   streak?: string;
 };
 
+export type GetFolkloreResponse = {
+  data: Folklore;
+  streak?: string;
+};
+
 export type FolkloreSearchParams = Partial<{
   type: string;
   region: string;
@@ -161,10 +166,13 @@ const FolkloreService = {
   async getById(id: number) {
     const res = await $api.get<any>(`/folklore/getById/${id}`);
 
-    const { folklore } = unwrapFolkloreFromResponse(res.data);
+    const { folklore, streak } = unwrapFolkloreFromResponse(res.data);
     if (!folklore) throw new Error("GetById: invalid response");
 
-    return normalizeFolklore(folklore);
+    return {
+      data: normalizeFolklore(folklore),
+      streak,
+    } as GetFolkloreResponse;
   },
 
   async update(id: number, payload: FolkloreUpdateDto) {

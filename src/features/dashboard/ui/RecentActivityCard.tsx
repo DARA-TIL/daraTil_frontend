@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import {
+  formatRelativeActivityTime,
+  getActivityColor,
+  getActivityEntityLabel,
+  getActivityTitle,
+} from "@/features/activity/model/presentation";
+import { useActivityStore } from "@/features/activity/store/useActivityStore";
 
 type ActivityEvent = {
   id: string;
@@ -10,33 +18,42 @@ type ActivityEvent = {
 };
 
 export const RecentActivityCard: React.FC = () => {
-  const { t } = useTranslation("dashboard");
+  const { t, i18n } = useTranslation("dashboard");
+  const userID = useAuthStore((s) => s.user?.id ?? 0);
 
-  // демо-данные - потом можно заменить на реальные события из API
-  const lessonName = t("cards.nextLessonName");      // "Northern dialect basics"
-  const folkloreName = t("cards.folkloreName");      // "Song of the steppe"
-  const level = 3;
+  const items = useActivityStore((s) => s.items);
+  const loading = useActivityStore((s) => s.loading);
+  const fetchRecent = useActivityStore((s) => s.fetchRecent);
 
-  const events: ActivityEvent[] = [
-    {
-      id: "lesson-finished",
-      title: t("cards.activityItem1Title", { lessonName }),
-      meta: t("cards.activityItem1Meta", { minutes: 15, xp: 45 }),
-      color: "#3b82f6",
-    },
-    {
-      id: "folklore-listened",
-      title: t("cards.activityItem2Title", { storyName: folkloreName }),
-      meta: t("cards.activityItem2Meta", { minutes: 40, duration: 12 }),
-      color: "#a855f7",
-    },
-    {
-      id: "level-unlocked",
-      title: t("cards.activityItem3Title", { level }),
-      meta: t("cards.activityItem3Meta", { hours: 1 }),
-      color: "#22c55e",
-    },
-  ];
+  useEffect(() => {
+    void fetchRecent();
+  }, [fetchRecent]);
+
+  const events = useMemo<ActivityEvent[]>(() => {
+    const locale = i18n.resolvedLanguage ?? "en";
+
+    return items
+      .filter((item) => userID <= 0 || item.userID === userID)
+      .slice(0, 5)
+      .map((item) => {
+        const timeAgo = formatRelativeActivityTime(item.time, locale, t);
+        const entity = getActivityEntityLabel(item.entityType, item.entityID, t);
+
+        return {
+          id: `${item.id}-${item.time}-${item.action}`,
+          title: getActivityTitle(item.action, t),
+          meta: t("cards.activityMeta", {
+            defaultValue: "{{timeAgo}} • {{entity}}",
+            timeAgo,
+            entity,
+          }),
+          color: getActivityColor(item.action),
+        };
+      });
+  }, [items, userID, i18n.resolvedLanguage, t]);
+
+  const showLoading = loading && events.length === 0;
+  const showEmptyState = !loading && events.length === 0;
 
   return (
     <Paper
@@ -69,23 +86,39 @@ export const RecentActivityCard: React.FC = () => {
           {t("cards.activityTitle")}
         </Typography>
         <Chip
-          label={t("cards.activityToday")}
+          label={
+            loading
+              ? t("cards.activityLoadingShort", { defaultValue: "Updating..." })
+              : t("cards.activityToday")
+          }
           size="small"
           sx={{ borderRadius: 999 }}
         />
       </Stack>
 
-      {/* TIMELINE */}
-      {events.map((ev) => (
+      {showLoading && (
+        <Typography variant="body2" color="text.secondary">
+          {t("cards.activityLoading", { defaultValue: "Loading activity..." })}
+        </Typography>
+      )}
+
+      {showEmptyState && (
+        <Typography variant="body2" color="text.secondary">
+          {t("cards.activityEmpty", {
+            defaultValue: "No recent activity yet.",
+          })}
+        </Typography>
+      )}
+
+      {events.map((ev, index) => (
         <Box
           key={ev.id}
           sx={{
             position: "relative",
-            mb: 2.5,
+            mb: index === events.length - 1 ? 0 : 2.5,
             pl: 3,
           }}
         >
-          {/* Дот */}
           <Box
             sx={{
               position: "absolute",
@@ -100,14 +133,7 @@ export const RecentActivityCard: React.FC = () => {
             }}
           />
 
-          {/* Контент события */}
-          <Typography
-            variant="body2"
-            fontWeight={600}
-            sx={{
-              mb: 0.4,
-            }}
-          >
+          <Typography variant="body2" fontWeight={600} sx={{ mb: 0.4 }}>
             {ev.title}
           </Typography>
           <Typography

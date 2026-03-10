@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
@@ -19,22 +20,13 @@ import ProfileSectionCard from "../ProfileSectionCard";
 
 const ProfileOverviewTab: React.FC = () => {
   const theme = useTheme();
+  const { t } = useTranslation("dashboard");
   const user = useAuthStore((s) => s.user);
   const updateProfile = useAuthStore((s) => s.updateProfile);
 
   const [username, setUsername] = useState(user?.username ?? "");
   const [avatar, setAvatar] = useState(user?.avatar ?? "");
   const [edit, setEdit] = useState(false);
-
-  const stats = useMemo(
-    () => [
-      { label: "Completed lessons", value: "18" },
-      { label: "Words learned", value: "320" },
-      { label: "Time spent", value: "5h 20m" },
-      { label: "Streak", value: "4 days" },
-    ],
-    [],
-  );
 
   useEffect(() => {
     if (!user) return;
@@ -46,6 +38,31 @@ const ProfileOverviewTab: React.FC = () => {
 
   const level = user.progress?.level ?? 0;
   const xpTotal = user.progress?.xpTotal ?? 0;
+  const currentStreak = user.streak?.currentStreak ?? 0;
+  const longestStreak = user.streak?.longestStreak ?? 0;
+
+  const stats = useMemo(
+    () => [
+      { label: t("cards.completedLessons"), value: "18" },
+      { label: t("cards.wordsLearned"), value: "320" },
+      { label: t("cards.timeSpent"), value: "5h 20m" },
+      {
+        label: t("cards.profileStreak", { defaultValue: "Streak" }),
+        value: t("cards.streakCurrentValue", {
+          count: currentStreak,
+          defaultValue: "{{count}} days",
+        }),
+      },
+      {
+        label: t("cards.profileLongestStreak", { defaultValue: "Longest streak" }),
+        value: t("cards.streakLongestValue", {
+          count: longestStreak,
+          defaultValue: "{{count}} days",
+        }),
+      },
+    ],
+    [t, currentStreak, longestStreak],
+  );
 
   const onSave = async () => {
     await updateProfile({ username, avatar });
@@ -111,7 +128,7 @@ const ProfileOverviewTab: React.FC = () => {
                   useFlexGap
                 >
                   <Chip
-                    label={`Level ${level}`}
+                    label={`${t("cards.levelLabel", { defaultValue: "Level" })} ${level}`}
                     sx={{ background: "rgba(255,255,255,0.20)", color: "#fff" }}
                   />
                   <Chip
@@ -120,6 +137,13 @@ const ProfileOverviewTab: React.FC = () => {
                   />
                   <Chip
                     label={user.role}
+                    sx={{ background: "rgba(255,255,255,0.20)", color: "#fff" }}
+                  />
+                  <Chip
+                    label={t("cards.streakCurrentValue", {
+                      count: currentStreak,
+                      defaultValue: "{{count}} days",
+                    })}
                     sx={{ background: "rgba(255,255,255,0.20)", color: "#fff" }}
                   />
                 </Stack>

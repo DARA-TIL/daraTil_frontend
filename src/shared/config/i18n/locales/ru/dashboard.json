@@ -1,7 +1,6 @@
 {
   "title": "Главная панель",
   "subtitle": "Продолжайте путь, изучайте уроки и фольклорные материалы.",
-
   "actions": {
     "continue": "Продолжить урок",
     "library": "Библиотека уроков",
@@ -9,7 +8,6 @@
     "folklore": "Фольклор",
     "quiz": "Быстрая практика"
   },
-
   "cards": {
     "specialTitle": "Ежедневное задание",
     "activityToday": "Сегодня",
@@ -18,19 +16,16 @@
     "statsStories": "Истории",
     "startChallenge": "Начать задание",
     "streakShort": "{{day}} день",
-
     "charactersTitle": "Увлекательные уроки",
     "guidesOnline": "Гайды онлайн: {{count}}",
     "charactersDesc": "Познакомьтесь с проводниками и продолжите с того места, где остановились.",
     "viewAll": "Показать все",
-
     "folkloreTitle": "Избранный фольклор",
     "new": "Новое",
     "folkloreDesc": "Послушайте традиционную историю южного региона.",
     "folkloreName": "Песня степи",
     "folkloreMeta": "{{minutes}} мин • {{region}} регион",
     "listen": "Слушать",
-
     "mapTitle": "Моя карта уроков",
     "mapSubtitle": "Отслеживайте свой путь по регионам и урокам.",
     "today": "Сегодня",
@@ -42,7 +37,6 @@
     "nextLessonName": "Основы северного диалекта",
     "nextLessonMeta": "Регион: {{region}} • Модуль {{unit}} • {{minutes}} мин",
     "start": "Начать",
-
     "progressTitle": "Ваш прогресс",
     "progressSubtitle": "Уровень {{level}} • {{currentXp}} / {{nextXp}} XP",
     "levelLabel": "Уровень",
@@ -53,13 +47,37 @@
     "timeSpent": "Потраченное время",
     "timeShort": "{{hours}} ч",
     "timeFull": "{{hours}} ч {{minutes}} мин",
-
     "activityTitle": "Последняя активность",
     "activityItem1Title": "Завершен урок: «{{lessonName}}»",
     "activityItem1Meta": "{{minutes}} мин назад • +{{xp}} XP",
     "activityItem2Title": "Прослушана фольклорная история «{{storyName}}»",
     "activityItem2Meta": "{{minutes}} мин назад • {{duration}} мин",
     "activityItem3Title": "Открыты достижения {{level}} уровня",
-    "activityItem3Meta": "{{hours}} час назад"
+    "activityItem3Meta": "{{hours}} час назад",
+    "activityLoadingShort": "Updating...",
+    "activityLoading": "Loading activity...",
+    "activityEmpty": "No recent activity yet.",
+    "activityMeta": "{{timeAgo}} • {{entity}}",
+    "activityTimelineTitle": "Activity timeline",
+    "activityActionLessonCompleted": "Lesson completed",
+    "activityActionFolkloreLiked": "Folklore liked",
+    "activityActionFolkloreDisliked": "Folklore disliked",
+    "activityActionUnknown": "Activity updated",
+    "activityEntityFallback": "Entity",
+    "activityTimeUnknown": "Unknown time",
+    "activityActionFolkloreRead": "Фольклор прочитан",
+    "streakTitle": "Ежедневная серия",
+    "streakDescription": "Завершайте уроки и действия с фольклором каждый день.",
+    "streakCurrent": "Текущая",
+    "streakLongest": "Лучшая",
+    "streakCurrentValue": "{{count}} дн.",
+    "streakLongestValue": "{{count}} дн.",
+    "streakAction": "Сохранить серию",
+    "streakStatusIncremented": "Серия увеличена: {{count}} дн.",
+    "streakStatusCreated": "Серия создана. Продолжайте!",
+    "streakStatusNewStart": "Новая серия начата!",
+    "streakStatusReset": "Серия сброшена до 0. Начните снова сегодня.",
+    "profileStreak": "Серия",
+    "profileLongestStreak": "Лучшая серия"
   }
 }

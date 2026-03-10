@@ -1,7 +1,6 @@
 {
   "title": "Dashboard",
   "subtitle": "Continue your journey, explore lessons and folklore content.",
-
   "actions": {
     "continue": "Continue lesson",
     "library": "Lessons library",
@@ -9,7 +8,6 @@
     "folklore": "Folklore",
     "quiz": "Quick practice"
   },
-
   "cards": {
     "specialTitle": "Daily challenge",
     "activityToday": "Today",
@@ -18,19 +16,16 @@
     "statsStories": "Stories",
     "startChallenge": "Start challenge",
     "streakShort": "Day {{day}}",
-
     "charactersTitle": "Engaging lessons",
     "guidesOnline": "{{count}} guides online",
     "charactersDesc": "Meet your guides and continue from where you stopped.",
     "viewAll": "View all",
-
     "folkloreTitle": "Featured folklore",
     "new": "New",
     "folkloreDesc": "Listen to a traditional story from the southern region.",
     "folkloreName": "Song of the steppe",
     "folkloreMeta": "{{minutes}} min • {{region}} region",
     "listen": "Listen",
-
     "mapTitle": "My lessons map",
     "mapSubtitle": "Track your journey across regions and lessons.",
     "today": "Today",
@@ -42,7 +37,6 @@
     "nextLessonName": "Northern dialect basics",
     "nextLessonMeta": "Region: {{region}} • Unit {{unit}} • {{minutes}} min",
     "start": "Start",
-
     "progressTitle": "Your progress",
     "progressSubtitle": "Level {{level}} • {{currentXp}} / {{nextXp}} XP",
     "levelLabel": "Level",
@@ -53,13 +47,37 @@
     "timeSpent": "Time spent",
     "timeShort": "{{hours}}h",
     "timeFull": "{{hours}}h {{minutes}}m",
-
     "activityTitle": "Recent activity",
     "activityItem1Title": "Finished lesson: \"{{lessonName}}\"",
     "activityItem1Meta": "{{minutes}} min ago • +{{xp}} XP",
     "activityItem2Title": "Listened to folklore story \"{{storyName}}\"",
     "activityItem2Meta": "{{minutes}} min ago • {{duration}} min",
     "activityItem3Title": "Unlocked level {{level}} achievements",
-    "activityItem3Meta": "{{hours}} hour ago"
+    "activityItem3Meta": "{{hours}} hour ago",
+    "activityLoadingShort": "Updating...",
+    "activityLoading": "Loading activity...",
+    "activityEmpty": "No recent activity yet.",
+    "activityMeta": "{{timeAgo}} • {{entity}}",
+    "activityTimelineTitle": "Activity timeline",
+    "activityActionLessonCompleted": "Lesson completed",
+    "activityActionFolkloreLiked": "Folklore liked",
+    "activityActionFolkloreDisliked": "Folklore disliked",
+    "activityActionUnknown": "Activity updated",
+    "activityEntityFallback": "Entity",
+    "activityTimeUnknown": "Unknown time",
+    "activityActionFolkloreRead": "Folklore read",
+    "streakTitle": "Daily streak",
+    "streakDescription": "Complete lessons and folklore actions every day.",
+    "streakCurrent": "Current",
+    "streakLongest": "Longest",
+    "streakCurrentValue": "{{count}} days",
+    "streakLongestValue": "{{count}} days",
+    "streakAction": "Keep streak alive",
+    "streakStatusIncremented": "Streak increased: {{count}} days",
+    "streakStatusCreated": "Streak created. Keep it alive!",
+    "streakStatusNewStart": "New streak started!",
+    "streakStatusReset": "Streak reset to 0. Start again today.",
+    "profileStreak": "Streak",
+    "profileLongestStreak": "Longest streak"
   }
 }

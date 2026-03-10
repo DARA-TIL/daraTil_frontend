@@ -5,6 +5,7 @@ type ApiData<T> = { data: T };
 
 function normalizeUser(dto: any): IUser {
   const p = dto.progress ?? dto.Progress ?? null;
+  const st = dto.streak ?? dto.Streak ?? null;
 
   return {
     id: dto.id ?? dto.ID ?? 0,
@@ -13,6 +14,7 @@ function normalizeUser(dto: any): IUser {
     avatar: dto.avatar ?? dto.Avatar ?? "",
     role: dto.role ?? dto.Role ?? "",
     authProvider: dto.authProvider ?? dto.AuthProvider ?? "",
+    streakStatus: typeof dto.streak === "string" ? dto.streak : "",
     progress: p
       ? {
           id: p.id ?? p.ID ?? 0,
@@ -20,6 +22,14 @@ function normalizeUser(dto: any): IUser {
           xpTotal: p.XpTotal ?? p.xpTotal ?? 0,
           xpForNextLevel: p.XpForNextLevel ?? p.xpForNextLevel ?? 1,
           userID: p.userID ?? p.UserID ?? 0,
+        }
+      : null,
+    streak: st
+      ? {
+          id: st.id ?? st.ID ?? 0,
+          userID: st.userID ?? st.UserID ?? (dto.id ?? dto.ID ?? 0),
+          currentStreak: st.currentStreak ?? st.CurrentStreak ?? 0,
+          longestStreak: st.longestStreak ?? st.LongestStreak ?? 0,
         }
       : null,
   };

@@ -5,6 +5,7 @@ import FolkloreService, {
 import type { Folklore } from "../model/types";
 import axios from "axios";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 type LoadMode = "all" | "search";
 
@@ -177,7 +178,8 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
     set({ selectedId: id, detailsLoading: true });
     try {
       const full = await FolkloreService.getById(id);
-      set({ selected: full });
+      set({ selected: full.data });
+      useAuthStore.getState().applyStreakUpdate(full.streak);
     } catch (e) {
       useUiStore.getState().showSnackbar(getErrorMessage(e), "error");
       set({ selectedId: null, selected: null });
@@ -197,6 +199,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
     if (!hasKnownState) {
       try {
         const res = await FolkloreService.toggleLike(id);
+        useAuthStore.getState().applyStreakUpdate(res.streak);
 
         set((s) => ({
           likedIds: { ...s.likedIds, [id]: res.liked },
@@ -239,6 +242,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
 
     try {
       const res = await FolkloreService.toggleLike(id);
+      useAuthStore.getState().applyStreakUpdate(res.streak);
 
       // strict sync from server response
       set((s) => {

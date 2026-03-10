@@ -137,6 +137,7 @@ export const useLessonTestStore = create<State>((set, get) => ({
 
       const raw = await LessonsService.finish(payload);
       const resNorm = normalizeFinishResponse(raw);
+      useAuthStore.getState().applyStreakUpdate(resNorm?.streak);
 
       // IMPORTANT: finishResult должен быть в том виде, как его ждут UI компоненты
       set({ finishResult: resNorm as FinishLessonResponse });

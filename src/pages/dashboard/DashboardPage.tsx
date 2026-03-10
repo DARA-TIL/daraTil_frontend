@@ -5,7 +5,7 @@ import { DashboardHeader } from "../../features/dashboard/ui/DashboardHeader";
 import { LessonsMapCard } from "../../features/dashboard/ui/LessonsMapCard";
 import { ProgressCard } from "../../features/dashboard/ui/ProgressCard";
 import { FeaturedFolkloreCard } from "../../features/dashboard/ui/FeaturedFolkloreCard";
-import { EngagingLessonsCard } from "../../features/dashboard/ui/EngagingLessonsCard";
+import { StreakCard } from "../../features/dashboard/ui/StreakCard";
 import { DailyChallengeCard } from "../../features/dashboard/ui/DailyChallengeCard";
 import { RecentActivityCard } from "../../features/dashboard/ui/RecentActivityCard";
 
@@ -40,7 +40,7 @@ const DashboardPage: React.FC = () => {
         <Grid size={{ xs: 12, md:5 }}>
           <Stack spacing={2.5} sx={{ height: "100%" }}>
             <FeaturedFolkloreCard />
-            <EngagingLessonsCard />
+            <StreakCard />
             <DailyChallengeCard />
           </Stack>
         </Grid>
