@@ -34,6 +34,10 @@
       "users": {
         "title": "Управление пользователями",
         "subtitle": "Поиск пользователей, роли, обновление профиля."
+      },
+      "regions": {
+        "title": "Regions management",
+        "subtitle": "Manage imported regions, translations, dialects, traditions, and images for the interactive map."
       }
     }
   },
@@ -94,7 +98,6 @@
     "empty": "Нет уроков",
     "rowMeta": "Уровень {{level}} - Награда {{reward}} - Блоки {{blocks}} - {{author}}",
     "confirmDeleteLesson": "Удалить урок \"{{name}}\"? Это удалит все блоки.",
-
     "fields": {
       "name": "Название",
       "author": "Автор",
@@ -104,23 +107,19 @@
       "image": "Картинка",
       "lessonImage": "Картинка урока"
     },
-
     "helpers": {
       "upload": "Можно вставить URL или загрузить файл. При загрузке файл отправится в Cloudinary."
     },
-
     "validation": {
       "nameRequired": "Название обязательно.",
       "authorRequired": "Автор обязателен.",
       "blockTitleRequired": "Название блока обязательно.",
       "mediaUrlRequired": "Для медиа-блоков нужен URL.",
-
       "imageType": "Пожалуйста, выберите файл изображения.",
       "imageTooLarge": "Картинка слишком большая (макс {{max}}MB).",
       "mediaType": "Пожалуйста, выберите аудио или видео файл.",
       "mediaTooLarge": "Медиа слишком большое (макс {{max}}MB)."
     },
-
     "snackbar": {
       "saved": "Сохранено",
       "saveFailed": "Не удалось сохранить",
@@ -135,12 +134,10 @@
       "blockDeleted": "Блок удалён",
       "updateFailed": "Не удалось обновить"
     },
-
     "actions": {
       "createLesson": "Создать урок",
       "openAsUser": "Открыть как пользователь"
     },
-
     "edit": {
       "loadingTitle": "Редактирование урока",
       "titleWithId": "Редактировать урок #{{id}} - {{name}}",
@@ -151,25 +148,20 @@
         "test": "Тест"
       }
     },
-
     "blocks": {
       "title": "Блоки урока",
       "subtitle": "Позиции всегда нормализуются на бэкенде (1..N).",
       "addBlock": "Добавить блок",
-
       "createBlockTitle": "Создать блок",
       "editBlockTitle": "Редактировать блок #{{id}}",
       "createBlock": "Создать блок",
       "saveBlock": "Сохранить блок",
-
       "empty": "Блоков пока нет. Нажмите \"Добавить блок\", чтобы создать первый.",
       "noText": "Нет текста",
       "noUrl": "Нет URL",
       "youtubeVideo": "YouTube видео",
-
       "confirmDeleteBlock": "Удалить блок \"{{name}}\"? Позиции будут нормализованы.",
       "positionHelper": "Если позиция занята, бэкенд поменяет местами и нормализует.",
-
       "fields": {
         "title": "Заголовок",
         "type": "Тип",
@@ -178,7 +170,6 @@
         "media": "Медиа",
         "captionOptional": "Подпись (необязательно)"
       },
-
       "types": {
         "text": "Текст",
         "image": "Картинка",
@@ -186,11 +177,103 @@
         "video": "Видео",
         "youtube": "YouTube"
       },
-
       "actions": {
         "moveUp": "Вверх",
         "moveDown": "Вниз"
       }
+    }
+  },
+  "regions": {
+    "title": "Regions admin",
+    "subtitle": "Manage region metadata, translations, dialects, traditions, and drawer imagery for the interactive map.",
+    "listTitle": "Imported regions",
+    "editorBadge": "Regions editor",
+    "emptyTitle": "Select a region to edit",
+    "emptyDescription": "Choose a region from the list to manage metadata, translations, dialects, and traditions.",
+    "emptyTranslations": "No translations yet.",
+    "emptyDialects": "No dialect entries yet.",
+    "emptyTraditions": "No traditions yet.",
+    "placeholderImage": "No region image yet",
+    "kind": {
+      "region": "Region",
+      "city": "City"
+    },
+    "state": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "filters": {
+      "kind": "Kind",
+      "state": "State"
+    },
+    "tabs": {
+      "metadata": "Metadata",
+      "translations": "Translations",
+      "dialects": "Dialects",
+      "traditions": "Traditions"
+    },
+    "fields": {
+      "code": "Code",
+      "kind": "Kind",
+      "requiredLevel": "Required level",
+      "isActive": "Active",
+      "regionStatus": "Region status",
+      "image": "Region image",
+      "language": "Language",
+      "name": "Name",
+      "description": "Description",
+      "word": "Word",
+      "pronounceUrl": "Pronounce URL"
+    },
+    "labels": {
+      "regionCode": "Code: {{code}}",
+      "levelBadge": "Level {{level}}",
+      "dialectEntry": "Dialect entry #{{id}}",
+      "traditionEntry": "Tradition #{{id}}",
+      "translationCount": "Translations: {{count}}"
+    },
+    "actions": {
+      "refresh": "Refresh regions",
+      "editing": "Editing",
+      "saveMetadata": "Save metadata",
+      "addTranslation": "Add translation",
+      "addDialect": "Add dialect entry",
+      "addDialectTranslation": "Add dialect translation",
+      "addTradition": "Add tradition",
+      "addTraditionTranslation": "Add tradition translation"
+    },
+    "helpers": {
+      "image": "Paste an image URL or upload a file. Uploads are stored in Cloudinary."
+    },
+    "validation": {
+      "imageType": "Please select an image file.",
+      "imageTooLarge": "Image is too large (max {{max}}MB).",
+      "imageUploadFailed": "Image upload failed. Please try again."
+    },
+    "snackbar": {
+      "metadataSaved": "Region metadata saved",
+      "translationCreated": "Region translation created",
+      "translationSaved": "Region translation saved",
+      "translationDeleted": "Region translation deleted",
+      "dialectCreated": "Dialect entry created",
+      "dialectDeleted": "Dialect entry deleted",
+      "dialectTranslationCreated": "Dialect translation created",
+      "dialectTranslationSaved": "Dialect translation saved",
+      "dialectTranslationDeleted": "Dialect translation deleted",
+      "traditionCreated": "Tradition created",
+      "traditionDeleted": "Tradition deleted",
+      "traditionTranslationCreated": "Tradition translation created",
+      "traditionTranslationSaved": "Tradition translation saved",
+      "traditionTranslationDeleted": "Tradition translation deleted"
+    },
+    "confirmDeleteTranslation": "Delete this translation?",
+    "confirmDeleteDialect": "Delete this dialect entry?",
+    "confirmDeleteDialectTranslation": "Delete this dialect translation?",
+    "confirmDeleteTradition": "Delete this tradition?",
+    "confirmDeleteTraditionTranslation": "Delete this tradition translation?",
+    "pagination": {
+      "summary": "Showing {{from}}-{{to}} of {{total}}",
+      "perPage": "Per page"
     }
   }
 }

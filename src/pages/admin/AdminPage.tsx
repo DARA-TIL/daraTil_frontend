@@ -4,6 +4,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import { useTranslation } from "react-i18next";
 
 const AdminPage: React.FC = () => {
@@ -84,6 +85,18 @@ const AdminPage: React.FC = () => {
           subtitle={t("adminPage.cards.users.subtitle")}
           icon={<PeopleAltIcon />}
           to="/app/admin/users"
+        />
+
+        <Card
+          title={t("adminPage.cards.regions.title", {
+            defaultValue: "Regions management",
+          })}
+          subtitle={t("adminPage.cards.regions.subtitle", {
+            defaultValue:
+              "Manage imported regions, translations, dialects, traditions, and images for the map drawer.",
+          })}
+          icon={<TravelExploreRoundedIcon />}
+          to="/app/admin/regions"
         />
       </Stack>
     </Box>

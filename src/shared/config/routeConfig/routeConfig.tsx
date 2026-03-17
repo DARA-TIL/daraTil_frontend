@@ -1,4 +1,5 @@
 import type React from "react";
+import { lazy } from "react";
 import RootLayout from "@/layout/rootLayout/RootLayout";
 import DashboardLayout from "@/layout/dashboardLayout/DashboardLayout";
 
@@ -8,7 +9,6 @@ import Register from "@/pages/auth/Register";
 import NotFound from "@/pages/notFound/NotFound";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import LessonsPage from "@/pages/lessons/LessonsPage";
-import MapPage from "@/pages/map/MapPage";
 import FolklorePage from "@/pages/folklore/FolklorePage";
 import ProgressPage from "@/pages/progress/ProgressPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
@@ -25,6 +25,9 @@ import LessonsAdminPage from "@/pages/admin/lessons/LessonsAdminPage";
 import LessonCreatePage from "@/pages/admin/lessons/LessonCreatePage";
 import UsersAdminPage from "@/pages/admin/users/UsersAdminPage";
 import UserEditAdminPage from "@/pages/admin/users/UserEditAdminPage";
+import RegionsAdminPage from "@/pages/admin/regions/RegionsAdminPage";
+
+const MapPage = lazy(() => import("@/pages/map/MapPage"));
 
 export interface AppRouteConfig {
   path?: string;
@@ -165,6 +168,14 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <UserEditAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/regions",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <RegionsAdminPage />
               </ProtectedRoute>
             ),
           },

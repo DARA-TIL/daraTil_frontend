@@ -1,3 +1,45 @@
 {
-  "map": "Map"
+  "map": "Map",
+  "page": {
+    "title": "Interactive Kazakhstan Map",
+    "subtitle": "Explore regions and republican cities, zoom into the map, and open localized cultural content on the side.",
+    "searchLabel": "Search region or city",
+    "reset": "Show all Kazakhstan",
+    "mapFocusTitle": "Explore Kazakhstan",
+    "mapFocusHint": "Hover to preview. Click to zoom and open region details."
+  },
+  "legend": {
+    "available": "Available",
+    "selected": "Selected",
+    "locked": "Locked"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "dialects": "Dialects",
+    "traditions": "Traditions"
+  },
+  "panel": {
+    "idleBadge": "Map explorer",
+    "emptyTitle": "Select a region",
+    "emptyDescription": "Choose any region or republican city to explore local overview, dialects, and traditions.",
+    "emptyHintHover": "Hover to preview",
+    "emptyHintClick": "Click to zoom and explore",
+    "emptyHintLanguage": "Use local KZ / RU / EN content switching inside the drawer",
+    "kind": {
+      "region": "Region",
+      "city": "City"
+    },
+    "requiredLevel": "Level {{level}}",
+    "placeholderOverview": "This region is ready for cultural, linguistic, and tradition content.",
+    "metaCode": "Code: {{code}}",
+    "metaDialects": "Dialects: {{count}}",
+    "metaTraditions": "Traditions: {{count}}",
+    "metaStatus": "Status: {{status}}",
+    "statusUnknown": "Unknown",
+    "noOverview": "Overview text is not available yet for this language.",
+    "noDialects": "No dialect content is available yet for this region.",
+    "noTraditions": "No traditions are available yet for this region.",
+    "noDescription": "Description not available yet.",
+    "pronounce": "Pronounce"
+  }
 }
