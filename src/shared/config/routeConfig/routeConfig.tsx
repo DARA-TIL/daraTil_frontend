@@ -26,6 +26,7 @@ import LessonCreatePage from "@/pages/admin/lessons/LessonCreatePage";
 import UsersAdminPage from "@/pages/admin/users/UsersAdminPage";
 import UserEditAdminPage from "@/pages/admin/users/UserEditAdminPage";
 import RegionsAdminPage from "@/pages/admin/regions/RegionsAdminPage";
+import AchievementsAdminPage from "@/pages/admin/achievements/AchievementsAdminPage";
 
 const MapPage = lazy(() => import("@/pages/map/MapPage"));
 
@@ -176,6 +177,14 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <RegionsAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/achievements",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <AchievementsAdminPage />
               </ProtectedRoute>
             ),
           },

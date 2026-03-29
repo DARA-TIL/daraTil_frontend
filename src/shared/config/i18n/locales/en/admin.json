@@ -18,7 +18,8 @@
     "uploading": "Uploading...",
     "all": "All",
     "empty": "No items",
-    "close": "Close"
+    "close": "Close",
+    "errorGeneric": "Something went wrong. Please try again."
   },
   "adminPage": {
     "title": "Admin",
@@ -38,6 +39,10 @@
       "regions": {
         "title": "Regions management",
         "subtitle": "Manage imported regions, translations, dialects, traditions, and images for the interactive map."
+      },
+      "achievements": {
+        "title": "Achievements and rules",
+        "subtitle": "Create achievements and control which actions affect streaks, activities, and achievements."
       }
     }
   },
@@ -275,6 +280,126 @@
     "pagination": {
       "summary": "Showing {{from}}-{{to}} of {{total}}",
       "perPage": "Per page"
+    }
+  },
+  "achievementsAdmin": {
+    "title": "Achievements admin",
+    "subtitle": "Create achievements, assign actions, define required quantity, and manage icon visuals.",
+    "listTitle": "Achievements",
+    "placeholderIcon": "No icon uploaded yet",
+    "confirmDelete": "Delete this achievement?",
+    "tabs": {
+      "achievements": "Achievements",
+      "rules": "Action rules"
+    },
+    "actions": {
+      "refresh": "Refresh achievements",
+      "new": "New achievement",
+      "editing": "Editing",
+      "resetForm": "Reset form"
+    },
+    "fields": {
+      "action": "Action",
+      "name": "Name",
+      "quantity": "Required quantity",
+      "description": "Description",
+      "icon": "Icon"
+    },
+    "labels": {
+      "quantity": "Goal {{value}}",
+      "achievedUsers": "Achieved by {{value}} users",
+      "createMode": "Create mode",
+      "editMode": "Edit mode",
+      "newAchievement": "New achievement",
+      "usersTracked": "User progress entries"
+    },
+    "helpers": {
+      "icon": "Paste an image URL or upload a file. Uploads are stored in Cloudinary."
+    },
+    "validation": {
+      "iconType": "Please select an image file.",
+      "iconTooLarge": "Image is too large (max {{max}}MB).",
+      "iconUploadFailed": "Icon upload failed. Please try again."
+    },
+    "snackbar": {
+      "created": "Achievement created",
+      "saved": "Achievement saved",
+      "deleted": "Achievement deleted"
+    }
+  },
+  "actionRulesAdmin": {
+    "title": "Action rules",
+    "subtitle": "Control whether each action affects streaks, activities, and achievements.",
+    "createTitle": "Create action rule",
+    "listTitle": "Existing rules",
+    "confirmDelete": "Delete this action rule?",
+    "actions": {
+      "refresh": "Refresh rules"
+    },
+    "fields": {
+      "action": "Action"
+    },
+    "labels": {
+      "ruleCount": "Rules: {{count}}"
+    },
+    "ruleKeys": {
+      "streak": "Streak",
+      "activity": "Activity",
+      "achievement": "Achievement"
+    },
+    "snackbar": {
+      "created": "Action rule created",
+      "saved": "Action rule saved",
+      "deleted": "Action rule deleted"
+    }
+  },
+  "usersAdmin": {
+    "title": "Users admin",
+    "subtitle": "Manage users, roles and profile data.",
+    "empty": "No users",
+    "actions": {
+      "refresh": "Refresh",
+      "levelUpMe": "Level up me"
+    },
+    "tools": {
+      "title": "Admin tools",
+      "subtitle": "Increase your own XP/level for testing.",
+      "current": "Current: level {{level}} - XP {{xp}}"
+    },
+    "fields": {
+      "xp": "XP",
+      "role": "Role",
+      "username": "Username",
+      "avatar": "Avatar",
+      "password": "Password (optional)"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin"
+    },
+    "labels": {
+      "unknown": "Unknown",
+      "userMeta": "{{email}} - level {{level}} - XP {{xp}}"
+    },
+    "helpers": {
+      "avatar": "Paste URL or upload. Upload will be sent to Cloudinary.",
+      "password": "Leave empty to keep current password."
+    },
+    "validation": {
+      "positiveXp": "XP must be a positive number",
+      "avatarType": "Please select an image file.",
+      "avatarTooLarge": "Image is too large (max {{max}}MB).",
+      "avatarUploadFailed": "Avatar upload failed. Please try again.",
+      "usernameRequired": "Username is required"
+    },
+    "snackbar": {
+      "saved": "Saved",
+      "userUpdated": "User updated",
+      "levelUpdated": "Level updated"
+    },
+    "edit": {
+      "loadingTitle": "Edit user",
+      "titleWithId": "Edit user #{{id}} - {{name}}"
     }
   }
 }

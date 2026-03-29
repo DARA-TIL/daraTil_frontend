@@ -5,6 +5,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
+import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import { useTranslation } from "react-i18next";
 
 const AdminPage: React.FC = () => {
@@ -97,6 +98,18 @@ const AdminPage: React.FC = () => {
           })}
           icon={<TravelExploreRoundedIcon />}
           to="/app/admin/regions"
+        />
+
+        <Card
+          title={t("adminPage.cards.achievements.title", {
+            defaultValue: "Achievements and rules",
+          })}
+          subtitle={t("adminPage.cards.achievements.subtitle", {
+            defaultValue:
+              "Create achievements and control which actions affect streaks, activities, and achievements.",
+          })}
+          icon={<EmojiEventsRoundedIcon />}
+          to="/app/admin/achievements"
         />
       </Stack>
     </Box>

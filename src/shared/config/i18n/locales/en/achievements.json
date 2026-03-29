@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "Achievements",
+    "subtitle": "Track what you have unlocked, what is nearly done, and what still needs action."
+  },
+  "summary": {
+    "total": "Total achievements",
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "hidden": "Hidden"
+  },
+  "sections": {
+    "almostCompleted": "Almost completed",
+    "groupedProgress": "In progress grouped by category",
+    "completed": "Completed achievements",
+    "hidden": "Hidden achievements"
+  },
+  "empty": {
+    "almostCompleted": "No achievements are close to completion yet.",
+    "inProgress": "No active achievement progress yet.",
+    "completed": "No completed achievements yet.",
+    "hidden": "Everything has already been revealed."
+  },
+  "card": {
+    "completed": "Completed",
+    "hidden": "Hidden",
+    "inProgress": "In progress",
+    "hiddenDescription": "Start related actions to reveal progress for this achievement.",
+    "progress": "Progress {{current}} / {{target}}",
+    "done": "You have completed this achievement.",
+    "remaining": "{{count}} actions left"
+  },
+  "actions": {
+    "lesson_completed": "Lesson completed",
+    "folklore_liked": "Folklore liked",
+    "folklore_disliked": "Folklore disliked",
+    "folklore_readed": "Folklore read",
+    "level_upgraded": "Level upgraded",
+    "region_slang_readed": "Region slang read",
+    "region_tradition_readed": "Region tradition read"
+  }
+}

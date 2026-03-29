@@ -18,7 +18,8 @@
     "uploading": "Загрузка...",
     "all": "Все",
     "empty": "Нет элементов",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "errorGeneric": "Что-то пошло не так. Попробуйте ещё раз."
   },
   "adminPage": {
     "title": "Админ",
@@ -36,8 +37,12 @@
         "subtitle": "Поиск пользователей, роли, обновление профиля."
       },
       "regions": {
-        "title": "Regions management",
-        "subtitle": "Manage imported regions, translations, dialects, traditions, and images for the interactive map."
+        "title": "Управление регионами",
+        "subtitle": "Управляйте импортированными регионами, переводами, диалектами, традициями и изображениями для интерактивной карты."
+      },
+      "achievements": {
+        "title": "Достижения и правила",
+        "subtitle": "Создавайте достижения и настраивайте, какие действия влияют на стрик, активность и достижения."
       }
     }
   },
@@ -184,96 +189,216 @@
     }
   },
   "regions": {
-    "title": "Regions admin",
-    "subtitle": "Manage region metadata, translations, dialects, traditions, and drawer imagery for the interactive map.",
-    "listTitle": "Imported regions",
-    "editorBadge": "Regions editor",
-    "emptyTitle": "Select a region to edit",
-    "emptyDescription": "Choose a region from the list to manage metadata, translations, dialects, and traditions.",
-    "emptyTranslations": "No translations yet.",
-    "emptyDialects": "No dialect entries yet.",
-    "emptyTraditions": "No traditions yet.",
-    "placeholderImage": "No region image yet",
+    "title": "Админка регионов",
+    "subtitle": "Управляйте метаданными регионов, переводами, диалектами, традициями и изображениями для интерактивной карты.",
+    "listTitle": "Импортированные регионы",
+    "editorBadge": "Редактор регионов",
+    "emptyTitle": "Выберите регион для редактирования",
+    "emptyDescription": "Выберите регион из списка, чтобы управлять метаданными, переводами, диалектами и традициями.",
+    "emptyTranslations": "Переводов пока нет.",
+    "emptyDialects": "Диалектных записей пока нет.",
+    "emptyTraditions": "Традиций пока нет.",
+    "placeholderImage": "Изображение региона пока не загружено",
     "kind": {
-      "region": "Region",
-      "city": "City"
+      "region": "Регион",
+      "city": "Город"
     },
     "state": {
-      "active": "Active",
-      "inactive": "Inactive"
+      "active": "Активен",
+      "inactive": "Неактивен"
     },
     "filters": {
-      "kind": "Kind",
-      "state": "State"
+      "kind": "Тип",
+      "state": "Состояние"
     },
     "tabs": {
-      "metadata": "Metadata",
-      "translations": "Translations",
-      "dialects": "Dialects",
-      "traditions": "Traditions"
+      "metadata": "Метаданные",
+      "translations": "Переводы",
+      "dialects": "Диалекты",
+      "traditions": "Традиции"
     },
     "fields": {
-      "code": "Code",
-      "kind": "Kind",
-      "requiredLevel": "Required level",
-      "isActive": "Active",
-      "regionStatus": "Region status",
-      "image": "Region image",
-      "language": "Language",
-      "name": "Name",
-      "description": "Description",
-      "word": "Word",
-      "pronounceUrl": "Pronounce URL"
+      "code": "Код",
+      "kind": "Тип",
+      "requiredLevel": "Требуемый уровень",
+      "isActive": "Активен",
+      "regionStatus": "Статус региона",
+      "image": "Изображение региона",
+      "language": "Язык",
+      "name": "Название",
+      "description": "Описание",
+      "word": "Слово",
+      "pronounceUrl": "Ссылка на произношение"
     },
     "labels": {
-      "regionCode": "Code: {{code}}",
-      "levelBadge": "Level {{level}}",
-      "dialectEntry": "Dialect entry #{{id}}",
-      "traditionEntry": "Tradition #{{id}}",
-      "translationCount": "Translations: {{count}}"
+      "regionCode": "Код: {{code}}",
+      "levelBadge": "Уровень {{level}}",
+      "dialectEntry": "Диалект #{{id}}",
+      "traditionEntry": "Традиция #{{id}}",
+      "translationCount": "Переводов: {{count}}"
     },
     "actions": {
-      "refresh": "Refresh regions",
-      "editing": "Editing",
-      "saveMetadata": "Save metadata",
-      "addTranslation": "Add translation",
-      "addDialect": "Add dialect entry",
-      "addDialectTranslation": "Add dialect translation",
-      "addTradition": "Add tradition",
-      "addTraditionTranslation": "Add tradition translation"
+      "refresh": "Обновить регионы",
+      "editing": "Редактируется",
+      "saveMetadata": "Сохранить метаданные",
+      "addTranslation": "Добавить перевод",
+      "addDialect": "Добавить диалект",
+      "addDialectTranslation": "Добавить перевод диалекта",
+      "addTradition": "Добавить традицию",
+      "addTraditionTranslation": "Добавить перевод традиции"
     },
     "helpers": {
-      "image": "Paste an image URL or upload a file. Uploads are stored in Cloudinary."
+      "image": "Вставьте URL изображения или загрузите файл. Загруженные файлы сохраняются в Cloudinary."
     },
     "validation": {
-      "imageType": "Please select an image file.",
-      "imageTooLarge": "Image is too large (max {{max}}MB).",
-      "imageUploadFailed": "Image upload failed. Please try again."
+      "imageType": "Пожалуйста, выберите файл изображения.",
+      "imageTooLarge": "Изображение слишком большое (макс {{max}}MB).",
+      "imageUploadFailed": "Не удалось загрузить изображение. Попробуйте ещё раз."
     },
     "snackbar": {
-      "metadataSaved": "Region metadata saved",
-      "translationCreated": "Region translation created",
-      "translationSaved": "Region translation saved",
-      "translationDeleted": "Region translation deleted",
-      "dialectCreated": "Dialect entry created",
-      "dialectDeleted": "Dialect entry deleted",
-      "dialectTranslationCreated": "Dialect translation created",
-      "dialectTranslationSaved": "Dialect translation saved",
-      "dialectTranslationDeleted": "Dialect translation deleted",
-      "traditionCreated": "Tradition created",
-      "traditionDeleted": "Tradition deleted",
-      "traditionTranslationCreated": "Tradition translation created",
-      "traditionTranslationSaved": "Tradition translation saved",
-      "traditionTranslationDeleted": "Tradition translation deleted"
+      "metadataSaved": "Метаданные региона сохранены",
+      "translationCreated": "Перевод региона создан",
+      "translationSaved": "Перевод региона сохранён",
+      "translationDeleted": "Перевод региона удалён",
+      "dialectCreated": "Диалект создан",
+      "dialectDeleted": "Диалект удалён",
+      "dialectTranslationCreated": "Перевод диалекта создан",
+      "dialectTranslationSaved": "Перевод диалекта сохранён",
+      "dialectTranslationDeleted": "Перевод диалекта удалён",
+      "traditionCreated": "Традиция создана",
+      "traditionDeleted": "Традиция удалена",
+      "traditionTranslationCreated": "Перевод традиции создан",
+      "traditionTranslationSaved": "Перевод традиции сохранён",
+      "traditionTranslationDeleted": "Перевод традиции удалён"
     },
-    "confirmDeleteTranslation": "Delete this translation?",
-    "confirmDeleteDialect": "Delete this dialect entry?",
-    "confirmDeleteDialectTranslation": "Delete this dialect translation?",
-    "confirmDeleteTradition": "Delete this tradition?",
-    "confirmDeleteTraditionTranslation": "Delete this tradition translation?",
+    "confirmDeleteTranslation": "Удалить этот перевод?",
+    "confirmDeleteDialect": "Удалить этот диалект?",
+    "confirmDeleteDialectTranslation": "Удалить этот перевод диалекта?",
+    "confirmDeleteTradition": "Удалить эту традицию?",
+    "confirmDeleteTraditionTranslation": "Удалить этот перевод традиции?",
     "pagination": {
-      "summary": "Showing {{from}}-{{to}} of {{total}}",
-      "perPage": "Per page"
+      "summary": "Показано {{from}}-{{to}} из {{total}}",
+      "perPage": "На странице"
+    }
+  },
+  "achievementsAdmin": {
+    "title": "Админка достижений",
+    "subtitle": "Создавайте достижения, привязывайте действия, задавайте нужное количество и управляйте иконками.",
+    "listTitle": "Достижения",
+    "placeholderIcon": "Иконка пока не загружена",
+    "confirmDelete": "Удалить это достижение?",
+    "tabs": {
+      "achievements": "Достижения",
+      "rules": "Правила действий"
+    },
+    "actions": {
+      "refresh": "Обновить достижения",
+      "new": "Новое достижение",
+      "editing": "Редактируется",
+      "resetForm": "Сбросить форму"
+    },
+    "fields": {
+      "action": "Действие",
+      "name": "Название",
+      "quantity": "Требуемое количество",
+      "description": "Описание",
+      "icon": "Иконка"
+    },
+    "labels": {
+      "quantity": "Цель {{value}}",
+      "achievedUsers": "Получили {{value}} пользователей",
+      "createMode": "Режим создания",
+      "editMode": "Режим редактирования",
+      "newAchievement": "Новое достижение",
+      "usersTracked": "Записей прогресса пользователей"
+    },
+    "helpers": {
+      "icon": "Вставьте URL изображения или загрузите файл. Загруженные файлы сохраняются в Cloudinary."
+    },
+    "validation": {
+      "iconType": "Пожалуйста, выберите файл изображения.",
+      "iconTooLarge": "Изображение слишком большое (макс {{max}}MB).",
+      "iconUploadFailed": "Не удалось загрузить иконку. Попробуйте ещё раз."
+    },
+    "snackbar": {
+      "created": "Достижение создано",
+      "saved": "Достижение сохранено",
+      "deleted": "Достижение удалено"
+    }
+  },
+  "actionRulesAdmin": {
+    "title": "Правила действий",
+    "subtitle": "Управляйте тем, влияет ли каждое действие на стрик, активность и достижения.",
+    "createTitle": "Создать правило действия",
+    "listTitle": "Существующие правила",
+    "confirmDelete": "Удалить это правило действия?",
+    "actions": {
+      "refresh": "Обновить правила"
+    },
+    "fields": {
+      "action": "Действие"
+    },
+    "labels": {
+      "ruleCount": "Правил: {{count}}"
+    },
+    "ruleKeys": {
+      "streak": "Стрик",
+      "activity": "Активность",
+      "achievement": "Достижение"
+    },
+    "snackbar": {
+      "created": "Правило действия создано",
+      "saved": "Правило действия сохранено",
+      "deleted": "Правило действия удалено"
+    }
+  },
+  "usersAdmin": {
+    "title": "Админка пользователей",
+    "subtitle": "Управляйте пользователями, ролями и данными профиля.",
+    "empty": "Пользователей нет",
+    "actions": {
+      "refresh": "Обновить",
+      "levelUpMe": "Повысить мой уровень"
+    },
+    "tools": {
+      "title": "Инструменты администратора",
+      "subtitle": "Увеличьте свой XP/уровень для тестирования.",
+      "current": "Сейчас: уровень {{level}} - XP {{xp}}"
+    },
+    "fields": {
+      "xp": "XP",
+      "role": "Роль",
+      "username": "Имя пользователя",
+      "avatar": "Аватар",
+      "password": "Пароль (необязательно)"
+    },
+    "roles": {
+      "user": "Пользователь",
+      "admin": "Администратор"
+    },
+    "labels": {
+      "unknown": "Неизвестно",
+      "userMeta": "{{email}} - уровень {{level}} - XP {{xp}}"
+    },
+    "helpers": {
+      "avatar": "Вставьте URL или загрузите файл. Загрузка будет отправлена в Cloudinary.",
+      "password": "Оставьте пустым, чтобы сохранить текущий пароль."
+    },
+    "validation": {
+      "positiveXp": "XP должен быть положительным числом",
+      "avatarType": "Пожалуйста, выберите файл изображения.",
+      "avatarTooLarge": "Изображение слишком большое (макс {{max}}MB).",
+      "avatarUploadFailed": "Не удалось загрузить аватар. Попробуйте ещё раз.",
+      "usernameRequired": "Имя пользователя обязательно"
+    },
+    "snackbar": {
+      "saved": "Сохранено",
+      "userUpdated": "Пользователь обновлён",
+      "levelUpdated": "Уровень обновлён"
+    },
+    "edit": {
+      "loadingTitle": "Редактирование пользователя",
+      "titleWithId": "Редактировать пользователя #{{id}} - {{name}}"
     }
   }
 }

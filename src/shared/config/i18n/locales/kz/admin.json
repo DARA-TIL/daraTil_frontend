@@ -18,7 +18,8 @@
     "uploading": "Жүктелуде...",
     "all": "Барлығы",
     "empty": "Элемент жоқ",
-    "close": "Жабу"
+    "close": "Жабу",
+    "errorGeneric": "Бір қате болды. Қайта көріңіз."
   },
   "adminPage": {
     "title": "Әкімші",
@@ -36,8 +37,12 @@
         "subtitle": "Пайдаланушыларды іздеу, рөлдерді өңдеу, профильді жаңарту."
       },
       "regions": {
-        "title": "Regions management",
-        "subtitle": "Manage imported regions, translations, dialects, traditions, and images for the interactive map."
+        "title": "Өңірлерді басқару",
+        "subtitle": "Интерактивті картаға арналған импортталған өңірлерді, аудармаларды, диалектілерді, дәстүрлерді және суреттерді басқарыңыз."
+      },
+      "achievements": {
+        "title": "Жетістіктер мен ережелер",
+        "subtitle": "Жетістіктер құрыңыз және қандай әрекеттер серияға, белсенділікке және жетістіктерге әсер ететінін басқарыңыз."
       }
     }
   },
@@ -184,96 +189,216 @@
     }
   },
   "regions": {
-    "title": "Regions admin",
-    "subtitle": "Manage region metadata, translations, dialects, traditions, and drawer imagery for the interactive map.",
-    "listTitle": "Imported regions",
-    "editorBadge": "Regions editor",
-    "emptyTitle": "Select a region to edit",
-    "emptyDescription": "Choose a region from the list to manage metadata, translations, dialects, and traditions.",
-    "emptyTranslations": "No translations yet.",
-    "emptyDialects": "No dialect entries yet.",
-    "emptyTraditions": "No traditions yet.",
-    "placeholderImage": "No region image yet",
+    "title": "Өңірлер әкімшілігі",
+    "subtitle": "Интерактивті картаға арналған өңір метадеректерін, аудармаларды, диалектілерді, дәстүрлерді және суреттерді басқарыңыз.",
+    "listTitle": "Импортталған өңірлер",
+    "editorBadge": "Өңір редакторы",
+    "emptyTitle": "Өңірді өңдеу үшін таңдаңыз",
+    "emptyDescription": "Метадеректерді, аудармаларды, диалектілерді және дәстүрлерді басқару үшін тізімнен өңірді таңдаңыз.",
+    "emptyTranslations": "Әзірге аудармалар жоқ.",
+    "emptyDialects": "Әзірге диалект жазбалары жоқ.",
+    "emptyTraditions": "Әзірге дәстүрлер жоқ.",
+    "placeholderImage": "Өңір суреті әлі жүктелмеген",
     "kind": {
-      "region": "Region",
-      "city": "City"
+      "region": "Өңір",
+      "city": "Қала"
     },
     "state": {
-      "active": "Active",
-      "inactive": "Inactive"
+      "active": "Белсенді",
+      "inactive": "Белсенді емес"
     },
     "filters": {
-      "kind": "Kind",
-      "state": "State"
+      "kind": "Түрі",
+      "state": "Күйі"
     },
     "tabs": {
-      "metadata": "Metadata",
-      "translations": "Translations",
-      "dialects": "Dialects",
-      "traditions": "Traditions"
+      "metadata": "Метадеректер",
+      "translations": "Аудармалар",
+      "dialects": "Диалектілер",
+      "traditions": "Дәстүрлер"
     },
     "fields": {
-      "code": "Code",
-      "kind": "Kind",
-      "requiredLevel": "Required level",
-      "isActive": "Active",
-      "regionStatus": "Region status",
-      "image": "Region image",
-      "language": "Language",
-      "name": "Name",
-      "description": "Description",
-      "word": "Word",
-      "pronounceUrl": "Pronounce URL"
+      "code": "Код",
+      "kind": "Түрі",
+      "requiredLevel": "Қажетті деңгей",
+      "isActive": "Белсенді",
+      "regionStatus": "Өңір мәртебесі",
+      "image": "Өңір суреті",
+      "language": "Тіл",
+      "name": "Атауы",
+      "description": "Сипаттама",
+      "word": "Сөз",
+      "pronounceUrl": "Дыбысталу сілтемесі"
     },
     "labels": {
-      "regionCode": "Code: {{code}}",
-      "levelBadge": "Level {{level}}",
-      "dialectEntry": "Dialect entry #{{id}}",
-      "traditionEntry": "Tradition #{{id}}",
-      "translationCount": "Translations: {{count}}"
+      "regionCode": "Код: {{code}}",
+      "levelBadge": "Деңгей {{level}}",
+      "dialectEntry": "Диалект #{{id}}",
+      "traditionEntry": "Дәстүр #{{id}}",
+      "translationCount": "Аудармалар: {{count}}"
     },
     "actions": {
-      "refresh": "Refresh regions",
-      "editing": "Editing",
-      "saveMetadata": "Save metadata",
-      "addTranslation": "Add translation",
-      "addDialect": "Add dialect entry",
-      "addDialectTranslation": "Add dialect translation",
-      "addTradition": "Add tradition",
-      "addTraditionTranslation": "Add tradition translation"
+      "refresh": "Өңірлерді жаңарту",
+      "editing": "Өңделуде",
+      "saveMetadata": "Метадеректерді сақтау",
+      "addTranslation": "Аударма қосу",
+      "addDialect": "Диалект жазбасын қосу",
+      "addDialectTranslation": "Диалект аудармасын қосу",
+      "addTradition": "Дәстүр қосу",
+      "addTraditionTranslation": "Дәстүр аудармасын қосу"
     },
     "helpers": {
-      "image": "Paste an image URL or upload a file. Uploads are stored in Cloudinary."
+      "image": "Сурет URL мекенжайын енгізіңіз немесе файл жүктеңіз. Жүктелген файлдар Cloudinary жүйесінде сақталады."
     },
     "validation": {
-      "imageType": "Please select an image file.",
-      "imageTooLarge": "Image is too large (max {{max}}MB).",
-      "imageUploadFailed": "Image upload failed. Please try again."
+      "imageType": "Сурет файлын таңдаңыз.",
+      "imageTooLarge": "Сурет тым үлкен (ең көбі {{max}}MB).",
+      "imageUploadFailed": "Суретті жүктеу сәтсіз болды. Қайта көріңіз."
     },
     "snackbar": {
-      "metadataSaved": "Region metadata saved",
-      "translationCreated": "Region translation created",
-      "translationSaved": "Region translation saved",
-      "translationDeleted": "Region translation deleted",
-      "dialectCreated": "Dialect entry created",
-      "dialectDeleted": "Dialect entry deleted",
-      "dialectTranslationCreated": "Dialect translation created",
-      "dialectTranslationSaved": "Dialect translation saved",
-      "dialectTranslationDeleted": "Dialect translation deleted",
-      "traditionCreated": "Tradition created",
-      "traditionDeleted": "Tradition deleted",
-      "traditionTranslationCreated": "Tradition translation created",
-      "traditionTranslationSaved": "Tradition translation saved",
-      "traditionTranslationDeleted": "Tradition translation deleted"
+      "metadataSaved": "Өңір метадеректері сақталды",
+      "translationCreated": "Өңір аудармасы құрылды",
+      "translationSaved": "Өңір аудармасы сақталды",
+      "translationDeleted": "Өңір аудармасы жойылды",
+      "dialectCreated": "Диалект жазбасы құрылды",
+      "dialectDeleted": "Диалект жазбасы жойылды",
+      "dialectTranslationCreated": "Диалект аудармасы құрылды",
+      "dialectTranslationSaved": "Диалект аудармасы сақталды",
+      "dialectTranslationDeleted": "Диалект аудармасы жойылды",
+      "traditionCreated": "Дәстүр құрылды",
+      "traditionDeleted": "Дәстүр жойылды",
+      "traditionTranslationCreated": "Дәстүр аудармасы құрылды",
+      "traditionTranslationSaved": "Дәстүр аудармасы сақталды",
+      "traditionTranslationDeleted": "Дәстүр аудармасы жойылды"
     },
-    "confirmDeleteTranslation": "Delete this translation?",
-    "confirmDeleteDialect": "Delete this dialect entry?",
-    "confirmDeleteDialectTranslation": "Delete this dialect translation?",
-    "confirmDeleteTradition": "Delete this tradition?",
-    "confirmDeleteTraditionTranslation": "Delete this tradition translation?",
+    "confirmDeleteTranslation": "Осы аударманы жою керек пе?",
+    "confirmDeleteDialect": "Осы диалект жазбасын жою керек пе?",
+    "confirmDeleteDialectTranslation": "Осы диалект аудармасын жою керек пе?",
+    "confirmDeleteTradition": "Осы дәстүрді жою керек пе?",
+    "confirmDeleteTraditionTranslation": "Осы дәстүр аудармасын жою керек пе?",
     "pagination": {
-      "summary": "Showing {{from}}-{{to}} of {{total}}",
-      "perPage": "Per page"
+      "summary": "{{total}} ішінен {{from}}-{{to}} көрсетіліп тұр",
+      "perPage": "Бетке"
+    }
+  },
+  "achievementsAdmin": {
+    "title": "Жетістіктер әкімшілігі",
+    "subtitle": "Жетістіктер құрыңыз, әрекеттерді байланыстырыңыз, қажетті санды орнатыңыз және белгішелерді басқарыңыз.",
+    "listTitle": "Жетістіктер",
+    "placeholderIcon": "Белгіше әлі жүктелмеген",
+    "confirmDelete": "Осы жетістікті жою керек пе?",
+    "tabs": {
+      "achievements": "Жетістіктер",
+      "rules": "Әрекет ережелері"
+    },
+    "actions": {
+      "refresh": "Жетістіктерді жаңарту",
+      "new": "Жаңа жетістік",
+      "editing": "Өңделуде",
+      "resetForm": "Форманы тазалау"
+    },
+    "fields": {
+      "action": "Әрекет",
+      "name": "Атауы",
+      "quantity": "Қажетті саны",
+      "description": "Сипаттама",
+      "icon": "Белгіше"
+    },
+    "labels": {
+      "quantity": "Мақсат {{value}}",
+      "achievedUsers": "{{value}} пайдаланушы орындады",
+      "createMode": "Құру режимі",
+      "editMode": "Өңдеу режимі",
+      "newAchievement": "Жаңа жетістік",
+      "usersTracked": "Пайдаланушы прогресі жазбалары"
+    },
+    "helpers": {
+      "icon": "Сурет URL мекенжайын енгізіңіз немесе файл жүктеңіз. Жүктелген файлдар Cloudinary жүйесінде сақталады."
+    },
+    "validation": {
+      "iconType": "Сурет файлын таңдаңыз.",
+      "iconTooLarge": "Сурет тым үлкен (ең көбі {{max}}MB).",
+      "iconUploadFailed": "Белгішені жүктеу сәтсіз болды. Қайта көріңіз."
+    },
+    "snackbar": {
+      "created": "Жетістік құрылды",
+      "saved": "Жетістік сақталды",
+      "deleted": "Жетістік жойылды"
+    }
+  },
+  "actionRulesAdmin": {
+    "title": "Әрекет ережелері",
+    "subtitle": "Әр әрекеттің серияға, белсенділікке және жетістіктерге әсерін басқарыңыз.",
+    "createTitle": "Әрекет ережесін құру",
+    "listTitle": "Бар ережелер",
+    "confirmDelete": "Осы әрекет ережесін жою керек пе?",
+    "actions": {
+      "refresh": "Ережелерді жаңарту"
+    },
+    "fields": {
+      "action": "Әрекет"
+    },
+    "labels": {
+      "ruleCount": "Ережелер: {{count}}"
+    },
+    "ruleKeys": {
+      "streak": "Серия",
+      "activity": "Белсенділік",
+      "achievement": "Жетістік"
+    },
+    "snackbar": {
+      "created": "Әрекет ережесі құрылды",
+      "saved": "Әрекет ережесі сақталды",
+      "deleted": "Әрекет ережесі жойылды"
+    }
+  },
+  "usersAdmin": {
+    "title": "Пайдаланушылар әкімшілігі",
+    "subtitle": "Пайдаланушыларды, рөлдерді және профиль деректерін басқарыңыз.",
+    "empty": "Пайдаланушылар жоқ",
+    "actions": {
+      "refresh": "Жаңарту",
+      "levelUpMe": "Деңгейімді көтеру"
+    },
+    "tools": {
+      "title": "Әкімші құралдары",
+      "subtitle": "Тексеру үшін өз XP/деңгейіңізді арттырыңыз.",
+      "current": "Қазір: деңгей {{level}} - XP {{xp}}"
+    },
+    "fields": {
+      "xp": "XP",
+      "role": "Рөлі",
+      "username": "Пайдаланушы аты",
+      "avatar": "Аватар",
+      "password": "Құпиясөз (міндетті емес)"
+    },
+    "roles": {
+      "user": "Пайдаланушы",
+      "admin": "Әкімші"
+    },
+    "labels": {
+      "unknown": "Белгісіз",
+      "userMeta": "{{email}} - деңгей {{level}} - XP {{xp}}"
+    },
+    "helpers": {
+      "avatar": "URL енгізіңіз немесе файл жүктеңіз. Жүктеу Cloudinary жүйесіне жіберіледі.",
+      "password": "Ағымдағы құпиясөзді сақтау үшін бос қалдырыңыз."
+    },
+    "validation": {
+      "positiveXp": "XP оң сан болуы керек",
+      "avatarType": "Сурет файлын таңдаңыз.",
+      "avatarTooLarge": "Сурет тым үлкен (ең көбі {{max}}MB).",
+      "avatarUploadFailed": "Аватарды жүктеу сәтсіз болды. Қайта көріңіз.",
+      "usernameRequired": "Пайдаланушы аты міндетті"
+    },
+    "snackbar": {
+      "saved": "Сақталды",
+      "userUpdated": "Пайдаланушы жаңартылды",
+      "levelUpdated": "Деңгей жаңартылды"
+    },
+    "edit": {
+      "loadingTitle": "Пайдаланушыны өңдеу",
+      "titleWithId": "Пайдаланушыны өңдеу #{{id}} - {{name}}"
     }
   }
 }

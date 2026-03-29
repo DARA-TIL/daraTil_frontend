@@ -31,7 +31,8 @@
   },
   "details": {
     "loadingTitle": "Lesson",
-    "meta": "Required level {{level}} - Reward {{xp}} XP{{hasAuthor, boolean, true { - Author {{author}} } false {}}}"
+    "meta": "Required level {{level}} - Reward {{xp}} XP",
+    "authorSuffix": " - Author {{author}}"
   },
   "locked": {
     "title": "This lesson is locked",
@@ -68,6 +69,10 @@
     "tip": "Tip: improve your score to gain more XP.",
     "empty": "No best result yet. Complete the test to create your first result."
   },
-  "blocks": { "title": "Lesson blocks" },
-  "test": { "title": "Lesson test" }
+  "blocks": {
+    "title": "Lesson blocks"
+  },
+  "test": {
+    "title": "Lesson test"
+  }
 }
