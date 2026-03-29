@@ -173,10 +173,7 @@ const MapPage: React.FC = () => {
 
         <Box
           sx={{
-            display: "grid",
-            gridTemplateColumns: isDesktop ? "minmax(0, 1fr) minmax(360px, 34%)" : "minmax(0, 1fr)",
-            gap: 2,
-            alignItems: "stretch",
+            position: "relative",
           }}
         >
           <KazakhstanInteractiveMap
@@ -190,25 +187,39 @@ const MapPage: React.FC = () => {
             onReset={clearSelected}
           />
 
-          {isDesktop ? (
-            drawerContent
-          ) : (
-            <Drawer
-              anchor="bottom"
-              open={Boolean(selectedCode)}
-              onClose={clearSelected}
-              PaperProps={{
-                sx: {
-                  height: "78vh",
-                  borderTopLeftRadius: 24,
-                  borderTopRightRadius: 24,
-                  backgroundColor: theme.palette.background.default,
-                },
-              }}
-            >
-              <Box sx={{ p: 1.25, height: "100%" }}>{drawerContent}</Box>
-            </Drawer>
-          )}
+          <Drawer
+            anchor={isDesktop ? "right" : "bottom"}
+            open={Boolean(selectedCode)}
+            onClose={clearSelected}
+            transitionDuration={{
+              enter: isDesktop ? 380 : 320,
+              exit: isDesktop ? 280 : 220,
+            }}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            PaperProps={{
+              sx: isDesktop
+                ? {
+                    width: "min(480px, 34vw)",
+                    maxWidth: "100vw",
+                    p: 1.25,
+                    backgroundColor: theme.palette.background.default,
+                    borderLeft: "1px solid",
+                    borderColor: theme.customColors.sidebarBorder,
+                    boxShadow: "0 20px 48px rgba(15,23,42,0.18)",
+                  }
+                : {
+                    height: "78vh",
+                    p: 1.25,
+                    borderTopLeftRadius: 24,
+                    borderTopRightRadius: 24,
+                    backgroundColor: theme.palette.background.default,
+                  },
+            }}
+          >
+            <Box sx={{ height: "100%" }}>{drawerContent}</Box>
+          </Drawer>
         </Box>
       </Stack>
     </Box>

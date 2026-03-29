@@ -155,7 +155,9 @@ export const useAuthStore = create<AuthState>((set) => {
 
     try {
       try {
-        const meResponse = await $api.get("/auth/me");
+        const meResponse = await $api.get("/auth/me", {
+          skipAuthRefresh: true,
+        } as any);
         const user = normalizeUserFromBackend(meResponse.data);
 
         if (user) {
@@ -181,7 +183,9 @@ export const useAuthStore = create<AuthState>((set) => {
           return userFromRefresh;
         }
 
-        const meResponse2 = await $api.get("/auth/me");
+        const meResponse2 = await $api.get("/auth/me", {
+          skipAuthRefresh: true,
+        } as any);
         const user2 = normalizeUserFromBackend(meResponse2.data);
 
         setUserWithStreakEvent(user2, Boolean(user2));

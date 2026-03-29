@@ -20,6 +20,19 @@ function extractAccessToken(payload: AuthResponse | any): string | null {
   return (p?.accessToken ?? null) as string | null;
 }
 
+function shouldFallbackToPost(error: any): boolean {
+  const status = error?.response?.status;
+  return status === 404 || status === 405;
+}
+
+function isPublicAuthPath(pathname: string): boolean {
+  return (
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password"
+  );
+}
+
 $api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -43,8 +56,14 @@ $api.interceptors.response.use(
     const isRefreshRequest =
       originalRequest?.url?.includes("/auth/refresh") ||
       originalRequest?.url?.includes("auth/refresh");
+    const skipAutoRefresh = Boolean(originalRequest?.skipAuthRefresh);
 
-    if (status === 401 && !originalRequest._retry && !isRefreshRequest) {
+    if (
+      status === 401 &&
+      !originalRequest._retry &&
+      !isRefreshRequest &&
+      !skipAutoRefresh
+    ) {
       originalRequest._retry = true;
 
       try {
@@ -62,7 +81,11 @@ $api.interceptors.response.use(
               if (!token)
                 throw new Error("Refresh: no accessToken in response");
               return token;
-            } catch {
+            } catch (getError) {
+              if (!shouldFallbackToPost(getError)) {
+                throw getError;
+              }
+
               // 2) fallback на POST (если бэк поменяет метод)
               const res = await axios.post<AuthResponse>(
                 `${API_URL}/auth/refresh`,
@@ -95,7 +118,11 @@ $api.interceptors.response.use(
         localStorage.setItem("lastPage", window.location.pathname);
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+
+        if (!isPublicAuthPath(window.location.pathname)) {
+          window.location.replace("/login");
+        }
+
         return Promise.reject(e);
       }
     }
