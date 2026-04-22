@@ -8,6 +8,7 @@ import AchievementService from "../api/AchievementService";
 import AchievementAdminService from "../api/AchievementAdminService";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { useAchievementsStore } from "./useAchievementsStore";
 
 type Filters = {
   search: string;
@@ -194,6 +195,7 @@ export const useAchievementsAdminStore = create<AchievementsAdminState>(
       delete: async (id) => {
         const result = await withAction(async () => {
           await AchievementAdminService.delete(id);
+          useAchievementsStore.getState().removeById(id);
           set((state) => ({
             items: state.items.filter((item) => item.id !== id),
             selectedId: state.selectedId === id ? null : state.selectedId,

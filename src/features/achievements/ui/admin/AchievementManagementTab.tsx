@@ -5,6 +5,7 @@ import {
   Button,
   Chip,
   MenuItem,
+  Pagination,
   Paper,
   Skeleton,
   Stack,
@@ -28,6 +29,7 @@ import { useAchievementsAdminStore } from "../../store/useAchievementsAdminStore
 import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 type AchievementDraft = Achievement;
@@ -81,6 +83,8 @@ export const AchievementManagementTab: React.FC = () => {
   const [draft, setDraft] = useState<AchievementDraft>(createEmptyDraft());
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [iconUploading, setIconUploading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
 
   useEffect(() => {
     void fetchAll();
@@ -108,6 +112,23 @@ export const AchievementManagementTab: React.FC = () => {
       ),
     [filters, getFilteredItems, items],
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [filters.action, filters.search]);
+
+  const pageCount = Math.max(1, Math.ceil(rows.length / rowsPerPage));
+
+  useEffect(() => {
+    if (page > pageCount) {
+      setPage(pageCount);
+    }
+  }, [page, pageCount]);
+
+  const paginatedRows = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    return rows.slice(start, start + rowsPerPage);
+  }, [page, rows, rowsPerPage]);
 
   async function uploadIconIfNeeded(): Promise<string | null> {
     if (!iconFile) return draft.iconUrl ?? null;
@@ -290,78 +311,136 @@ export const AchievementManagementTab: React.FC = () => {
                 {t("common.empty", { ns: "admin" })}
               </Typography>
             ) : (
-              <Stack gap={1.1}>
-                {rows.map((item) => {
-                  const isSelected = item.id === selectedId;
-                  const achievedUsers = item.userAchievements.filter(
-                    (entry) => entry.achieved,
-                  ).length;
+              <Stack gap={1.4}>
+                <Stack gap={1.1}>
+                  {paginatedRows.map((item) => {
+                    const isSelected = item.id === selectedId;
+                    const achievedUsers = item.userAchievements.filter(
+                      (entry) => entry.achieved,
+                    ).length;
 
-                  return (
-                    <Paper
-                      key={item.id}
-                      variant="outlined"
-                      sx={{
-                        p: 1.5,
-                        borderRadius: 3,
-                        borderColor: isSelected
-                          ? theme.palette.primary.main
-                          : theme.customColors.sidebarBorder,
-                        backgroundImage: isSelected
-                          ? theme.gradients.cardSoft
-                          : "none",
-                      }}
-                    >
-                      <Stack spacing={1}>
-                        <Stack
-                          direction={{ xs: "column", sm: "row" }}
-                          justifyContent="space-between"
-                          gap={1}
-                        >
-                          <Box sx={{ minWidth: 0 }}>
-                            <Typography fontWeight={900} noWrap>
-                              {item.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" noWrap>
-                              {getActionLabel(item.action, t)}
-                            </Typography>
-                          </Box>
-
-                          <Button
-                            variant={isSelected ? "contained" : "outlined"}
-                            onClick={() => void selectById(item.id)}
+                    return (
+                      <Paper
+                        key={item.id}
+                        variant="outlined"
+                        sx={{
+                          p: 1.5,
+                          borderRadius: 3,
+                          borderColor: isSelected
+                            ? theme.palette.primary.main
+                            : theme.customColors.sidebarBorder,
+                          backgroundImage: isSelected
+                            ? theme.gradients.cardSoft
+                            : "none",
+                        }}
+                      >
+                        <Stack spacing={1}>
+                          <Stack
+                            direction={{ xs: "column", sm: "row" }}
+                            justifyContent="space-between"
+                            gap={1}
                           >
-                            {isSelected
-                              ? t("achievementsAdmin.actions.editing", {
-                                  ns: "admin",
-                                  defaultValue: "Editing",
-                                })
-                              : t("common.edit", { ns: "admin" })}
-                          </Button>
-                        </Stack>
+                            <Box sx={{ minWidth: 0 }}>
+                              <Typography fontWeight={900} noWrap>
+                                {item.name}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                noWrap
+                              >
+                                {getActionLabel(item.action, t)}
+                              </Typography>
+                            </Box>
 
-                        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                          <Chip
-                            size="small"
-                            label={t("achievementsAdmin.labels.quantity", {
-                              ns: "admin",
-                              defaultValue: "Goal {{value}}",
-                              value: item.quantity,
-                            })}
-                          />
-                          <Chip
-                            size="small"
-                            label={t("achievementsAdmin.labels.achievedUsers", {
-                              ns: "admin",
-                              defaultValue: "Achieved by {{value}} users",
-                              value: achievedUsers,
-                            })}
-                          />
+                            <Button
+                              variant={isSelected ? "contained" : "outlined"}
+                              onClick={() => void selectById(item.id)}
+                            >
+                              {isSelected
+                                ? t("achievementsAdmin.actions.editing", {
+                                    ns: "admin",
+                                    defaultValue: "Editing",
+                                  })
+                                : t("common.edit", { ns: "admin" })}
+                            </Button>
+                          </Stack>
+
+                          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                            <Chip
+                              size="small"
+                              label={t("achievementsAdmin.labels.quantity", {
+                                ns: "admin",
+                                defaultValue: "Goal {{value}}",
+                                value: item.quantity,
+                              })}
+                            />
+                            <Chip
+                              size="small"
+                              label={t("achievementsAdmin.labels.achievedUsers", {
+                                ns: "admin",
+                                defaultValue: "Achieved by {{value}} users",
+                                value: achievedUsers,
+                              })}
+                            />
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    </Paper>
-                  );
-                })}
+                      </Paper>
+                    );
+                  })}
+                </Stack>
+
+                <Stack
+                  direction={{ xs: "column", md: "row" }}
+                  justifyContent="space-between"
+                  alignItems={{ xs: "stretch", md: "center" }}
+                  gap={1.25}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {t("regions.pagination.summary", {
+                      ns: "admin",
+                      defaultValue: "Showing {{from}}-{{to}} of {{total}}",
+                      from: (page - 1) * rowsPerPage + 1,
+                      to: Math.min(page * rowsPerPage, rows.length),
+                      total: rows.length,
+                    })}
+                  </Typography>
+
+                  <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    alignItems={{ xs: "stretch", sm: "center" }}
+                    gap={1.25}
+                  >
+                    <TextField
+                      label={t("regions.pagination.perPage", {
+                        ns: "admin",
+                        defaultValue: "Per page",
+                      })}
+                      value={rowsPerPage}
+                      onChange={(event) => {
+                        setRowsPerPage(Number(event.target.value) || 8);
+                        setPage(1);
+                      }}
+                      select
+                      size="small"
+                      sx={{ minWidth: 120 }}
+                    >
+                      {[6, 8, 12, 16].map((value) => (
+                        <MenuItem key={value} value={value}>
+                          {value}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+
+                    <Pagination
+                      page={page}
+                      count={pageCount}
+                      color="primary"
+                      shape="rounded"
+                      onChange={(_, nextPage) => setPage(nextPage)}
+                    />
+                  </Stack>
+                </Stack>
               </Stack>
             )}
           </Stack>
@@ -579,12 +658,15 @@ export const AchievementManagementTab: React.FC = () => {
                       startIcon={<DeleteOutlineRoundedIcon />}
                       disabled={busy}
                       onClick={async () => {
-                        const confirmed = window.confirm(
-                          t("achievementsAdmin.confirmDelete", {
+                        const confirmed = await requestConfirm({
+                          title: t("common.delete", { ns: "admin" }),
+                          message: t("achievementsAdmin.confirmDelete", {
                             ns: "admin",
                             defaultValue: "Delete this achievement?",
                           }),
-                        );
+                          confirmLabel: t("common.delete", { ns: "admin" }),
+                          variant: "danger",
+                        });
                         if (!confirmed || !draft.id) return;
 
                         const ok = await remove(draft.id);

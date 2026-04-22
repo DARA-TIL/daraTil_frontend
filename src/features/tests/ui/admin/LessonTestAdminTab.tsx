@@ -19,6 +19,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AutoFixHighOutlinedIcon from "@mui/icons-material/AutoFixHighOutlined";
 import { useTestAdminStore } from "../../store/useTestAdminStore";
 import type { QuestionDto, QuestionOptionDto } from "../../model/types";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 type Props = { lessonId: number };
@@ -253,7 +254,12 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
                 startIcon={<DeleteOutlineIcon />}
                 disabled={loading}
                 onClick={async () => {
-                  const ok = window.confirm(t("admin.confirms.deleteTest"));
+                  const ok = await requestConfirm({
+                    title: t("admin.actions.deleteTest"),
+                    message: t("admin.confirms.deleteTest"),
+                    confirmLabel: t("admin.actions.deleteTest"),
+                    variant: "danger",
+                  });
                   if (!ok) return;
                   await deleteTest(test.id, lessonId);
                 }}
@@ -544,7 +550,12 @@ function QuestionCard(props: {
               startIcon={<DeleteOutlineIcon />}
               disabled={loading}
               onClick={async () => {
-                const ok = window.confirm(t("admin.confirms.deleteQuestion"));
+                const ok = await requestConfirm({
+                  title: t("admin.actions.deleteQuestion"),
+                  message: t("admin.confirms.deleteQuestion"),
+                  confirmLabel: t("admin.actions.deleteQuestion"),
+                  variant: "danger",
+                });
                 if (!ok) return;
                 await onDelete();
               }}
@@ -733,7 +744,12 @@ function OptionRow(props: {
             startIcon={<DeleteOutlineIcon />}
             disabled={loading}
             onClick={async () => {
-              const ok = window.confirm(t("admin.confirms.deleteOption"));
+              const ok = await requestConfirm({
+                title: t("admin.actions.deleteOption"),
+                message: t("admin.confirms.deleteOption"),
+                confirmLabel: t("admin.actions.deleteOption"),
+                variant: "danger",
+              });
               if (!ok) return;
               await onDelete();
             }}

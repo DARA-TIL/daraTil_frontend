@@ -15,6 +15,7 @@ import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import type { Region, RegionLanguage, RegionSlangTranslation } from "../../model/types";
 import { useRegionsAdminStore } from "../../store/useRegionsAdminStore";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -278,11 +279,14 @@ export const RegionDialectsAdminTab: React.FC<Props> = ({ region }) => {
                     startIcon={<DeleteOutlineRoundedIcon />}
                     disabled={actionLoading}
                     onClick={async () => {
-                      const confirmed = window.confirm(
-                        t("regions.confirmDeleteDialect", {
+                      const confirmed = await requestConfirm({
+                        title: t("common.delete"),
+                        message: t("regions.confirmDeleteDialect", {
                           defaultValue: "Delete this dialect entry?",
                         }),
-                      );
+                        confirmLabel: t("common.delete"),
+                        variant: "danger",
+                      });
                       if (!confirmed) return;
 
                       const ok = await deleteSlang(slang.id);
@@ -427,12 +431,15 @@ export const RegionDialectsAdminTab: React.FC<Props> = ({ region }) => {
                               startIcon={<DeleteOutlineRoundedIcon />}
                               disabled={actionLoading}
                               onClick={async () => {
-                                const confirmed = window.confirm(
-                                  t("regions.confirmDeleteDialectTranslation", {
+                                const confirmed = await requestConfirm({
+                                  title: t("common.delete"),
+                                  message: t("regions.confirmDeleteDialectTranslation", {
                                     defaultValue:
                                       "Delete this dialect translation?",
                                   }),
-                                );
+                                  confirmLabel: t("common.delete"),
+                                  variant: "danger",
+                                });
                                 if (!confirmed) return;
 
                                 const ok = await deleteSlangTranslation(translation.id);

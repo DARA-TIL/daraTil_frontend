@@ -7,6 +7,7 @@
     "total": "Барлық жетістік",
     "completed": "Аяқталған",
     "inProgress": "Үдерісте",
+    "currentStreak": "Қазіргі серия",
     "hidden": "Жасырын"
   },
   "sections": {
@@ -38,5 +39,12 @@
     "level_upgraded": "Деңгей көтерілді",
     "region_slang_readed": "Өңірлік сленг оқылды",
     "region_tradition_readed": "Өңірлік дәстүр оқылды"
+  },
+  "notifications": {
+    "achievementUnlockedGeneric": "Жетістік ашылды",
+    "achievementUnlocked": "Жетістік ашылды: \"{{name}}\"",
+    "streakIncrease": "Сіздің серияңыз: {{count}} күн.",
+    "streakReset": "Серия нөлге түсті. Бүгін жаңа серия бастаңыз.",
+    "view": "Ашу"
   }
 }

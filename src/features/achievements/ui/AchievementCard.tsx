@@ -1,5 +1,5 @@
 import React from "react";
-import { alpha, useTheme } from "@mui/material/styles";
+import { alpha, keyframes, useTheme } from "@mui/material/styles";
 import {
   Box,
   Chip,
@@ -18,9 +18,20 @@ import { useTranslation } from "react-i18next";
 type Props = {
   entry: AchievementProgressEntry;
   mode?: "default" | "hidden";
+  highlighted?: boolean;
 };
 
-export const AchievementCard: React.FC<Props> = ({ entry, mode = "default" }) => {
+const unlockGlow = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.52); transform: translateY(0); }
+  45% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0); transform: translateY(-2px); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); transform: translateY(0); }
+`;
+
+export const AchievementCard: React.FC<Props> = ({
+  entry,
+  mode = "default",
+  highlighted = false,
+}) => {
   const theme = useTheme();
   const { t } = useTranslation("achievements");
 
@@ -33,11 +44,15 @@ export const AchievementCard: React.FC<Props> = ({ entry, mode = "default" }) =>
         p: 1.8,
         borderRadius: 4,
         border: "1px solid",
-        borderColor: theme.customColors.sidebarBorder,
+        borderColor: highlighted
+          ? alpha(theme.palette.warning.main, 0.72)
+          : theme.customColors.sidebarBorder,
         backgroundImage: isCompleted
           ? theme.gradients.cardSoft
           : "none",
         opacity: isHidden ? 0.86 : 1,
+        animation: highlighted ? `${unlockGlow} 1.2s ease-out 3` : "none",
+        transition: "border-color 180ms ease, box-shadow 180ms ease",
       }}
     >
       <Stack spacing={1.25}>

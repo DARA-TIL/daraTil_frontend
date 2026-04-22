@@ -7,6 +7,7 @@
     "total": "Всего достижений",
     "completed": "Завершено",
     "inProgress": "В процессе",
+    "currentStreak": "Текущая серия",
     "hidden": "Скрытые"
   },
   "sections": {
@@ -38,5 +39,12 @@
     "level_upgraded": "Уровень повышен",
     "region_slang_readed": "Региональный сленг прочитан",
     "region_tradition_readed": "Региональная традиция прочитана"
+  },
+  "notifications": {
+    "achievementUnlockedGeneric": "Достижение открыто",
+    "achievementUnlocked": "Достижение открыто: \"{{name}}\"",
+    "streakIncrease": "Ваша серия: {{count}} дней.",
+    "streakReset": "Серия сброшена. Начните новую серию сегодня.",
+    "view": "Открыть"
   }
 }

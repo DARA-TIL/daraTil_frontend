@@ -28,6 +28,7 @@ import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
 import LessonTestAdminTab from "@/features/tests/ui/admin/LessonTestAdminTab";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 const BLOCK_TYPES: LessonBlockType[] = ["text", "image", "audio", "video"];
@@ -785,11 +786,14 @@ const LessonEditPage: React.FC = () => {
                       <IconButton
                         disabled={busy}
                         onClick={async () => {
-                          const ok = window.confirm(
-                            t("lessons.blocks.confirmDeleteBlock", {
+                          const ok = await requestConfirm({
+                            title: t("common.delete"),
+                            message: t("lessons.blocks.confirmDeleteBlock", {
                               name: b.name ?? "",
                             }),
-                          );
+                            confirmLabel: t("common.delete"),
+                            variant: "danger",
+                          });
                           if (!ok) return;
                           const success = await deleteBlock(b.id);
                           if (success) {

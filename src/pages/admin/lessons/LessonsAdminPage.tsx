@@ -16,6 +16,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useNavigate } from "react-router-dom";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useLessonsAdminStore } from "@/features/lessons/store/useLessonAdminStore";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 const LessonsAdminPage: React.FC = () => {
@@ -162,9 +163,14 @@ const LessonsAdminPage: React.FC = () => {
                   <IconButton
                     title={t("common.delete")}
                     onClick={async () => {
-                      const ok = window.confirm(
-                        t("lessons.confirmDeleteLesson", { name: x.name }),
-                      );
+                      const ok = await requestConfirm({
+                        title: t("common.delete"),
+                        message: t("lessons.confirmDeleteLesson", {
+                          name: x.name,
+                        }),
+                        confirmLabel: t("common.delete"),
+                        variant: "danger",
+                      });
                       if (!ok) return;
 
                       const success = await remove(x.ID);

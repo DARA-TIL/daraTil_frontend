@@ -7,6 +7,7 @@
     "total": "Total achievements",
     "completed": "Completed",
     "inProgress": "In progress",
+    "currentStreak": "Current streak",
     "hidden": "Hidden"
   },
   "sections": {
@@ -38,5 +39,12 @@
     "level_upgraded": "Level upgraded",
     "region_slang_readed": "Region slang read",
     "region_tradition_readed": "Region tradition read"
+  },
+  "notifications": {
+    "achievementUnlockedGeneric": "Achievement unlocked",
+    "achievementUnlocked": "Achievement unlocked: \"{{name}}\"",
+    "streakIncrease": "You're on a {{count}}-day streak.",
+    "streakReset": "Your streak was reset. Start a new streak today.",
+    "view": "View"
   }
 }

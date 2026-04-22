@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Grid,
@@ -11,7 +11,8 @@ import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
-import { useTheme } from "@mui/material/styles";
+import LocalFireDepartmentRoundedIcon from "@mui/icons-material/LocalFireDepartmentRounded";
+import { alpha, keyframes, useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
 import {
@@ -21,17 +22,53 @@ import {
 import { AchievementCard } from "@/features/achievements/ui/AchievementCard";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
+const summaryPulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.45); transform: translateY(0); }
+  55% { box-shadow: 0 0 0 14px rgba(249, 115, 22, 0); transform: translateY(-2px); }
+  100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); transform: translateY(0); }
+`;
+
 const ProgressPage: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation("achievements");
   const userId = useAuthStore((state) => state.user?.id ?? 0);
+  const currentStreak = useAuthStore(
+    (state) => state.user?.streak?.currentStreak ?? 0,
+  );
+  const streakEventToken = useAuthStore((state) => state.streakEventToken);
   const loading = useAchievementsStore((state) => state.loading);
   const items = useAchievementsStore((state) => state.items);
+  const recentUnlockedId = useAchievementsStore((state) => state.recentUnlockedId);
   const fetchAll = useAchievementsStore((state) => state.fetchAll);
+  const clearRecentUnlocked = useAchievementsStore(
+    (state) => state.clearRecentUnlocked,
+  );
+  const [streakPulse, setStreakPulse] = useState(false);
 
   useEffect(() => {
     void fetchAll();
   }, [fetchAll]);
+
+  useEffect(() => {
+    if (!recentUnlockedId) return;
+
+    const timer = window.setTimeout(() => {
+      clearRecentUnlocked();
+    }, 6500);
+
+    return () => window.clearTimeout(timer);
+  }, [clearRecentUnlocked, recentUnlockedId]);
+
+  useEffect(() => {
+    if (!streakEventToken) return;
+
+    setStreakPulse(true);
+    const timer = window.setTimeout(() => {
+      setStreakPulse(false);
+    }, 2600);
+
+    return () => window.clearTimeout(timer);
+  }, [streakEventToken]);
 
   const summary = useMemo(
     () => getAchievementCompletionStats(items, userId),
@@ -62,8 +99,15 @@ const ProgressPage: React.FC = () => {
   }, [summary.entries]);
 
   const completed = useMemo(
-    () => summary.entries.filter((entry) => entry.isCompleted),
-    [summary.entries],
+    () =>
+      summary.entries
+        .filter((entry) => entry.isCompleted)
+        .sort((left, right) => {
+          if (left.achievement.id === recentUnlockedId) return -1;
+          if (right.achievement.id === recentUnlockedId) return 1;
+          return 0;
+        }),
+    [recentUnlockedId, summary.entries],
   );
 
   const hidden = useMemo(
@@ -77,24 +121,35 @@ const ProgressPage: React.FC = () => {
       icon: <Inventory2RoundedIcon color="primary" />,
       value: summary.total,
       label: t("summary.total", { defaultValue: "Total achievements" }),
+      highlighted: false,
     },
     {
       key: "completed",
       icon: <EmojiEventsRoundedIcon color="warning" />,
       value: summary.completed,
       label: t("summary.completed", { defaultValue: "Completed" }),
+      highlighted: false,
     },
     {
       key: "inProgress",
       icon: <AutoGraphRoundedIcon color="success" />,
       value: summary.inProgress,
       label: t("summary.inProgress", { defaultValue: "In progress" }),
+      highlighted: false,
+    },
+    {
+      key: "streak",
+      icon: <LocalFireDepartmentRoundedIcon sx={{ color: "#f97316" }} />,
+      value: currentStreak,
+      label: t("summary.currentStreak", { defaultValue: "Current streak" }),
+      highlighted: streakPulse,
     },
     {
       key: "hidden",
       icon: <VisibilityOffRoundedIcon color="disabled" />,
       value: summary.hidden,
       label: t("summary.hidden", { defaultValue: "Hidden" }),
+      highlighted: false,
     },
   ];
 
@@ -139,8 +194,13 @@ const ProgressPage: React.FC = () => {
                   p: 2,
                   borderRadius: 4,
                   border: "1px solid",
-                  borderColor: theme.customColors.sidebarBorder,
+                  borderColor: card.highlighted
+                    ? alpha("#f97316", 0.7)
+                    : theme.customColors.sidebarBorder,
                   backgroundColor: "background.paper",
+                  animation: card.highlighted
+                    ? `${summaryPulse} 1.1s ease-out 2`
+                    : "none",
                 }}
               >
                 <Stack direction="row" spacing={1.2} alignItems="center">
@@ -184,7 +244,10 @@ const ProgressPage: React.FC = () => {
               <Grid container spacing={2}>
                 {almostCompleted.map((entry) => (
                   <Grid key={entry.achievement.id} size={{ xs: 12, md: 6 }}>
-                    <AchievementCard entry={entry} />
+                    <AchievementCard
+                      entry={entry}
+                      highlighted={entry.achievement.id === recentUnlockedId}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -226,7 +289,10 @@ const ProgressPage: React.FC = () => {
                     <Grid container spacing={2}>
                       {entries.map((entry) => (
                         <Grid key={entry.achievement.id} size={{ xs: 12, md: 6 }}>
-                          <AchievementCard entry={entry} />
+                          <AchievementCard
+                            entry={entry}
+                            highlighted={entry.achievement.id === recentUnlockedId}
+                          />
                         </Grid>
                       ))}
                     </Grid>
@@ -264,7 +330,10 @@ const ProgressPage: React.FC = () => {
               <Grid container spacing={2}>
                 {completed.map((entry) => (
                   <Grid key={entry.achievement.id} size={{ xs: 12, md: 6 }}>
-                    <AchievementCard entry={entry} />
+                    <AchievementCard
+                      entry={entry}
+                      highlighted={entry.achievement.id === recentUnlockedId}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -299,7 +368,11 @@ const ProgressPage: React.FC = () => {
               <Grid container spacing={2}>
                 {hidden.map((entry) => (
                   <Grid key={entry.achievement.id} size={{ xs: 12, md: 6 }}>
-                    <AchievementCard entry={entry} mode="hidden" />
+                    <AchievementCard
+                      entry={entry}
+                      mode="hidden"
+                      highlighted={entry.achievement.id === recentUnlockedId}
+                    />
                   </Grid>
                 ))}
               </Grid>

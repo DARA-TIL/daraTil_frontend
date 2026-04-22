@@ -11,6 +11,11 @@ const AchievementService = {
     return unwrapAchievementListPayload(res.data);
   },
 
+  async getAchieved(): Promise<Achievement[]> {
+    const res = await $api.get<unknown>("/achievement/achieved");
+    return unwrapAchievementListPayload(res.data);
+  },
+
   async getById(id: number): Promise<Achievement> {
     const res = await $api.get<unknown>(`/achievement/getById/${id}`);
     const achievement = unwrapAchievementPayload(res.data);

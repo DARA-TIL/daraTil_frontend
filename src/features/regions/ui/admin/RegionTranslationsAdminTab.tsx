@@ -15,6 +15,7 @@ import TranslateRoundedIcon from "@mui/icons-material/TranslateRounded";
 import type { Region, RegionLanguage, RegionTranslation } from "../../model/types";
 import { useRegionsAdminStore } from "../../store/useRegionsAdminStore";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -241,11 +242,14 @@ export const RegionTranslationsAdminTab: React.FC<Props> = ({ region }) => {
                         startIcon={<DeleteOutlineRoundedIcon />}
                         disabled={actionLoading}
                         onClick={async () => {
-                          const confirmed = window.confirm(
-                            t("regions.confirmDeleteTranslation", {
+                          const confirmed = await requestConfirm({
+                            title: t("common.delete"),
+                            message: t("regions.confirmDeleteTranslation", {
                               defaultValue: "Delete this translation?",
                             }),
-                          );
+                            confirmLabel: t("common.delete"),
+                            variant: "danger",
+                          });
                           if (!confirmed) return;
 
                           const ok = await deleteTranslation(translation.id);

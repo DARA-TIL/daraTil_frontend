@@ -24,6 +24,7 @@ import { getActionLabel } from "@/features/achievements/model/presentation";
 import type { ActionRule } from "../../model/types";
 import { useActionRulesAdminStore } from "../../store/useActionRulesAdminStore";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 const DEFAULT_RULE_KEYS = ["streak", "activity", "achievement"] as const;
@@ -364,12 +365,15 @@ export const ActionRulesManagementTab: React.FC = () => {
                           startIcon={<DeleteOutlineRoundedIcon />}
                           disabled={actionLoading}
                           onClick={async () => {
-                            const confirmed = window.confirm(
-                              t("actionRulesAdmin.confirmDelete", {
+                            const confirmed = await requestConfirm({
+                              title: t("common.delete", { ns: "admin" }),
+                              message: t("actionRulesAdmin.confirmDelete", {
                                 ns: "admin",
                                 defaultValue: "Delete this action rule?",
                               }),
-                            );
+                              confirmLabel: t("common.delete", { ns: "admin" }),
+                              variant: "danger",
+                            });
                             if (!confirmed) return;
 
                             const ok = await remove(item.action);

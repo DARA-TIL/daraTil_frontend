@@ -119,6 +119,10 @@ interface AuthState {
   setUser: (user: IUser | null) => void;
   setLoading: (state: boolean) => void;
   applyStreakUpdate: (status?: string | null) => void;
+  applyStreakSnapshot: (
+    status?: string | null,
+    currentStreak?: number | null,
+  ) => void;
 
   login: (email: string, password: string) => Promise<IUser | null>;
   register: (
@@ -244,6 +248,41 @@ export const useAuthStore = create<AuthState>((set) => {
         };
       }),
 
+    applyStreakSnapshot: (status, currentStreak) =>
+      set((state) => {
+        const user = state.user;
+        if (!user || !status) return {};
+
+        const kind = parseStreakStatus(status);
+        const canonicalStatus = toCanonicalStreakStatus(status);
+
+        if (!isActionableStreakKind(kind)) {
+          return {
+            user: { ...user, streakStatus: canonicalStatus || user.streakStatus },
+          };
+        }
+
+        const baseStreak = normalizeStreak(user.id, user.streak);
+        const hasServerStreak =
+          typeof currentStreak === "number" && Number.isFinite(currentStreak);
+        const nextCurrent = hasServerStreak
+          ? Math.max(0, currentStreak)
+          : applyStreakKind(baseStreak, kind).currentStreak;
+
+        return {
+          user: {
+            ...user,
+            streakStatus: canonicalStatus,
+            streak: {
+              ...baseStreak,
+              currentStreak: nextCurrent,
+              longestStreak: Math.max(baseStreak.longestStreak, nextCurrent),
+            },
+          },
+          streakEventToken: state.streakEventToken + 1,
+        };
+      }),
+
     login: async (email, password) => {
       const response = await AuthService.login(email, password);
 
@@ -281,6 +320,8 @@ export const useAuthStore = create<AuthState>((set) => {
     },
 
     logout: async () => {
+      localStorage.setItem("loggedOut", "true");
+
       try {
         await AuthService.logout();
       } catch (e: any) {

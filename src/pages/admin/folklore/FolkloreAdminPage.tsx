@@ -14,6 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { useFolkloreAdminStore } from "@/features/folklore/store/useFolkloreAdminStore";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
 import { useTranslation } from "react-i18next";
 
 const TYPES = ["proverb", "story", "song", "legend", "aitys", "kui"];
@@ -151,7 +152,12 @@ const FolkloreAdminPage: React.FC = () => {
 
                   <IconButton
                     onClick={async () => {
-                      const ok = window.confirm(t("folklore.confirmDelete"));
+                      const ok = await requestConfirm({
+                        title: t("common.delete"),
+                        message: t("folklore.confirmDelete"),
+                        confirmLabel: t("common.delete"),
+                        variant: "danger",
+                      });
                       if (!ok) return;
                       await remove(x.id);
                     }}
