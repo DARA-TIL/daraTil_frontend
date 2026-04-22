@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import axios from "axios";
 import { useUiStore } from "@/shared/store/useUiStore";
 import FolkloreAdminService from "../api/FolkloreAdminService";
 import type {
@@ -7,13 +6,10 @@ import type {
   FolkloreCreateDto,
   FolkloreUpdateDto,
 } from "../model/types";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
-function getErrorMessage(e: unknown): string {
-  if (axios.isAxiosError(e)) {
-    const backendError = (e.response?.data as any)?.error;
-    if (backendError) return String(backendError);
-  }
-  return "Something went wrong. Please try again.";
+function getErrorMessage(error: unknown): string {
+  return getApiErrorMessage(error) ?? "Something went wrong. Please try again.";
 }
 
 type AdminFilters = {

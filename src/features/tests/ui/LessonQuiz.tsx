@@ -30,7 +30,7 @@ const LessonQuiz: React.FC<{ lessonId: number; test: Test }> = ({
   const submit = useLessonTestStore((s) => s.submit);
   const submitting = useLessonTestStore((s) => s.submitting);
 
-  const questions = test.questions ?? [];
+  const questions = useMemo(() => test.questions ?? [], [test.questions]);
   const total = questions.length;
 
   const [step, setStep] = useState(0);

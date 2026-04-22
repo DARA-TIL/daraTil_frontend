@@ -89,7 +89,7 @@ const Login: React.FC = () => {
         const msg = t("errors.invalidCredentials");
         setStatus(msg);
         showSnackbar(msg, "error");
-      } catch (error: any) {
+      } catch (error: unknown) {
         let key: string = "errors.serverError";
 
         if (axios.isAxiosError(error) && error.response) {

@@ -14,6 +14,14 @@ import FileUploadField from "@/widgets/fileUpload/FileUploadField";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useUsersAdminStore } from "@/features/users/store/useUsersAdminStore";
+import type { UserUpdateDto } from "@/features/users/model/types";
+
+type UserEditForm = {
+  username: string;
+  role: string;
+  avatar: string | null;
+  password: string;
+};
 
 const UserEditAdminPage: React.FC = () => {
   const theme = useTheme();
@@ -28,7 +36,7 @@ const UserEditAdminPage: React.FC = () => {
   const fetchById = useUsersAdminStore((s) => s.fetchById);
   const updateById = useUsersAdminStore((s) => s.updateById);
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<UserEditForm>({
     username: "",
     role: "user",
     avatar: "" as string | null,
@@ -50,7 +58,7 @@ const UserEditAdminPage: React.FC = () => {
     });
   }, [selected]);
 
-  const set = (k: keyof typeof form, v: any) =>
+  const set = <K extends keyof UserEditForm>(k: K, v: UserEditForm[K]) =>
     setForm((s) => ({ ...s, [k]: v }));
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -192,10 +200,10 @@ const UserEditAdminPage: React.FC = () => {
                 const avatarUrl = await uploadAvatarIfNeeded();
                 if (avatarFile && !avatarUrl) return;
 
-                const payload: any = {
+                const payload: UserUpdateDto = {
                   username: form.username.trim(),
                   role: form.role,
-                  avatar: avatarUrl ?? form.avatar ?? null,
+                  avatar: avatarUrl ?? form.avatar ?? undefined,
                 };
 
                 if (form.password.trim()) payload.password = form.password;

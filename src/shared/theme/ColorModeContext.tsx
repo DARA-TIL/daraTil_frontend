@@ -1,6 +1,4 @@
 import React, {
-  createContext,
-  useContext,
   useMemo,
   useState,
   useEffect,
@@ -8,23 +6,7 @@ import React, {
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import type { PaletteMode } from "@mui/material";
 import { getAppTheme } from "./theme";
-
-interface ColorModeContextValue {
-  mode: PaletteMode;
-  toggleColorMode: () => void;
-}
-
-const ColorModeContext = createContext<ColorModeContextValue | undefined>(
-  undefined
-);
-
-export const useColorMode = () => {
-  const ctx = useContext(ColorModeContext);
-  if (!ctx) {
-    throw new Error("useColorMode must be used within ColorModeProvider");
-  }
-  return ctx;
-};
+import { SharedColorModeContext } from "./sharedColorMode";
 
 const STORAGE_KEY = "daratil-color-mode";
 
@@ -58,11 +40,11 @@ export const ColorModeProvider: React.FC<{ children: React.ReactNode }> = ({
   const theme = useMemo(() => getAppTheme(mode), [mode]);
 
   return (
-    <ColorModeContext.Provider value={value}>
+    <SharedColorModeContext.Provider value={value}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
-    </ColorModeContext.Provider>
+    </SharedColorModeContext.Provider>
   );
 };

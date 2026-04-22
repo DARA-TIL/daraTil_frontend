@@ -7,6 +7,7 @@ import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import LocationCityRoundedIcon from "@mui/icons-material/LocationCityRounded";
 import { useTranslation } from "react-i18next";
 import { geoCentroid } from "d3-geo";
+import type { GeoPermissibleObjects } from "d3-geo";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import type { Region, RegionLanguage } from "../model/types";
 import {
@@ -82,8 +83,10 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
     center: mapBaseCenter,
     zoom: 1,
   });
+  const [isZoomAnimating, setIsZoomAnimating] = useState(false);
 
   const animationFrameRef = useRef<number | null>(null);
+  const viewportRef = useRef<AnimatedViewport>(viewport);
 
   const regionsByCode = useMemo(
     () => Object.fromEntries(items.map((region) => [region.code, region])),
@@ -101,7 +104,10 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
     }
 
     return {
-      center: geoCentroid(feature as any) as [number, number],
+      center: geoCentroid(feature as unknown as GeoPermissibleObjects) as [
+        number,
+        number,
+      ],
       zoom: getMapZoomForFeature(feature),
     };
   }, [selectedCode]);
@@ -111,30 +117,35 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
       cancelAnimationFrame(animationFrameRef.current);
     }
 
-    const startViewport = viewport;
+    const startViewport = viewportRef.current;
     const nextViewport = targetViewport;
     const duration = 420;
     const startedAt = performance.now();
+    setIsZoomAnimating(true);
 
     const step = (now: number) => {
       const progress = clamp((now - startedAt) / duration, 0, 1);
       const eased = easeInOutCubic(progress);
 
-      setViewport({
+      const nextFrameViewport: AnimatedViewport = {
         center: [
           startViewport.center[0] +
             (nextViewport.center[0] - startViewport.center[0]) * eased,
           startViewport.center[1] +
             (nextViewport.center[1] - startViewport.center[1]) * eased,
-        ],
+        ] as [number, number],
         zoom:
           startViewport.zoom + (nextViewport.zoom - startViewport.zoom) * eased,
-      });
+      };
+
+      viewportRef.current = nextFrameViewport;
+      setViewport(nextFrameViewport);
 
       if (progress < 1) {
         animationFrameRef.current = requestAnimationFrame(step);
       } else {
         animationFrameRef.current = null;
+        setIsZoomAnimating(false);
       }
     };
 
@@ -144,6 +155,7 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      setIsZoomAnimating(false);
     };
   }, [targetViewport]);
 
@@ -367,7 +379,9 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
                           outline: "none",
                           cursor: "pointer",
                           transition:
-                            "fill 180ms ease, stroke 180ms ease, opacity 180ms ease, stroke-width 180ms ease",
+                            isZoomAnimating
+                              ? "none"
+                              : "fill 180ms ease, stroke 180ms ease, opacity 180ms ease, stroke-width 180ms ease",
                         },
                         hover: {
                           fill,

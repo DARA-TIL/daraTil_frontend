@@ -2,8 +2,10 @@ import $api from "@/shared/api/http";
 import type {
   Folklore,
   FolkloreCreateDto,
+  FolkloreTranslation,
   FolkloreUpdateDto,
 } from "../model/types";
+import { isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
 
 // сохраняем совместимый контракт для store: { data, liked }
 export type ToggleLikeResponse = {
@@ -50,7 +52,7 @@ type FolkloreDto = {
   updatedAt?: string;
   UpdatedAt?: string;
 
-  translations?: any[];
+  translations?: FolkloreTranslation[];
 };
 
 function normalizeFolklore(dto: FolkloreDto): Folklore {
@@ -70,60 +72,73 @@ function normalizeFolklore(dto: FolkloreDto): Folklore {
   };
 }
 
-function unwrap<T = any>(payload: any): T {
-  return (payload?.data ?? payload) as T;
+function unwrap<T = unknown>(payload: unknown): T {
+  return unwrapApiData(payload) as T;
 }
 
-function unwrapArray(payload: any): FolkloreDto[] {
-  const v = unwrap<any>(payload);
+function unwrapArray(payload: unknown): FolkloreDto[] {
+  const v = unwrap<unknown>(payload);
   return Array.isArray(v) ? (v as FolkloreDto[]) : [];
 }
 
-function unwrapFolkloreFromResponse(payload: any): {
+function unwrapFolkloreFromResponse(payload: unknown): {
   folklore: FolkloreDto | null;
   streak?: string;
 } {
-  const v = unwrap<any>(payload);
+  const v = unwrap<unknown>(payload);
+  if (!isRecord(v)) return { folklore: null };
 
   // Swagger: { folklore, streak }
-  if (v?.folklore)
-    return { folklore: v.folklore as FolkloreDto, streak: v.streak };
+  if (v.folklore)
+    return {
+      folklore: v.folklore as FolkloreDto,
+      streak: typeof v.streak === "string" ? v.streak : undefined,
+    };
 
   // Legacy: { data: FolkloreDto }
-  if (v && typeof v === "object" && (v.id || v.ID || v.name))
+  if (v.id || v.ID || v.name)
     return { folklore: v as FolkloreDto };
 
   // Rare legacy: { data: { folklore, streak } }
-  if (v?.data?.folklore)
-    return { folklore: v.data.folklore as FolkloreDto, streak: v.data.streak };
+  const nested = isRecord(v.data) ? v.data : null;
+  if (nested?.folklore)
+    return {
+      folklore: nested.folklore as FolkloreDto,
+      streak: typeof nested.streak === "string" ? nested.streak : undefined,
+    };
 
   return { folklore: null };
 }
 
-function unwrapLikeResponse(payload: any): {
+function unwrapLikeResponse(payload: unknown): {
   folklore: FolkloreDto | null;
   liked: boolean;
   streak?: string;
 } {
-  const v = unwrap<any>(payload);
+  const v = unwrap<unknown>(payload);
+  if (!isRecord(v)) return { folklore: null, liked: false };
 
   // Swagger: { folklore, liked, streak }
-  if (v?.folklore)
+  if (v.folklore)
     return {
       folklore: v.folklore as FolkloreDto,
       liked: Boolean(v.liked),
-      streak: v.streak,
+      streak: typeof v.streak === "string" ? v.streak : undefined,
     };
 
   // Legacy: { data: FolkloreDto, liked }
-  if (v?.data)
+  if (v.data)
     return {
       folklore: v.data as FolkloreDto,
       liked: Boolean(v.liked),
-      streak: v.streak,
+      streak: typeof v.streak === "string" ? v.streak : undefined,
     };
 
-  return { folklore: null, liked: Boolean(v?.liked), streak: v?.streak };
+  return {
+    folklore: null,
+    liked: Boolean(v.liked),
+    streak: typeof v.streak === "string" ? v.streak : undefined,
+  };
 }
 
 function cleanParams(params: Record<string, unknown>) {
@@ -146,14 +161,14 @@ function cleanParams(params: Record<string, unknown>) {
 
 const FolkloreService = {
   async create(payload: FolkloreCreateDto) {
-    const res = await $api.post<any>("/folklore/create", payload);
+    const res = await $api.post<unknown>("/folklore/create", payload);
     const { folklore } = unwrapFolkloreFromResponse(res.data);
     if (!folklore) throw new Error("Create folklore: invalid response");
     return normalizeFolklore(folklore);
   },
 
   async getAll() {
-    const res = await $api.get<any>("/folklore/getAll");
+    const res = await $api.get<unknown>("/folklore/getAll");
 
     // Swagger: массив
     if (Array.isArray(res.data))
@@ -164,7 +179,7 @@ const FolkloreService = {
   },
 
   async getById(id: number) {
-    const res = await $api.get<any>(`/folklore/getById/${id}`);
+    const res = await $api.get<unknown>(`/folklore/getById/${id}`);
 
     const { folklore, streak } = unwrapFolkloreFromResponse(res.data);
     if (!folklore) throw new Error("GetById: invalid response");
@@ -176,20 +191,20 @@ const FolkloreService = {
   },
 
   async update(id: number, payload: FolkloreUpdateDto) {
-    const res = await $api.patch<any>(`/folklore/update/${id}`, payload);
+    const res = await $api.patch<unknown>(`/folklore/update/${id}`, payload);
     const { folklore } = unwrapFolkloreFromResponse(res.data);
     if (!folklore) throw new Error("Update folklore: invalid response");
     return normalizeFolklore(folklore);
   },
 
   async remove(id: number) {
-    const res = await $api.delete<any>(`/folklore/delete/${id}`);
-    const v = unwrap<any>(res.data);
+    const res = await $api.delete<unknown>(`/folklore/delete/${id}`);
+    const v = unwrap<unknown>(res.data);
     return typeof v === "string" ? v : "ok";
   },
 
   async toggleLike(id: number): Promise<ToggleLikeResponse> {
-    const res = await $api.post<any>(`/folklore/like/${id}`);
+    const res = await $api.post<unknown>(`/folklore/like/${id}`);
     const u = unwrapLikeResponse(res.data);
     if (!u.folklore) throw new Error("ToggleLike: invalid response");
 
@@ -202,7 +217,7 @@ const FolkloreService = {
   },
 
   async getLiked() {
-    const res = await $api.get<any>("/user/getLikedFolklore");
+    const res = await $api.get<unknown>("/user/getLikedFolklore");
 
     // Swagger: массив
     if (Array.isArray(res.data))
@@ -214,7 +229,7 @@ const FolkloreService = {
 
   async search(params: FolkloreSearchParams) {
     const query = cleanParams(params as Record<string, unknown>);
-    const res = await $api.get<any>("/folklore/search", { params: query });
+    const res = await $api.get<unknown>("/folklore/search", { params: query });
 
     if (Array.isArray(res.data))
       return (res.data as FolkloreDto[]).map(normalizeFolklore);

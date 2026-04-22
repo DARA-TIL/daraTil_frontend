@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -85,12 +85,8 @@ export const ActionRulesManagementTab: React.FC = () => {
     );
   }, [items]);
 
-  const rows = useMemo(
-    () =>
-      [...getFilteredItems()].sort((left, right) =>
-        left.action.localeCompare(right.action),
-      ),
-    [filters, getFilteredItems, items],
+  const rows = [...getFilteredItems()].sort((left, right) =>
+    left.action.localeCompare(right.action),
   );
 
   return (

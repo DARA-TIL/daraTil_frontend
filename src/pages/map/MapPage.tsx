@@ -47,6 +47,7 @@ const MapPage: React.FC = () => {
     normalizeRegionLanguage(i18n.resolvedLanguage ?? "en"),
   );
   const [activeTab, setActiveTab] = useState<RegionTab>("overview");
+  const appLanguage = i18n.resolvedLanguage ?? "en";
 
   useEffect(() => {
     void fetchAll();
@@ -54,9 +55,9 @@ const MapPage: React.FC = () => {
 
   useEffect(() => {
     if (!selectedCode) return;
-    setDrawerLanguage(normalizeRegionLanguage(i18n.resolvedLanguage ?? "en"));
+    setDrawerLanguage(normalizeRegionLanguage(appLanguage));
     setActiveTab("overview");
-  }, [selectedCode]);
+  }, [appLanguage, selectedCode]);
 
   const searchOptions = useMemo<SearchOption[]>(
     () =>
@@ -180,7 +181,7 @@ const MapPage: React.FC = () => {
             items={items}
             selectedCode={selectedCode}
             userLevel={userLevel}
-            language={normalizeRegionLanguage(i18n.resolvedLanguage ?? "en")}
+            language={normalizeRegionLanguage(appLanguage)}
             onSelect={(code) => {
               void selectByCode(code);
             }}

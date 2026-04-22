@@ -15,6 +15,7 @@ import OAuthButtons from "@/features/auth/ui/OAuthButtons";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUiStore } from "@/shared/store/useUiStore";
 import axios from "axios";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -67,27 +68,16 @@ const Register: React.FC = () => {
         const msg = t("errors.registerFailed");
         setStatus(msg);
         showSnackbar(msg, "error");
-      } catch (error: any) {
-        console.log("register error:", error.response?.data || error);
-
+      } catch (error: unknown) {
         let msg = t("errors.serverError");
 
-        if (axios.isAxiosError(error) && error.response?.data) {
-          const backendError = (error.response.data as any).error;
-          if (backendError) {
-            msg = backendError;
-          }
-        }
-
-        // внутри catch
         if (axios.isAxiosError(error) && error.response) {
           const status = error.response.status;
 
           if (status === 409) {
-            msg = t("errors.userAlreadyExists"); // добавь в i18n
+            msg = t("errors.userAlreadyExists");
           } else {
-            const backendError = (error.response.data as any)?.error;
-            if (backendError) msg = String(backendError);
+            msg = getApiErrorMessage(error) ?? msg;
           }
         }
 

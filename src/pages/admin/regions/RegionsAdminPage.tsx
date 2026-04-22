@@ -31,7 +31,6 @@ const RegionsAdminPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(8);
 
-  const items = useRegionsAdminStore((state) => state.items);
   const loading = useRegionsAdminStore((state) => state.loading);
   const selectedId = useRegionsAdminStore((state) => state.selectedId);
   const selected = useRegionsAdminStore((state) => state.selected);
@@ -49,14 +48,10 @@ const RegionsAdminPage: React.FC = () => {
 
   const displayLanguage = normalizeRegionLanguage(i18n.resolvedLanguage ?? "en");
 
-  const rows = useMemo(
-    () =>
-      [...getFilteredItems()].sort((left, right) =>
-        getRegionDisplayName(left, displayLanguage, left.code).localeCompare(
-          getRegionDisplayName(right, displayLanguage, right.code),
-        ),
-      ),
-    [displayLanguage, filters, getFilteredItems, items],
+  const rows = [...getFilteredItems()].sort((left, right) =>
+    getRegionDisplayName(left, displayLanguage, left.code).localeCompare(
+      getRegionDisplayName(right, displayLanguage, right.code),
+    ),
   );
 
   useEffect(() => {

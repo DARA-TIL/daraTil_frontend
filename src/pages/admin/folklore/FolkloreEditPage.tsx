@@ -56,7 +56,7 @@ const FolkloreEditPage: React.FC = () => {
       .catch(() => setItem(null));
   }, [folkloreId]);
 
-  const patch = (k: keyof Folklore, v: any) =>
+  const patch = <K extends keyof Folklore>(k: K, v: Folklore[K]) =>
     setItem((s) => (s ? ({ ...s, [k]: v } as Folklore) : s));
 
   function validateFile(file: File, kind: "image" | "media"): string | null {

@@ -34,7 +34,7 @@ const LessonCreatePage: React.FC = () => {
     requiredLevel: 1,
   });
 
-  const set = (k: keyof LessonCreateDto, v: any) =>
+  const set = <K extends keyof LessonCreateDto>(k: K, v: LessonCreateDto[K]) =>
     setForm((s) => ({ ...s, [k]: v }));
 
   const [imageFile, setImageFile] = useState<File | null>(null);

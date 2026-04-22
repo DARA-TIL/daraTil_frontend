@@ -7,11 +7,12 @@ import type {
   UpdateTestDto,
 } from "../model/types";
 import axios from "axios";
+import { unwrapApiData } from "@/shared/lib/unknownRecord";
 
 const BASE = "/test";
 
-async function unwrap<T>(p: any): Promise<T> {
-  return (p as any)?.data ?? p;
+async function unwrap<T>(payload: unknown): Promise<T> {
+  return unwrapApiData(payload) as T;
 }
 
 const TestService = {
@@ -34,7 +35,7 @@ const TestService = {
 
   async create(payload: CreateTestDto): Promise<Test> {
     const res = await $api.post<Test>(`${BASE}/create`, payload);
-    return (res.data as any).data ?? res.data;
+    return unwrap<Test>(res.data);
   },
 
   async update(payload: UpdateTestDto): Promise<void> {

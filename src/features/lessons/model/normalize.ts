@@ -4,46 +4,65 @@ import type {
   LessonBestResult,
   LessonResult,
 } from "./types";
+import { isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
 
-export function normalizeLessonBlock(raw: any): LessonBlock {
+export function normalizeLessonBlock(raw: unknown): LessonBlock {
+  const source = isRecord(raw) ? raw : {};
   return {
-    id: Number(raw?.id ?? raw?.ID ?? 0),
+    id: Number(source.id ?? source.ID ?? 0),
     lessonID: Number(
-      raw?.lessonId ?? raw?.LessonID ?? raw?.lessonID ?? raw?.LessonId ?? 0,
+      source.lessonId ?? source.LessonID ?? source.lessonID ?? source.LessonId ?? 0,
     ),
-    name: String(raw?.name ?? raw?.Name ?? ""),
+    name: String(source.name ?? source.Name ?? ""),
     type: String(
-      raw?.contentType ?? raw?.ContentType ?? raw?.type ?? raw?.Type ?? "text",
+      source.contentType ?? source.ContentType ?? source.type ?? source.Type ?? "text",
     ),
-    contentUrl: raw?.contentUrl ?? raw?.ContentUrl ?? null,
-    contentText: raw?.contentText ?? raw?.ContentText ?? null,
-    position: Number(raw?.position ?? raw?.Position ?? 0),
+    contentUrl:
+      typeof source.contentUrl === "string"
+        ? source.contentUrl
+        : typeof source.ContentUrl === "string"
+          ? source.ContentUrl
+          : null,
+    contentText:
+      typeof source.contentText === "string"
+        ? source.contentText
+        : typeof source.ContentText === "string"
+          ? source.ContentText
+          : null,
+    position: Number(source.position ?? source.Position ?? 0),
   };
 }
 
-function normalizeResult(raw: any): LessonResult {
+function normalizeResult(raw: unknown): LessonResult {
+  const source = isRecord(raw) ? raw : {};
   return {
-    id: Number(raw?.id ?? raw?.ID ?? 0),
-    userId: Number(raw?.userId ?? raw?.UserID ?? 0),
-    testId: Number(raw?.testId ?? raw?.TestID ?? 0),
-    lessonId: Number(raw?.lessonId ?? raw?.LessonID ?? 0),
-    result: Number(raw?.result ?? raw?.Result ?? 0),
-    pass: Boolean(raw?.pass ?? raw?.Pass ?? false),
-    passTime: raw?.passTime ?? raw?.PassTime,
+    id: Number(source.id ?? source.ID ?? 0),
+    userId: Number(source.userId ?? source.UserID ?? 0),
+    testId: Number(source.testId ?? source.TestID ?? 0),
+    lessonId: Number(source.lessonId ?? source.LessonID ?? 0),
+    result: Number(source.result ?? source.Result ?? 0),
+    pass: Boolean(source.pass ?? source.Pass ?? false),
+    passTime:
+      typeof source.passTime === "string"
+        ? source.passTime
+        : typeof source.PassTime === "string"
+          ? source.PassTime
+          : undefined,
   };
 }
 
-function normalizeBestResult(raw: any): LessonBestResult | null {
-  if (!raw || typeof raw !== "object") return null;
+function normalizeBestResult(raw: unknown): LessonBestResult | null {
+  if (!isRecord(raw)) return null;
   return {
-    result: Number(raw?.result ?? raw?.Result ?? 0),
-    pass: Boolean(raw?.pass ?? raw?.Pass ?? false),
+    result: Number(raw.result ?? raw.Result ?? 0),
+    pass: Boolean(raw.pass ?? raw.Pass ?? false),
   };
 }
 
-export function normalizeLesson(raw: any): Lesson {
-  const blocksRaw = raw?.blocks ?? raw?.Blocks ?? [];
-  const resultsRaw = raw?.results ?? raw?.Results ?? [];
+export function normalizeLesson(raw: unknown): Lesson {
+  const source = isRecord(raw) ? raw : {};
+  const blocksRaw = source.blocks ?? source.Blocks ?? [];
+  const resultsRaw = source.results ?? source.Results ?? [];
 
   const blocks = Array.isArray(blocksRaw)
     ? blocksRaw.map(normalizeLessonBlock)
@@ -52,20 +71,25 @@ export function normalizeLesson(raw: any): Lesson {
     ? resultsRaw.map(normalizeResult)
     : [];
 
-  const best = normalizeBestResult(raw?.bestResult ?? raw?.BestResult);
+  const best = normalizeBestResult(source.bestResult ?? source.BestResult);
 
   return {
-    ID: Number(raw?.id ?? raw?.ID ?? 0),
-    name: String(raw?.name ?? raw?.Name ?? ""),
+    ID: Number(source.id ?? source.ID ?? 0),
+    name: String(source.name ?? source.Name ?? ""),
 
-    description: raw?.description ?? raw?.Description ?? "",
-    imageUrl: raw?.imageUrl ?? raw?.ImageUrl ?? null,
-    author: raw?.author ?? raw?.Author ?? "",
+    description: String(source.description ?? source.Description ?? ""),
+    imageUrl:
+      typeof source.imageUrl === "string"
+        ? source.imageUrl
+        : typeof source.ImageUrl === "string"
+          ? source.ImageUrl
+          : null,
+    author: String(source.author ?? source.Author ?? ""),
 
-    reward: Number(raw?.reward ?? raw?.Reward ?? 0),
-    requiredLevel: Number(raw?.requiredLevel ?? raw?.RequiredLevel ?? 0),
+    reward: Number(source.reward ?? source.Reward ?? 0),
+    requiredLevel: Number(source.requiredLevel ?? source.RequiredLevel ?? 0),
 
-    lessonStatus: String(raw?.lessonStatus ?? raw?.LessonStatus ?? ""),
+    lessonStatus: String(source.lessonStatus ?? source.LessonStatus ?? ""),
 
     blocks: blocks
       .filter((b) => b.id > 0)
@@ -76,11 +100,11 @@ export function normalizeLesson(raw: any): Lesson {
   };
 }
 
-export function unwrapLessonPayload(payload: any): any {
-  return payload?.data ?? payload;
+export function unwrapLessonPayload(payload: unknown): unknown {
+  return unwrapApiData(payload);
 }
 
-export function unwrapLessonListPayload(payload: any): any[] {
-  const p = payload?.data ?? payload;
+export function unwrapLessonListPayload(payload: unknown): unknown[] {
+  const p = unwrapApiData(payload);
   return Array.isArray(p) ? p : [];
 }

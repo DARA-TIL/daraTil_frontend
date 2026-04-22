@@ -1,25 +1,32 @@
 import $api from "@/shared/api/http";
 import type { User, UserDto, UserUpdateDto } from "../model/types";
+import { getRecord, isRecord } from "@/shared/lib/unknownRecord";
 
 type ApiData<T> = { data: T };
 
-function normalizeUser(dto: any): User {
-  const p = dto.progress ?? dto.Progress ?? null;
+function normalizeUser(dto: unknown): User {
+  const source = isRecord(dto) ? dto : {};
+  const p = getRecord(source, "progress") ?? getRecord(source, "Progress");
 
   return {
-    id: dto.id ?? dto.ID ?? 0,
-    username: dto.username ?? dto.Username ?? "",
-    email: dto.email ?? dto.Email ?? "",
-    avatar: (dto.avatar ?? dto.Avatar ?? null) || null,
-    role: dto.role ?? dto.Role ?? "",
-    authProvider: dto.authProvider ?? dto.AuthProvider ?? "",
+    id: Number(source.id ?? source.ID ?? 0),
+    username: String(source.username ?? source.Username ?? ""),
+    email: String(source.email ?? source.Email ?? ""),
+    avatar:
+      typeof source.avatar === "string"
+        ? source.avatar
+        : typeof source.Avatar === "string"
+          ? source.Avatar
+          : null,
+    role: String(source.role ?? source.Role ?? ""),
+    authProvider: String(source.authProvider ?? source.AuthProvider ?? ""),
     progress: p
       ? {
-          id: p.id ?? p.ID ?? 0,
-          level: p.level ?? p.Level ?? 0,
-          xpTotal: p.XpTotal ?? p.xpTotal ?? 0,
-          xpForNextLevel: p.XpForNextLevel ?? p.xpForNextLevel ?? 1,
-          userID: p.userID ?? p.UserID ?? 0,
+          id: Number(p.id ?? p.ID ?? 0),
+          level: Number(p.level ?? p.Level ?? 0),
+          xpTotal: Number(p.XpTotal ?? p.xpTotal ?? 0),
+          xpForNextLevel: Number(p.XpForNextLevel ?? p.xpForNextLevel ?? 1),
+          userID: Number(p.userID ?? p.UserID ?? 0),
         }
       : null,
   };
@@ -37,7 +44,7 @@ const UsersAdminService = {
   },
 
   async updateById(id: number, payload: UserUpdateDto) {
-    const body: any = {};
+    const body: Record<string, string | null> = {};
     if (payload.username !== undefined) body.Username = payload.username;
     if (payload.role !== undefined) body.Role = payload.role;
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;

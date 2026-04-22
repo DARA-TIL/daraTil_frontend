@@ -40,7 +40,7 @@ const UserService = {
     role?: string;
     username?: string;
   }) {
-    const body: any = {};
+    const body: Record<string, string> = {};
     if (payload.username !== undefined) body.Username = payload.username;
     if (payload.role !== undefined) body.Role = payload.role;
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;
@@ -59,7 +59,7 @@ const UserService = {
       username?: string;
     },
   ) {
-    const body: any = {};
+    const body: Record<string, string> = {};
     if (payload.username !== undefined) body.Username = payload.username;
     if (payload.role !== undefined) body.Role = payload.role;
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;

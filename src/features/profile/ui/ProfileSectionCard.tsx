@@ -1,11 +1,12 @@
 import React from "react";
 import { Paper } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import type { SxProps, Theme } from "@mui/material/styles";
 
 type Props = {
   children: React.ReactNode;
   variant?: "soft" | "hero";
-  sx?: any;
+  sx?: SxProps<Theme>;
 };
 
 const ProfileSectionCard: React.FC<Props> = ({

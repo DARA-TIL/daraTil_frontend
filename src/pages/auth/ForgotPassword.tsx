@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
 
 import AuthService from "@/features/auth/api/AuthService";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 type Step = 1 | 2 | 3;
 
@@ -50,13 +50,10 @@ const ForgotPassword: React.FC = () => {
       await AuthService.requestPasswordReset(email.trim());
       showSnackbar(t("forgot.codeSent"), "success");
       setStep(2);
-    } catch (error: any) {
+    } catch (error: unknown) {
       let msg = t("forgot.genericError");
 
-      if (axios.isAxiosError(error)) {
-        const backendError = (error.response?.data as any)?.error;
-        if (backendError) msg = backendError;
-      }
+      msg = getApiErrorMessage(error) ?? msg;
 
       setFieldError(msg);
       showSnackbar(msg, "error");
@@ -80,13 +77,10 @@ const ForgotPassword: React.FC = () => {
       await AuthService.verifyPasswordReset(code.trim());
       showSnackbar(t("forgot.codeVerified"), "success");
       setStep(3);
-    } catch (error: any) {
+    } catch (error: unknown) {
       let msg = t("forgot.genericError");
 
-      if (axios.isAxiosError(error)) {
-        const backendError = (error.response?.data as any)?.error;
-        if (backendError) msg = backendError;
-      }
+      msg = getApiErrorMessage(error) ?? msg;
 
       setFieldError(msg);
       showSnackbar(msg, "error");
@@ -120,13 +114,10 @@ const ForgotPassword: React.FC = () => {
       await AuthService.confirmPasswordReset(password);
       showSnackbar(t("forgot.passwordChanged"), "success");
       navigate("/login");
-    } catch (error: any) {
+    } catch (error: unknown) {
       let msg = t("forgot.genericError");
 
-      if (axios.isAxiosError(error)) {
-        const backendError = (error.response?.data as any)?.error;
-        if (backendError) msg = backendError;
-      }
+      msg = getApiErrorMessage(error) ?? msg;
 
       setFieldError(msg);
       showSnackbar(msg, "error");

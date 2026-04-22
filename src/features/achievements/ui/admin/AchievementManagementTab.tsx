@@ -63,7 +63,6 @@ export const AchievementManagementTab: React.FC = () => {
   const { t } = useTranslation(["admin", "achievements"]);
   const showSnackbar = useUiStore((state) => state.showSnackbar);
 
-  const items = useAchievementsAdminStore((state) => state.items);
   const loading = useAchievementsAdminStore((state) => state.loading);
   const selectedId = useAchievementsAdminStore((state) => state.selectedId);
   const selected = useAchievementsAdminStore((state) => state.selected);
@@ -105,12 +104,8 @@ export const AchievementManagementTab: React.FC = () => {
     setIconFile(null);
   }, [selected]);
 
-  const rows = useMemo(
-    () =>
-      [...getFilteredItems()].sort((left, right) =>
-        left.name.localeCompare(right.name),
-      ),
-    [filters, getFilteredItems, items],
+  const rows = [...getFilteredItems()].sort((left, right) =>
+    left.name.localeCompare(right.name),
   );
 
   useEffect(() => {

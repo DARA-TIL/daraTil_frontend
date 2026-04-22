@@ -32,14 +32,12 @@ const ProfileOverviewTab: React.FC = () => {
     if (!user) return;
     setUsername(user.username ?? "");
     setAvatar(user.avatar ?? "");
-  }, [user?.username, user?.avatar]);
+  }, [user]);
 
-  if (!user) return null;
-
-  const level = user.progress?.level ?? 0;
-  const xpTotal = user.progress?.xpTotal ?? 0;
-  const currentStreak = user.streak?.currentStreak ?? 0;
-  const longestStreak = user.streak?.longestStreak ?? 0;
+  const level = user?.progress?.level ?? 0;
+  const xpTotal = user?.progress?.xpTotal ?? 0;
+  const currentStreak = user?.streak?.currentStreak ?? 0;
+  const longestStreak = user?.streak?.longestStreak ?? 0;
 
   const stats = useMemo(
     () => [
@@ -63,6 +61,8 @@ const ProfileOverviewTab: React.FC = () => {
     ],
     [t, currentStreak, longestStreak],
   );
+
+  if (!user) return null;
 
   const onSave = async () => {
     await updateProfile({ username, avatar });

@@ -13,58 +13,62 @@ import {
   toCanonicalStreakStatus,
   type StreakStatusKind,
 } from "@/features/auth/model/streak";
+import { getRecord, isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
 
-function unwrapAuth(payload: AuthResponse | any): AuthPayload | any {
-  return payload?.data ?? payload;
+function unwrapAuth(payload: AuthResponse | unknown): AuthPayload | unknown {
+  return unwrapApiData(payload);
 }
 
-function extractAccessToken(payload: AuthResponse | any): string | null {
+function extractAccessToken(payload: AuthResponse | unknown): string | null {
   const p = unwrapAuth(payload);
-  return (p?.accessToken ?? null) as string | null;
+  if (!isRecord(p)) return null;
+  return typeof p.accessToken === "string" ? p.accessToken : null;
 }
 
-function extractRefreshToken(payload: AuthResponse | any): string | null {
+function extractRefreshToken(payload: AuthResponse | unknown): string | null {
   const p = unwrapAuth(payload);
-  return (p?.refreshToken ?? null) as string | null;
+  if (!isRecord(p)) return null;
+  return typeof p.refreshToken === "string" ? p.refreshToken : null;
 }
 
-function normalizeUserFromBackend(payload: any): IUser | null {
+function normalizeUserFromBackend(payload: unknown): IUser | null {
   if (!payload) return null;
 
   const root = unwrapAuth(payload);
-  const u = root?.user ?? root?.data?.user ?? root;
-  if (!u || typeof u !== "object") return null;
+  if (!isRecord(root)) return null;
 
-  const p = u.progress ?? u.Progress ?? null;
-  const st = u.streak ?? u.Streak ?? null;
-  const streakStatus = root?.streak ?? payload?.streak ?? null;
+  const u = getRecord(root, "user") ?? getRecord(getRecord(root, "data"), "user") ?? root;
+
+  const p = getRecord(u, "progress") ?? getRecord(u, "Progress");
+  const st = getRecord(u, "streak") ?? getRecord(u, "Streak");
+  const streakStatus = root.streak;
 
   return {
-    id: u.id ?? u.ID ?? 0,
-    username: u.username ?? u.Username ?? "",
-    email: u.email ?? u.Email ?? "",
-    avatar: u.avatar ?? u.Avatar ?? "",
-    role: u.role ?? u.Role ?? "",
-    authProvider: u.authProvider ?? u.AuthProvider ?? "",
+    id: Number(u.id ?? u.ID ?? 0),
+    username: String(u.username ?? u.Username ?? ""),
+    email: String(u.email ?? u.Email ?? ""),
+    avatar: String(u.avatar ?? u.Avatar ?? ""),
+    role: String(u.role ?? u.Role ?? ""),
+    authProvider: String(u.authProvider ?? u.AuthProvider ?? ""),
     streakStatus:
       typeof streakStatus === "string"
         ? toCanonicalStreakStatus(streakStatus)
         : "",
     progress: p
       ? {
-          id: p.id ?? p.ID ?? 0,
-          level: p.level ?? p.Level ?? 0,
-          xpTotal: p.XpTotal ?? p.xpTotal ?? 0,
-          xpForNextLevel: p.XpForNextLevel ?? p.xpForNextLevel ?? 1,
-          userID: p.userID ?? p.UserID ?? 0,
+          id: Number(p.id ?? p.ID ?? 0),
+          level: Number(p.level ?? p.Level ?? 0),
+          xpTotal: Number(p.XpTotal ?? p.xpTotal ?? 0),
+          xpForNextLevel: Number(p.XpForNextLevel ?? p.xpForNextLevel ?? 1),
+          userID: Number(p.userID ?? p.UserID ?? 0),
         }
       : null,
     streak: st
       ? {
-          id: st.id ?? st.ID ?? 0,
-          userID: st.userID ?? st.UserID ?? u.id ?? u.ID ?? 0,
-          currentStreak: st.currentStreak ?? st.CurrentStreak ?? 0,
-          longestStreak: st.longestStreak ?? st.LongestStreak ?? 0,
+          id: Number(st.id ?? st.ID ?? 0),
+          userID: Number(st.userID ?? st.UserID ?? u.id ?? u.ID ?? 0),
+          currentStreak: Number(st.currentStreak ?? st.CurrentStreak ?? 0),
+          longestStreak: Number(st.longestStreak ?? st.LongestStreak ?? 0),
         }
       : null,
   };
@@ -161,14 +165,14 @@ export const useAuthStore = create<AuthState>((set) => {
       try {
         const meResponse = await $api.get("/auth/me", {
           skipAuthRefresh: true,
-        } as any);
+        });
         const user = normalizeUserFromBackend(meResponse.data);
 
         if (user) {
           setUserWithStreakEvent(user, true);
           return user;
         }
-      } catch (err: any) {
+      } catch {
         // ignore and continue with refresh flow
       }
 
@@ -189,12 +193,12 @@ export const useAuthStore = create<AuthState>((set) => {
 
         const meResponse2 = await $api.get("/auth/me", {
           skipAuthRefresh: true,
-        } as any);
+        });
         const user2 = normalizeUserFromBackend(meResponse2.data);
 
         setUserWithStreakEvent(user2, Boolean(user2));
         return user2;
-      } catch (refreshErr: any) {
+      } catch {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
         set({ isAuth: false, user: null });
@@ -324,8 +328,8 @@ export const useAuthStore = create<AuthState>((set) => {
 
       try {
         await AuthService.logout();
-      } catch (e: any) {
-        console.log("logout error:", e.response?.data || e.message);
+      } catch (error) {
+        console.log("logout error:", error);
       } finally {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
@@ -364,7 +368,7 @@ export const useAuthStore = create<AuthState>((set) => {
         }));
         useUiStore.getState().showSnackbar("Profile updated", "success");
         return updated;
-      } catch (e) {
+      } catch {
         useUiStore.getState().showSnackbar("Failed to update profile", "error");
         return null;
       }

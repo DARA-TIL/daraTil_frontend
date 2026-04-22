@@ -1,7 +1,8 @@
 import { geoCentroid, geoMercator, geoPath } from "d3-geo";
+import type { GeoPermissibleObjects } from "d3-geo";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import type { MapRegionProperties } from "./helpers";
-import kzRegionsGeoJsonRaw from "@/shared/assets/maps/kz.regions.geojson?raw";
+import kzRegionsGeoJsonRaw from "@/shared/assets/maps/kz.regions.simplified.geojson?raw";
 
 export const MAP_WIDTH = 1000;
 export const MAP_HEIGHT = 760;
@@ -15,7 +16,9 @@ export const mapFeatures = kazakhstanRegionsGeoJson.features as Array<
   Feature<Geometry, MapRegionProperties>
 >;
 
-export const mapBaseCenter = geoCentroid(kazakhstanRegionsGeoJson as any) as [
+const toD3Geo = (value: unknown) => value as GeoPermissibleObjects;
+
+export const mapBaseCenter = geoCentroid(toD3Geo(kazakhstanRegionsGeoJson)) as [
   number,
   number,
 ];
@@ -33,7 +36,7 @@ function computeScale(
     .scale(1);
 
   const path = geoPath(projection);
-  const [[x0, y0], [x1, y1]] = path.bounds(feature as any);
+  const [[x0, y0], [x1, y1]] = path.bounds(toD3Geo(feature));
   const dx = Math.max(x1 - x0, 1);
   const dy = Math.max(y1 - y0, 1);
 
@@ -61,7 +64,7 @@ export function getMapZoomForFeature(
     .scale(mapBaseScale);
 
   const path = geoPath(projection);
-  const [[x0, y0], [x1, y1]] = path.bounds(feature as any);
+  const [[x0, y0], [x1, y1]] = path.bounds(toD3Geo(feature));
   const dx = Math.max(x1 - x0, 1);
   const dy = Math.max(y1 - y0, 1);
   const fitZoom = Math.min((MAP_WIDTH - 180) / dx, (MAP_HEIGHT - 150) / dy);

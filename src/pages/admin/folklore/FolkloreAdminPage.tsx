@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -45,7 +45,7 @@ const FolkloreAdminPage: React.FC = () => {
     fetchAllIfNeeded();
   }, [fetchAllIfNeeded]);
 
-  const rows = useMemo(() => getFilteredItems(), [getFilteredItems, filters]);
+  const rows = getFilteredItems();
 
   return (
     <Box>

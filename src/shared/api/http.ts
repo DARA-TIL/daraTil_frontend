@@ -1,27 +1,36 @@
 import axios from "axios";
+import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import type {
   AuthResponse,
   AuthPayload,
 } from "@/features/auth/model/response/AuthResponse";
+import { isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
 
-export const API_URL = "https://daratilback.onrender.com/api";
+export const API_URL =
+  import.meta.env.VITE_API_URL || "https://daratilback.onrender.com/api";
+
+type RetriableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+  skipAuthRefresh?: boolean;
+};
 
 const $api = axios.create({
   withCredentials: true,
   baseURL: API_URL,
 });
 
-function unwrapAuth(payload: AuthResponse | any): AuthPayload | any {
-  return payload?.data ?? payload;
+function unwrapAuth(payload: AuthResponse | unknown): AuthPayload | unknown {
+  return unwrapApiData(payload);
 }
 
-function extractAccessToken(payload: AuthResponse | any): string | null {
+function extractAccessToken(payload: AuthResponse | unknown): string | null {
   const p = unwrapAuth(payload);
-  return (p?.accessToken ?? null) as string | null;
+  if (!isRecord(p)) return null;
+  return typeof p.accessToken === "string" ? p.accessToken : null;
 }
 
-function shouldFallbackToPost(error: any): boolean {
-  const status = error?.response?.status;
+function shouldFallbackToPost(error: unknown): boolean {
+  const status = axios.isAxiosError(error) ? error.response?.status : null;
   return status === 404 || status === 405;
 }
 
@@ -47,10 +56,10 @@ let refreshPromise: Promise<string> | null = null;
 
 $api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config as any;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as RetriableRequestConfig | undefined;
 
-    if (!error.response) return Promise.reject(error);
+    if (!error.response || !originalRequest) return Promise.reject(error);
 
     const status = error.response.status;
     const isRefreshRequest =
@@ -110,7 +119,6 @@ $api.interceptors.response.use(
 
         const newToken = await refreshPromise;
 
-        originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
         return $api(originalRequest);

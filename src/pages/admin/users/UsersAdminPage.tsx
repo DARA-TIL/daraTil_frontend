@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -29,7 +29,6 @@ const UsersAdminPage: React.FC = () => {
   const setFilter = useUsersAdminStore((s) => s.setFilter);
   const resetFilters = useUsersAdminStore((s) => s.resetFilters);
 
-  const items = useUsersAdminStore((s) => s.items);
   const getFilteredItems = useUsersAdminStore((s) => s.getFilteredItems);
 
   const updateById = useUsersAdminStore((s) => s.updateById);
@@ -47,10 +46,7 @@ const UsersAdminPage: React.FC = () => {
     fetchAll();
   }, [fetchAll]);
 
-  const rows = useMemo(
-    () => getFilteredItems(),
-    [items, filters, getFilteredItems],
-  );
+  const rows = getFilteredItems();
 
   const getRoleValue = (id: number, current: string) =>
     roleDrafts[id] ?? current ?? "user";

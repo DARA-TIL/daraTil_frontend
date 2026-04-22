@@ -74,20 +74,21 @@ const ProgressPage: React.FC = () => {
     () => getAchievementCompletionStats(items, userId),
     [items, userId],
   );
+  const summaryEntries = summary.entries;
 
   const almostCompleted = useMemo(
     () =>
-      summary.entries
+      summaryEntries
         .filter((entry) => entry.isStarted && !entry.isCompleted)
         .sort((left, right) => left.remaining - right.remaining || right.percent - left.percent)
         .slice(0, 4),
-    [summary.entries],
+    [summaryEntries],
   );
 
   const groupedInProgress = useMemo(() => {
-    const groups = new Map<string, typeof summary.entries>();
+    const groups = new Map<string, typeof summaryEntries>();
 
-    for (const entry of summary.entries.filter(
+    for (const entry of summaryEntries.filter(
       (item) => item.isStarted && !item.isCompleted,
     )) {
       const existing = groups.get(entry.achievement.action) ?? [];
@@ -96,23 +97,23 @@ const ProgressPage: React.FC = () => {
     }
 
     return Array.from(groups.entries());
-  }, [summary.entries]);
+  }, [summaryEntries]);
 
   const completed = useMemo(
     () =>
-      summary.entries
+      summaryEntries
         .filter((entry) => entry.isCompleted)
         .sort((left, right) => {
           if (left.achievement.id === recentUnlockedId) return -1;
           if (right.achievement.id === recentUnlockedId) return 1;
           return 0;
         }),
-    [recentUnlockedId, summary.entries],
+    [recentUnlockedId, summaryEntries],
   );
 
   const hidden = useMemo(
-    () => summary.entries.filter((entry) => !entry.isStarted && !entry.isCompleted),
-    [summary.entries],
+    () => summaryEntries.filter((entry) => !entry.isStarted && !entry.isCompleted),
+    [summaryEntries],
   );
 
   const summaryCards = [

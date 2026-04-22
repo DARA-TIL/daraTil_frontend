@@ -10,7 +10,7 @@ export class AppErrorBoundary extends React.Component<Props, State> {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(_: unknown) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 

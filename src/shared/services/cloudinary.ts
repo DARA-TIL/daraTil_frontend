@@ -15,7 +15,6 @@ const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 
 if (!CLOUD_NAME || !UPLOAD_PRESET) {
-  // eslint-disable-next-line no-console
   console.warn(
     "Cloudinary env is not set: VITE_CLOUDINARY_CLOUD_NAME / VITE_CLOUDINARY_UPLOAD_PRESET",
   );

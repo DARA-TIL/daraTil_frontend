@@ -6,6 +6,7 @@ import type { FinishLessonResponse } from "@/features/lessons/model/types";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
+import { isRecord, type UnknownRecord } from "@/shared/lib/unknownRecord";
 
 type State = {
   test: Test | null;
@@ -36,40 +37,44 @@ function toBool(v: unknown): boolean | null {
   return null;
 }
 
-// приводит ответ finish() к форме { data, progress, streak } даже если пришло { data: { data, progress, streak } }
-function normalizeFinishResponse(raw: any): any {
-  // если вдруг LessonsService.finish вернул AxiosResponse
-  const maybe = raw?.data && raw?.status ? raw.data : raw;
+function normalizeFinishResponse(raw: unknown): FinishLessonResponse {
+  const rawRecord = isRecord(raw) ? raw : {};
+  const maybe = rawRecord.data && rawRecord.status ? rawRecord.data : raw;
+  const maybeRecord = isRecord(maybe) ? maybe : {};
+  const dataRecord = isRecord(maybeRecord.data) ? maybeRecord.data : null;
 
-  // 1) двойной envelope: { data: { data: X, progress: Y, streak: Z } }
   if (
-    maybe?.data?.data &&
-    (maybe?.data?.progress !== undefined || maybe?.data?.streak !== undefined)
+    dataRecord?.data &&
+    (dataRecord.progress !== undefined || dataRecord.streak !== undefined)
   ) {
     return {
-      ...maybe,
-      data: maybe.data.data,
-      progress: maybe.data.progress ?? maybe.progress,
-      streak: maybe.data.streak ?? maybe.streak,
-    };
+      data: dataRecord.data,
+      progress: dataRecord.progress ?? maybeRecord.progress,
+      streak:
+        typeof dataRecord.streak === "string"
+          ? dataRecord.streak
+          : typeof maybeRecord.streak === "string"
+            ? maybeRecord.streak
+            : undefined,
+    } as FinishLessonResponse;
   }
 
-  // 2) обычный: { data: X, progress: Y, streak: Z }
-  // 3) или уже X (если сервис распаковал) - тогда просто вернем как есть
-  return maybe;
+  return {
+    data: maybeRecord.data ?? maybe,
+    progress: maybeRecord.progress,
+    streak: typeof maybeRecord.streak === "string" ? maybeRecord.streak : undefined,
+  } as FinishLessonResponse;
 }
 
-function extractPass(res: any): boolean {
-  const d = res?.data;
-
-  const cand =
-    d?.pass ?? d?.Pass ?? d?.passed ?? d?.Passed ?? res?.pass ?? res?.Pass;
+function extractPass(res: FinishLessonResponse): boolean {
+  const d: UnknownRecord = isRecord(res.data) ? res.data : {};
+  const cand = d.pass ?? d.Pass ?? d.passed ?? d.Passed;
 
   const b = toBool(cand);
   if (b !== null) return b;
 
-  // fallback: иногда pass лежит глубже
-  const cand2 = d?.data?.pass ?? d?.data?.Pass;
+  const nested = isRecord(d.data) ? d.data : null;
+  const cand2 = nested?.pass ?? nested?.Pass;
   const b2 = toBool(cand2);
   if (b2 !== null) return b2;
 
@@ -140,7 +145,7 @@ export const useLessonTestStore = create<State>((set, get) => ({
       useAuthStore.getState().applyStreakUpdate(resNorm?.streak);
 
       // IMPORTANT: finishResult должен быть в том виде, как его ждут UI компоненты
-      set({ finishResult: resNorm as FinishLessonResponse });
+      set({ finishResult: resNorm });
 
       const passed = extractPass(resNorm);
 

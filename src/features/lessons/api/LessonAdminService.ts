@@ -13,6 +13,16 @@ import {
   unwrapLessonPayload,
 } from "../model/normalize";
 
+type LessonBlockApiPayload = {
+  name?: string;
+  contentType?: string;
+  contentUrl?: string | null;
+  contentText?: string | null;
+  lessonId?: number;
+  lessonID?: number;
+  position?: number;
+};
+
 export default class LessonsAdminService {
   static async create(payload: LessonCreateDto): Promise<Lesson> {
     const res = await $api.post("/lesson/create", payload);
@@ -31,7 +41,7 @@ export default class LessonsAdminService {
     payload: LessonBlockCreateDto,
   ): Promise<LessonBlock> {
     // backend ожидает lessonId, contentType
-    const body: any = {
+    const body: LessonBlockApiPayload = {
       name: payload.name,
       contentType: payload.type,
       contentUrl: payload.contentUrl ?? "",
@@ -48,7 +58,7 @@ export default class LessonsAdminService {
     id: number,
     payload: LessonBlockUpdateDto,
   ): Promise<LessonBlock> {
-    const body: any = {};
+    const body: LessonBlockApiPayload = {};
     if (payload.name !== undefined) body.name = payload.name;
     if (payload.type !== undefined) body.contentType = payload.type;
     if (payload.contentUrl !== undefined) body.contentUrl = payload.contentUrl;

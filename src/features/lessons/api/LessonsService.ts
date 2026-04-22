@@ -10,6 +10,7 @@ import {
   unwrapLessonPayload,
 } from "../model/normalize";
 import axios from "axios";
+import { isRecord } from "@/shared/lib/unknownRecord";
 
 export default class LessonsService {
   static async getAll(): Promise<Lesson[]> {
@@ -25,7 +26,7 @@ export default class LessonsService {
     } catch (e) {
       // 423 Locked - уровень ниже requiredLevel
       if (axios.isAxiosError(e) && e.response?.status === 423) {
-        const err: any = new Error("locked");
+        const err = new Error("locked") as Error & { code: number };
         err.code = 423;
         throw err;
       }
@@ -36,26 +37,33 @@ export default class LessonsService {
   static async finish(
     payload: FinishLessonRequest,
   ): Promise<FinishLessonResponse> {
-    const res = await $api.post<any>("/lesson/finish", payload);
+    const res = await $api.post<unknown>("/lesson/finish", payload);
     const raw = res.data;
+    const root = isRecord(raw) ? raw : {};
+    const data = isRecord(root.data) ? root.data : null;
 
     // Новый формат бэка:
     // { data: { lessonResult: {...}, progress: {...}, streak: "NoChange" } }
-    if (raw?.data?.lessonResult) {
+    if (data?.lessonResult) {
       return {
-        data: raw.data.lessonResult,
-        progress: raw.data.progress,
-        streak: raw.data.streak,
+        data: data.lessonResult,
+        progress: data.progress,
+        streak: typeof data.streak === "string" ? data.streak : undefined,
       } as FinishLessonResponse;
     }
 
     // На всякий случай: если когда-то вернется "двойной envelope"
     // { data: { data: {...}, progress, streak } }
-    if (raw?.data?.data) {
+    if (data?.data) {
       return {
-        data: raw.data.data,
-        progress: raw.data.progress ?? raw.progress,
-        streak: raw.data.streak ?? raw.streak,
+        data: data.data,
+        progress: data.progress ?? root.progress,
+        streak:
+          typeof data.streak === "string"
+            ? data.streak
+            : typeof root.streak === "string"
+              ? root.streak
+              : undefined,
       } as FinishLessonResponse;
     }
 

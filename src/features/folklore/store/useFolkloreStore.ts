@@ -3,9 +3,9 @@ import FolkloreService, {
   type FolkloreSearchParams,
 } from "../api/FolkloreService";
 import type { Folklore } from "../model/types";
-import axios from "axios";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 type LoadMode = "all" | "search";
 
@@ -44,12 +44,8 @@ interface FolkloreState {
   applyFilters: () => Promise<void>;
 }
 
-function getErrorMessage(e: unknown): string {
-  if (axios.isAxiosError(e)) {
-    const backendError = (e.response?.data as any)?.error;
-    if (backendError) return String(backendError);
-  }
-  return "Something went wrong. Please try again.";
+function getErrorMessage(error: unknown): string {
+  return getApiErrorMessage(error) ?? "Something went wrong. Please try again.";
 }
 
 function mergeFolklore(prev: Folklore, next: Partial<Folklore>): Folklore {
@@ -163,7 +159,7 @@ export const useFolkloreStore = create<FolkloreState>((set, get) => ({
       });
 
       set({ likedIds: map });
-    } catch (e) {
+    } catch {
       // это не критично, можно не шуметь
       // useUiStore.getState().showSnackbar(getErrorMessage(e), "error");
     }

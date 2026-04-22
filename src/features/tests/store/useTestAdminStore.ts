@@ -1,15 +1,11 @@
 import { create } from "zustand";
-import axios from "axios";
 import TestService from "../api/TestService";
 import type { CreateTestDto, Test, UpdateTestDto } from "../model/types";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
-function getErrorMessage(e: unknown): string {
-  if (axios.isAxiosError(e)) {
-    const backendError = (e.response?.data as any)?.error;
-    if (backendError) return String(backendError);
-  }
-  return "Something went wrong. Please try again.";
+function getErrorMessage(error: unknown): string {
+  return getApiErrorMessage(error) ?? "Something went wrong. Please try again.";
 }
 
 type State = {

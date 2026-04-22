@@ -21,7 +21,7 @@ export const useLessonsStore = create<State>((set) => ({
     try {
       const data = await LessonsService.getAll();
       set({ items: data });
-    } catch (e) {
+    } catch {
       set({ items: [] });
     } finally {
       set({ loading: false });
@@ -33,8 +33,12 @@ export const useLessonsStore = create<State>((set) => ({
     try {
       const lesson = await LessonsService.getById(id);
       set({ selected: lesson });
-    } catch (e: any) {
-      if (e?.code === 423) {
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        "code" in error &&
+        error.code === 423
+      ) {
         // показываем заглушку в UI
         set({
           selected: {
@@ -46,7 +50,7 @@ export const useLessonsStore = create<State>((set) => ({
             blocks: [],
             results: [],
             bestResult: null,
-          } as any,
+          },
         });
       } else {
         set({ selected: null });

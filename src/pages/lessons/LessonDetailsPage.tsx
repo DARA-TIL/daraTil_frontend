@@ -41,7 +41,7 @@ const LessonDetailsPage: React.FC = () => {
     };
   }, [lessonId]);
 
-  const results = lesson?.results ?? [];
+  const results = useMemo(() => lesson?.results ?? [], [lesson?.results]);
 
   const computedBest = useMemo(() => {
     if (!results.length) return null;

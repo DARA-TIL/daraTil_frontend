@@ -18,22 +18,18 @@ function isBrowser(): boolean {
 }
 
 function getConfiguredWsUrl(): string | null {
-  return ((import.meta as any).env?.VITE_WS_URL as string | undefined) ?? null;
+  return import.meta.env.VITE_WS_URL ?? null;
 }
 
 function getWsAuthMode(): "cookie" | "query" | "none" {
-  const value = String(
-    ((import.meta as any).env?.VITE_WS_AUTH_MODE as string | undefined) ?? "none",
-  ).toLowerCase();
+  const value = String(import.meta.env.VITE_WS_AUTH_MODE ?? "none").toLowerCase();
 
   if (value === "cookie" || value === "query") return value;
   return "none";
 }
 
 function isWsDisabledByEnv(): boolean {
-  const value = String(
-    ((import.meta as any).env?.VITE_WS_ENABLED as string | undefined) ?? "true",
-  ).toLowerCase();
+  const value = String(import.meta.env.VITE_WS_ENABLED ?? "true").toLowerCase();
 
   return value === "false" || value === "0";
 }
@@ -120,7 +116,7 @@ class AppWebSocket {
     };
 
     this.ws.onerror = (error) => {
-      if ((import.meta as any).env?.DEV) {
+      if (import.meta.env.DEV) {
         console.warn("WS error", error);
       }
     };
@@ -179,13 +175,13 @@ class AppWebSocket {
   }
 
   private warnOnceDisabled() {
-    if (this.warnedDisabled || !(import.meta as any).env?.DEV) return;
+    if (this.warnedDisabled || !import.meta.env.DEV) return;
     this.warnedDisabled = true;
     console.warn("WS disabled by VITE_WS_ENABLED=false");
   }
 
   private warnOnceMissingAuthMode() {
-    if (this.warnedMissingAuthMode || !(import.meta as any).env?.DEV) return;
+    if (this.warnedMissingAuthMode || !import.meta.env.DEV) return;
     this.warnedMissingAuthMode = true;
     console.warn(
       [
@@ -201,7 +197,7 @@ class AppWebSocket {
     this.shouldReconnect = false;
     this.clearReconnectTimer();
 
-    if (this.warnedHandshakeFailure || !(import.meta as any).env?.DEV) return;
+    if (this.warnedHandshakeFailure || !import.meta.env.DEV) return;
     this.warnedHandshakeFailure = true;
 
     console.warn(

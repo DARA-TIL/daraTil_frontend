@@ -54,7 +54,10 @@ const FolkloreCreatePage: React.FC = () => {
   const [imageUploading, setImageUploading] = useState(false);
   const [mediaUploading, setMediaUploading] = useState(false);
 
-  const set = (k: keyof FolkloreCreateDto, v: any) =>
+  const set = <K extends keyof FolkloreCreateDto>(
+    k: K,
+    v: FolkloreCreateDto[K],
+  ) =>
     setForm((s) => ({ ...s, [k]: v }));
 
   function validateFile(file: File, kind: "image" | "media"): string | null {
@@ -95,7 +98,7 @@ const FolkloreCreatePage: React.FC = () => {
       });
       set("imageUrl", res.secureUrl);
       return res.secureUrl;
-    } catch (e: any) {
+    } catch {
       showSnackbar(t("folklore.validation.imageUploadFailed"), "error");
       return null;
     } finally {
@@ -121,7 +124,7 @@ const FolkloreCreatePage: React.FC = () => {
       });
       set("mediaUrl", res.secureUrl);
       return res.secureUrl;
-    } catch (e: any) {
+    } catch {
       showSnackbar(t("folklore.validation.mediaUploadFailed"), "error");
       return null;
     } finally {

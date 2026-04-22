@@ -11,6 +11,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import type { Theme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
@@ -74,7 +75,7 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
   const [newQuestionText, setNewQuestionText] = useState("");
   const hasDraft = Boolean(draft && draft.questionsUpd?.length);
 
-  const questions = test?.questions ?? [];
+  const questions = useMemo(() => test?.questions ?? [], [test?.questions]);
 
   const summary = useMemo(() => {
     const total = questions.length;
@@ -358,7 +359,7 @@ function QuestionCard(props: {
     optId: number,
     patch: { text?: string; isCorrect?: boolean },
   ) => void;
-  theme: any;
+  theme: Theme;
 }) {
   const {
     q,
@@ -380,7 +381,7 @@ function QuestionCard(props: {
   const [newOptText, setNewOptText] = useState("");
   const [newOptCorrect, setNewOptCorrect] = useState(false);
 
-  const validation = useMemo(() => validateQuestion(q), [q.options, q.text]);
+  const validation = useMemo(() => validateQuestion(q), [q]);
   const hasCorrect = validation.correctCount > 0;
 
   const add3Quick = async () => {
@@ -647,7 +648,7 @@ function OptionRow(props: {
   onSave: (text: string, isCorrect: boolean) => Promise<boolean>;
   onDelete: () => Promise<boolean>;
   onDraft: (patch: { text?: string; isCorrect?: boolean }) => void;
-  theme: any;
+  theme: Theme;
 }) {
   const { opt, loading, onSave, onDelete, onDraft, theme } = props;
   const { t } = useTranslation("tests");
