@@ -78,6 +78,16 @@
     "streakStatusNewStart": "Жаңа серия басталды!",
     "streakStatusReset": "Серия 0-ге түсті. Бүгін қайта баста.",
     "profileStreak": "Серия",
-    "profileLongestStreak": "Ең ұзақ серия"
+    "profileLongestStreak": "Ең ұзақ серия",
+    "dictionaryTitle": "Сөздік жинағы",
+    "dictionaryDescription": "Ассистент арқылы сақталған сөздер тез қайталауға әрдайым дайын тұрады.",
+    "dictionarySavedWords": "Сақталған сөздер",
+    "dictionaryFavorites": "Таңдаулылар",
+    "dictionaryExplained": "Түсіндірмесі бар",
+    "dictionaryQuickPicks": "Таңдаулы сөздер",
+    "dictionaryEmptyTitle": "Сөздік әлі бос",
+    "dictionaryEmptyDescription": "Пайдалы сөздерді жинауды бастау үшін сабақтарда, фольклорда немесе картада ассистентті пайдаланыңыз.",
+    "dictionaryAction": "Сөздікті ашу",
+    "dictionaryLoadError": "Сөздік қысқаша мәліметін жүктеу мүмкін болмады."
   }
 }

@@ -1,0 +1,28 @@
+{
+  "popover": {
+    "title": "Сөз көмекшісі",
+    "dictionaryHint": "Түсіндіру не аудару жасағаннан кейін сөз автоматты түрде сөздігіңізге қосылады.",
+    "explain": "Түсіндіру",
+    "translate": "Аудару",
+    "loadingExplain": "Түсіндірме дайындалып жатыр...",
+    "loadingTranslate": "Сөз аударылып жатыр...",
+    "resultExplain": "Түсіндірме",
+    "resultTranslate": "{{language}} тіліне аударма",
+    "contextLabel": "Контекст",
+    "languageNames": {
+      "KZ": "қазақша",
+      "RU": "орысша",
+      "EN": "ағылшынша"
+    },
+    "favorite": "Таңдаулыға қосу",
+    "favoriteSaved": "Сақталды",
+    "loadingFavorite": "Таңдаулыға сақталып жатыр..."
+  },
+  "errors": {
+    "requestFailed": "Таңдалған сөзді өңдеу мүмкін болмады. Қайталап көріңіз."
+  },
+  "snackbar": {
+    "favorited": "Сөз таңдаулыға қосылды.",
+    "openDictionary": "Сөздікті ашу"
+  }
+}

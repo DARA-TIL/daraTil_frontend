@@ -13,9 +13,12 @@ import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import { useTranslation } from "react-i18next";
 import type { LessonBlock } from "../../model/types";
 import { detectMediaKind, toYouTubeEmbed, type MediaKind } from "./mediaUtils";
 import SmartAudioPlayer from "@/widgets/SmartMedia/SmartAudioPlayer";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
+import { normalizeAssistantLanguage } from "@/features/assistant/model/helpers";
 
 function iconForKind(kind: MediaKind) {
   if (kind === "youtube") return YouTubeIcon;
@@ -35,7 +38,9 @@ function labelForKind(kind: MediaKind) {
 
 const MediaBlock: React.FC<{ block: LessonBlock }> = ({ block }) => {
   const theme = useTheme();
+  const { i18n } = useTranslation();
   const url = block.contentUrl?.trim() || "";
+  const captionText = block.contentText?.trim() || "";
 
   const kind = useMemo(
     () => detectMediaKind(block.type, url),
@@ -224,14 +229,19 @@ const MediaBlock: React.FC<{ block: LessonBlock }> = ({ block }) => {
           </Typography>
         )}
 
-        {showCaptionBelow && !!block.contentText?.trim() && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: 1.1, whiteSpace: "pre-wrap" }}
+        {showCaptionBelow && captionText && (
+          <AssistantSelectionSurface
+            block={captionText}
+            language={normalizeAssistantLanguage(i18n.resolvedLanguage ?? i18n.language)}
           >
-            {block.contentText}
-          </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mt: 1.1, whiteSpace: "pre-wrap" }}
+            >
+              {captionText}
+            </Typography>
+          </AssistantSelectionSurface>
         )}
       </Box>
     </Paper>

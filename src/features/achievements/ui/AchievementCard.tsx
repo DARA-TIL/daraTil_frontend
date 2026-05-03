@@ -14,6 +14,8 @@ import FlagRoundedIcon from "@mui/icons-material/FlagRounded";
 import type { AchievementProgressEntry } from "../model/presentation";
 import { getActionLabel } from "../model/presentation";
 import { useTranslation } from "react-i18next";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
+import { normalizeAssistantLanguage } from "@/features/assistant/model/helpers";
 
 type Props = {
   entry: AchievementProgressEntry;
@@ -33,7 +35,7 @@ export const AchievementCard: React.FC<Props> = ({
   highlighted = false,
 }) => {
   const theme = useTheme();
-  const { t } = useTranslation("achievements");
+  const { t, i18n } = useTranslation("achievements");
 
   const { achievement, progress, percent, remaining, isCompleted } = entry;
   const isHidden = mode === "hidden";
@@ -111,13 +113,24 @@ export const AchievementCard: React.FC<Props> = ({
           />
         </Stack>
 
-        <Typography color="text.secondary">
-          {isHidden
-            ? t("card.hiddenDescription", {
-                defaultValue: "Start related actions to reveal progress for this achievement.",
-              })
-            : achievement.description}
-        </Typography>
+        <AssistantSelectionSurface
+          block={
+            isHidden
+              ? t("card.hiddenDescription", {
+                  defaultValue: "Start related actions to reveal progress for this achievement.",
+                })
+              : achievement.description
+          }
+          language={normalizeAssistantLanguage(i18n.resolvedLanguage ?? i18n.language)}
+        >
+          <Typography color="text.secondary">
+            {isHidden
+              ? t("card.hiddenDescription", {
+                  defaultValue: "Start related actions to reveal progress for this achievement.",
+                })
+              : achievement.description}
+          </Typography>
+        </AssistantSelectionSurface>
 
         <Stack spacing={0.6}>
           <Stack direction="row" justifyContent="space-between" spacing={1}>

@@ -1,4 +1,4 @@
-{
+﻿{
   "login": "Login",
   "register": "Register",
   "logout": "Logout",
@@ -8,6 +8,7 @@
   "lessons": "Lessons",
   "map": "Map",
   "folklore": "Folklore",
+  "dictionary": "Dictionary",
   "progress": "Achievements",
   "settings": "Settings"
 }

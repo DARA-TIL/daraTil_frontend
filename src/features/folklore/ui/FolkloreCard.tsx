@@ -14,12 +14,14 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import type { Folklore } from "../model/types";
 import { useFolkloreStore } from "../store/useFolkloreStore";
 import { useTranslation } from "react-i18next";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
+import { normalizeAssistantLanguage } from "@/features/assistant/model/helpers";
 
 export const FolkloreCard: React.FC<{
   item: Folklore;
   onOpen: (id: number) => void;
 }> = ({ item, onOpen }) => {
-  const { t } = useTranslation("folklore");
+  const { t, i18n } = useTranslation("folklore");
 
   const liked = useFolkloreStore((s) => Boolean(s.likedIds[item.id]));
   const toggleLike = useFolkloreStore((s) => s.toggleLike);
@@ -97,22 +99,27 @@ export const FolkloreCard: React.FC<{
             {item.author}
           </Typography>
 
-          <Typography
-            variant="body2"
-            sx={(theme) => ({
-              mt: 0.8,
-              color:
-                theme.palette.mode === "light"
-                  ? "rgba(75,85,99,0.9)"
-                  : "rgba(156,163,175,0.95)",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            })}
+          <AssistantSelectionSurface
+            block={item.content}
+            language={normalizeAssistantLanguage(i18n.resolvedLanguage ?? i18n.language)}
           >
-            {item.content}
-          </Typography>
+            <Typography
+              variant="body2"
+              sx={(theme) => ({
+                mt: 0.8,
+                color:
+                  theme.palette.mode === "light"
+                    ? "rgba(75,85,99,0.9)"
+                    : "rgba(156,163,175,0.95)",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              })}
+            >
+              {item.content}
+            </Typography>
+          </AssistantSelectionSurface>
         </CardContent>
       </CardActionArea>
 

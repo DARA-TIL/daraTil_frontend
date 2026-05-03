@@ -32,6 +32,7 @@ import {
   type RegionTab,
 } from "../model/helpers";
 import { useTranslation } from "react-i18next";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
 
 const fadeUp = keyframes`
   from {
@@ -191,12 +192,14 @@ export const RegionDetailsPanel: React.FC<Props> = ({
     if (tab === "overview") {
       return (
         <Stack spacing={1.4}>
-          <Typography color="text.secondary">
-            {overviewText ||
-              t("panel.noOverview", {
-                defaultValue: "Overview text is not available yet for this language.",
-              })}
-          </Typography>
+          <AssistantSelectionSurface block={overviewText} language={language}>
+            <Typography color="text.secondary">
+              {overviewText ||
+                t("panel.noOverview", {
+                  defaultValue: "Overview text is not available yet for this language.",
+                })}
+            </Typography>
+          </AssistantSelectionSurface>
 
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
             <Chip
@@ -258,13 +261,20 @@ export const RegionDetailsPanel: React.FC<Props> = ({
             >
               <Stack direction="row" justifyContent="space-between" spacing={1.25}>
                 <Box>
-                  <Typography fontWeight={800}>{item.word}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {item.description ||
-                      t("panel.noDescription", {
-                        defaultValue: "Description not available yet.",
-                      })}
-                  </Typography>
+                  <AssistantSelectionSurface
+                    block={[item.word, item.description].filter(Boolean).join("\n")}
+                    language={language}
+                  >
+                    <Box>
+                      <Typography fontWeight={800}>{item.word}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.description ||
+                          t("panel.noDescription", {
+                            defaultValue: "Description not available yet.",
+                          })}
+                      </Typography>
+                    </Box>
+                  </AssistantSelectionSurface>
                 </Box>
 
                 {item.pronounceUrl ? (
@@ -309,13 +319,20 @@ export const RegionDetailsPanel: React.FC<Props> = ({
               animationDelay: `${index * 60}ms`,
             }}
           >
-            <Typography fontWeight={800}>{item.name}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              {item.description ||
-                t("panel.noDescription", {
-                  defaultValue: "Description not available yet.",
-                })}
-            </Typography>
+            <AssistantSelectionSurface
+              block={[item.name, item.description].filter(Boolean).join("\n")}
+              language={language}
+            >
+              <Box>
+                <Typography fontWeight={800}>{item.name}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.description ||
+                    t("panel.noDescription", {
+                      defaultValue: "Description not available yet.",
+                    })}
+                </Typography>
+              </Box>
+            </AssistantSelectionSurface>
           </Paper>
         ))}
       </Stack>
@@ -401,18 +418,20 @@ export const RegionDetailsPanel: React.FC<Props> = ({
           <Typography variant="h4" fontWeight={900}>
             {regionName}
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              maxWidth: desktop ? 420 : "100%",
-              opacity: 0.94,
-            }}
-          >
-            {overviewText ||
-              t("panel.placeholderOverview", {
-                defaultValue: "This region is ready for cultural, linguistic, and tradition content.",
-              })}
-          </Typography>
+          <AssistantSelectionSurface block={overviewText} language={language}>
+            <Typography
+              variant="body2"
+              sx={{
+                maxWidth: desktop ? 420 : "100%",
+                opacity: 0.94,
+              }}
+            >
+              {overviewText ||
+                t("panel.placeholderOverview", {
+                  defaultValue: "This region is ready for cultural, linguistic, and tradition content.",
+                })}
+            </Typography>
+          </AssistantSelectionSurface>
         </Stack>
       </Box>
 

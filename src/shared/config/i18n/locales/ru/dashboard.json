@@ -78,6 +78,16 @@
     "streakStatusNewStart": "Новая серия начата!",
     "streakStatusReset": "Серия сброшена до 0. Начните снова сегодня.",
     "profileStreak": "Серия",
-    "profileLongestStreak": "Лучшая серия"
+    "profileLongestStreak": "Лучшая серия",
+    "dictionaryTitle": "Словарь под рукой",
+    "dictionaryDescription": "Слова, которые вы сохраняете через ассистента, всегда готовы к быстрому повторению.",
+    "dictionarySavedWords": "Сохранено слов",
+    "dictionaryFavorites": "Избранное",
+    "dictionaryExplained": "С объяснениями",
+    "dictionaryQuickPicks": "Избранные слова",
+    "dictionaryEmptyTitle": "Словарь пока пуст",
+    "dictionaryEmptyDescription": "Используйте ассистента в уроках, фольклоре или на карте, чтобы начать собирать полезные слова.",
+    "dictionaryAction": "Открыть словарь",
+    "dictionaryLoadError": "Не удалось загрузить сводку словаря."
   }
 }

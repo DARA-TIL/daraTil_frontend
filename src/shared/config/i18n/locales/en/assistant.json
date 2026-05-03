@@ -1,0 +1,28 @@
+{
+  "popover": {
+    "title": "Word assistant",
+    "dictionaryHint": "Any explanation or translation automatically adds the word to your dictionary.",
+    "explain": "Explain",
+    "translate": "Translate",
+    "loadingExplain": "Generating explanation...",
+    "loadingTranslate": "Translating word...",
+    "resultExplain": "Explanation",
+    "resultTranslate": "Translation to {{language}}",
+    "contextLabel": "Context",
+    "languageNames": {
+      "KZ": "Kazakh",
+      "RU": "Russian",
+      "EN": "English"
+    },
+    "favorite": "Add to favorites",
+    "favoriteSaved": "Saved",
+    "loadingFavorite": "Saving to favorites..."
+  },
+  "errors": {
+    "requestFailed": "Could not process the selected word. Please try again."
+  },
+  "snackbar": {
+    "favorited": "Word added to favorites.",
+    "openDictionary": "Open dictionary"
+  }
+}

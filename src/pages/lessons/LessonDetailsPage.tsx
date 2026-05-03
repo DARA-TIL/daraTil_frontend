@@ -15,12 +15,14 @@ import { useLessonsStore } from "@/features/lessons/store/useLessonsStore";
 import LessonBlocksRenderer from "@/features/lessons/ui/LessonBlocksRenderer";
 import LessonTestSection from "@/features/tests/ui/LessonTestSection";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
+import { normalizeAssistantLanguage } from "@/features/assistant/model/helpers";
 
 const LessonDetailsPage: React.FC = () => {
   const theme = useTheme();
   const nav = useNavigate();
   const { id } = useParams();
-  const { t } = useTranslation("lessons");
+  const { t, i18n } = useTranslation("lessons");
 
   const lessonId = useMemo(() => Number(id), [id]);
 
@@ -65,6 +67,8 @@ const LessonDetailsPage: React.FC = () => {
     if (v === "locked") return t("status.locked");
     return t("status.available");
   };
+
+  const lessonDescription = lesson?.description?.trim() || "";
 
   if (loading || !lesson) {
     return (
@@ -236,11 +240,14 @@ const LessonDetailsPage: React.FC = () => {
             <Typography fontWeight={800} mb={0.75}>
               {t("description.title")}
             </Typography>
-            <Typography color="text.secondary" sx={{ whiteSpace: "pre-wrap" }}>
-              {lesson.description?.trim()
-                ? lesson.description
-                : t("description.empty")}
-            </Typography>
+            <AssistantSelectionSurface
+              block={lessonDescription}
+              language={normalizeAssistantLanguage(i18n.resolvedLanguage ?? i18n.language)}
+            >
+              <Typography color="text.secondary" sx={{ whiteSpace: "pre-wrap" }}>
+                {lessonDescription || t("description.empty")}
+              </Typography>
+            </AssistantSelectionSurface>
           </Paper>
 
           <Divider sx={{ borderColor: theme.customColors.sidebarBorder }} />

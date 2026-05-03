@@ -1,0 +1,109 @@
+﻿{
+  "page": {
+    "title": "Dictionary",
+    "subtitle": "Review saved words, keep favorites close, and manage translations and explanations in one place."
+  },
+  "summary": {
+    "total": "Saved words",
+    "favorites": "Favorites",
+    "translations": "With translations",
+    "explanations": "With explanations"
+  },
+  "actions": {
+    "quickFavorite": "Quick favorite",
+    "create": "Create",
+    "favorite": "Favorite",
+    "favorited": "Favorited",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save"
+  },
+  "filters": {
+    "searchPlaceholder": "Search by word...",
+    "all": "All",
+    "favorites": "Favorites",
+    "resultCount": "{{count}} entries visible",
+    "pageSize": "Per page",
+    "pageMeta": "Page {{page}} of {{total}}"
+  },
+  "empty": {
+    "title": "No words found",
+    "subtitle": "Try another search, switch filters, or add a new word to your dictionary."
+  },
+  "common": {
+    "cancel": "Cancel"
+  },
+  "confirm": {
+    "deleteTitle": "Delete dictionary entry?",
+    "deleteMessage": "The word \"{{word}}\" will be removed from your dictionary."
+  },
+  "snackbar": {
+    "favoriteRemoved": "Removed from favorites.",
+    "favoriteAdded": "Added to favorites.",
+    "deleted": "Dictionary entry deleted.",
+    "created": "Dictionary entry created.",
+    "updated": "Dictionary entry updated.",
+    "quickFavorited": "Word generated and added to favorites."
+  },
+  "list": {
+    "noContext": "No context added yet.",
+    "translationCount": "{{count}} translations",
+    "explanationCount": "{{count}} explanations",
+    "favoriteBadge": "Favorite",
+    "translationPreview": "Translation preview",
+    "noTranslation": "No translation for this language yet.",
+    "explanationPreview": "Explanation preview",
+    "noExplanation": "No explanation for this language yet."
+  },
+  "details": {
+    "idleBadge": "Personal dictionary",
+    "emptyTitle": "Select a saved word",
+    "emptyDescription": "Review translations, explanation notes, and context for every word you keep in your personal dictionary.",
+    "contextTitle": "Saved context",
+    "noContext": "No context is stored for this word yet.",
+    "noContextShort": "No context saved yet. Add one while editing this word.",
+    "noTranslation": "No translation stored for this language yet.",
+    "noExplanation": "No explanation stored for this language yet.",
+    "wordBadge": "Saved word",
+    "favoriteBadge": "Favorite",
+    "translationCount": "{{count}} translations",
+    "explanationCount": "{{count}} explanations",
+    "currentLanguage": "Focused language: {{language}}",
+    "tabs": {
+      "context": "Context",
+      "translations": "Translations",
+      "explanations": "Explanations"
+    }
+  },
+  "dialog": {
+    "createTitle": "Create dictionary entry",
+    "editTitle": "Edit dictionary entry",
+    "fields": {
+      "originalWord": "Word",
+      "context": "Context"
+    },
+    "sections": {
+      "translations": "Translations",
+      "explanations": "Explanations"
+    }
+  },
+  "validation": {
+    "wordRequired": "Word is required.",
+    "contentRequired": "Add context, translation, or explanation before saving."
+  },
+  "quickFavorite": {
+    "title": "Quick save favorite word",
+    "subtitle": "Use the AI-assisted backend route to generate and immediately favorite a dictionary entry from a word inside its original text block.",
+    "fields": {
+      "word": "Word",
+      "language": "Source language",
+      "block": "Original text block"
+    },
+    "validation": {
+      "blockRequired": "Original text block is required."
+    },
+    "submit": "Generate and favorite"
+  }
+}

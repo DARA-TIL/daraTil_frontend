@@ -1,0 +1,28 @@
+{
+  "popover": {
+    "title": "Ассистент по слову",
+    "dictionaryHint": "После объяснения или перевода слово автоматически добавится в ваш словарь.",
+    "explain": "Объяснить",
+    "translate": "Перевести",
+    "loadingExplain": "Генерируем объяснение...",
+    "loadingTranslate": "Переводим слово...",
+    "resultExplain": "Объяснение",
+    "resultTranslate": "Перевод на {{language}}",
+    "contextLabel": "Контекст",
+    "languageNames": {
+      "KZ": "казахский",
+      "RU": "русский",
+      "EN": "английский"
+    },
+    "favorite": "В избранное",
+    "favoriteSaved": "Сохранено",
+    "loadingFavorite": "Сохраняем в избранное..."
+  },
+  "errors": {
+    "requestFailed": "Не удалось обработать выбранное слово. Попробуйте еще раз."
+  },
+  "snackbar": {
+    "favorited": "Слово добавлено в избранное.",
+    "openDictionary": "Открыть словарь"
+  }
+}

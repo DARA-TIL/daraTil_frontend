@@ -1,0 +1,109 @@
+﻿{
+  "page": {
+    "title": "Сөздік",
+    "subtitle": "Сақталған сөздерді қарап шығыңыз, таңдаулыларды жақын ұстаңыз және аудармалар мен түсіндірмелерді бір жерден басқарыңыз."
+  },
+  "summary": {
+    "total": "Сақталған сөздер",
+    "favorites": "Таңдаулылар",
+    "translations": "Аудармасы бар",
+    "explanations": "Түсіндірмесі бар"
+  },
+  "actions": {
+    "quickFavorite": "Тез таңдаулыға",
+    "create": "Құру",
+    "favorite": "Таңдаулыға",
+    "favorited": "Таңдаулыда",
+    "addFavorite": "Таңдаулыға қосу",
+    "removeFavorite": "Таңдаулыдан алып тастау",
+    "edit": "Өңдеу",
+    "delete": "Жою",
+    "save": "Сақтау"
+  },
+  "filters": {
+    "searchPlaceholder": "Сөз бойынша іздеу...",
+    "all": "Барлығы",
+    "favorites": "Таңдаулылар",
+    "resultCount": "Көрсетілген жазбалар: {{count}}",
+    "pageSize": "Беттегі саны",
+    "pageMeta": "{{page}} / {{total}} бет"
+  },
+  "empty": {
+    "title": "Сөздер табылмады",
+    "subtitle": "Басқа іздеуді көріңіз, сүзгіні ауыстырыңыз немесе сөздікке жаңа сөз қосыңыз."
+  },
+  "common": {
+    "cancel": "Бас тарту"
+  },
+  "confirm": {
+    "deleteTitle": "Сөздік жазбасын жою керек пе?",
+    "deleteMessage": "\"{{word}}\" сөзі сіздің сөздігіңізден жойылады."
+  },
+  "snackbar": {
+    "favoriteRemoved": "Сөз таңдаулылардан алынып тасталды.",
+    "favoriteAdded": "Сөз таңдаулыларға қосылды.",
+    "deleted": "Сөздік жазбасы жойылды.",
+    "created": "Сөздік жазбасы құрылды.",
+    "updated": "Сөздік жазбасы жаңартылды.",
+    "quickFavorited": "Сөз жасалып, таңдаулыларға қосылды."
+  },
+  "list": {
+    "noContext": "Контекст әлі қосылмаған.",
+    "translationCount": "Аудармалар: {{count}}",
+    "explanationCount": "Түсіндірмелер: {{count}}",
+    "favoriteBadge": "Таңдаулы",
+    "translationPreview": "Аударма көрінісі",
+    "noTranslation": "Бұл тіл үшін аударма әлі сақталмаған.",
+    "explanationPreview": "Түсіндірме көрінісі",
+    "noExplanation": "Бұл тіл үшін түсіндірме әлі сақталмаған."
+  },
+  "details": {
+    "idleBadge": "Жеке сөздік",
+    "emptyTitle": "Сақталған сөзді таңдаңыз",
+    "emptyDescription": "Жеке сөздігіңіздегі әр сөздің аудармаларын, түсіндірмелерін және контекстін қарап шығыңыз.",
+    "contextTitle": "Сақталған контекст",
+    "noContext": "Бұл сөз үшін контекст әлі сақталмаған.",
+    "noContextShort": "Контекст әлі сақталмаған. Оны сөзді өңдеу кезінде қосыңыз.",
+    "noTranslation": "Бұл тіл үшін аударма әлі сақталмаған.",
+    "noExplanation": "Бұл тіл үшін түсіндірме әлі сақталмаған.",
+    "wordBadge": "Сақталған сөз",
+    "favoriteBadge": "Таңдаулы",
+    "translationCount": "Аудармалар: {{count}}",
+    "explanationCount": "Түсіндірмелер: {{count}}",
+    "currentLanguage": "Негізгі тіл: {{language}}",
+    "tabs": {
+      "context": "Контекст",
+      "translations": "Аудармалар",
+      "explanations": "Түсіндірмелер"
+    }
+  },
+  "dialog": {
+    "createTitle": "Сөздік жазбасын құру",
+    "editTitle": "Сөздік жазбасын өңдеу",
+    "fields": {
+      "originalWord": "Сөз",
+      "context": "Контекст"
+    },
+    "sections": {
+      "translations": "Аудармалар",
+      "explanations": "Түсіндірмелер"
+    }
+  },
+  "validation": {
+    "wordRequired": "Сөз міндетті.",
+    "contentRequired": "Сақтамас бұрын контекст, аударма немесе түсіндірме қосыңыз."
+  },
+  "quickFavorite": {
+    "title": "Сөзді таңдаулыға тез сақтау",
+    "subtitle": "Бастапқы мәтіндегі сөз бойынша сөздік жазбасын жасап, оны бірден таңдаулыға қосу үшін backend AI-route пайдаланыңыз.",
+    "fields": {
+      "word": "Сөз",
+      "language": "Бастапқы тіл",
+      "block": "Бастапқы мәтін блогы"
+    },
+    "validation": {
+      "blockRequired": "Бастапқы мәтін блогы міндетті."
+    },
+    "submit": "Жасау және қосу"
+  }
+}

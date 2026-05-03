@@ -78,6 +78,16 @@
     "streakStatusNewStart": "New streak started!",
     "streakStatusReset": "Streak reset to 0. Start again today.",
     "profileStreak": "Streak",
-    "profileLongestStreak": "Longest streak"
+    "profileLongestStreak": "Longest streak",
+    "dictionaryTitle": "Dictionary pulse",
+    "dictionaryDescription": "Words you save with the assistant stay ready for quick review.",
+    "dictionarySavedWords": "Saved words",
+    "dictionaryFavorites": "Favorites",
+    "dictionaryExplained": "With explanations",
+    "dictionaryQuickPicks": "Favorite words",
+    "dictionaryEmptyTitle": "Your dictionary is still empty",
+    "dictionaryEmptyDescription": "Use the word assistant in lessons, folklore, or the map to start collecting useful vocabulary.",
+    "dictionaryAction": "Open dictionary",
+    "dictionaryLoadError": "Failed to load dictionary summary."
   }
 }

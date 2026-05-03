@@ -17,6 +17,8 @@ import { useFolkloreStore } from "../store/useFolkloreStore";
 import { getTranslationByLang, normalizeTabLang } from "../model/helpers";
 import type { FolkloreTabLang } from "../model/types";
 import { SmartMedia } from "@/widgets/SmartMedia/SmartMedia";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
+import { normalizeAssistantLanguage } from "@/features/assistant/model/helpers";
 
 export const FolkloreDetailsDialog: React.FC = () => {
   const { i18n, t } = useTranslation("folklore");
@@ -41,6 +43,10 @@ export const FolkloreDetailsDialog: React.FC = () => {
   const title = tab === "original" ? selected?.name : translation?.name;
   const content = tab === "original" ? selected?.content : translation?.content;
   const explanation = tab === "original" ? undefined : translation?.explanation;
+  const assistantLanguage =
+    tab === "original"
+      ? normalizeAssistantLanguage(i18n.resolvedLanguage || i18n.language)
+      : normalizeAssistantLanguage(tab);
 
   const typeLabel = selected?.type
     ? t(`types.${selected.type}`, { defaultValue: selected.type })
@@ -111,9 +117,14 @@ export const FolkloreDetailsDialog: React.FC = () => {
           <Tab value="en" label="EN" />
         </Tabs>
 
-        <Typography sx={{ whiteSpace: "pre-wrap" }}>
-          {loading ? t("details.loading") : content || ""}
-        </Typography>
+        <AssistantSelectionSurface
+          block={content || ""}
+          language={assistantLanguage}
+        >
+          <Typography sx={{ whiteSpace: "pre-wrap" }}>
+            {loading ? t("details.loading") : content || ""}
+          </Typography>
+        </AssistantSelectionSurface>
 
         {explanation ? (
           <Box
@@ -122,9 +133,14 @@ export const FolkloreDetailsDialog: React.FC = () => {
             <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 0.8 }}>
               {t("details.explanation")}
             </Typography>
-            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-              {explanation}
-            </Typography>
+            <AssistantSelectionSurface
+              block={explanation}
+              language={assistantLanguage}
+            >
+              <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+                {explanation}
+              </Typography>
+            </AssistantSelectionSurface>
           </Box>
         ) : null}
 

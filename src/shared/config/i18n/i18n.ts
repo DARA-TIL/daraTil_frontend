@@ -13,6 +13,8 @@ import enAdmin from "./locales/en/admin.json";
 import enLessons from "./locales/en/lessons.json";
 import enTests from "./locales/en/tests.json";
 import enAchievements from "./locales/en/achievements.json";
+import enAssistant from "./locales/en/assistant.json";
+import enDictionary from "./locales/en/dictionary.json";
 
 // RU
 import ruNavbar from "./locales/ru/navbar.json";
@@ -25,6 +27,8 @@ import ruAdmin from "./locales/ru/admin.json";
 import ruLessons from "./locales/ru/lessons.json";
 import ruTests from "./locales/ru/tests.json";
 import ruAchievements from "./locales/ru/achievements.json";
+import ruAssistant from "./locales/ru/assistant.json";
+import ruDictionary from "./locales/ru/dictionary.json";
 
 // KZ
 import kzNavbar from "./locales/kz/navbar.json";
@@ -37,6 +41,8 @@ import kzAdmin from "./locales/kz/admin.json";
 import kzLessons from "./locales/kz/lessons.json";
 import kzTests from "./locales/kz/tests.json";
 import kzAchievements from "./locales/kz/achievements.json";
+import kzAssistant from "./locales/kz/assistant.json";
+import kzDictionary from "./locales/kz/dictionary.json";
 
 i18n
   .use(LanguageDetector)
@@ -59,6 +65,8 @@ i18n
         lessons: enLessons,
         tests: enTests,
         achievements: enAchievements,
+        assistant: enAssistant,
+        dictionary: enDictionary,
       },
       ru: {
         navbar: ruNavbar,
@@ -71,6 +79,8 @@ i18n
         lessons: ruLessons,
         tests: ruTests,
         achievements: ruAchievements,
+        assistant: ruAssistant,
+        dictionary: ruDictionary,
       },
       kz: {
         navbar: kzNavbar,
@@ -83,6 +93,8 @@ i18n
         lessons: kzLessons,
         tests: kzTests,
         achievements: kzAchievements,
+        assistant: kzAssistant,
+        dictionary: kzDictionary,
       },
     },
     ns: [
@@ -94,6 +106,10 @@ i18n
       "folklore",
       "admin",
       "achievements",
+      "lessons",
+      "tests",
+      "assistant",
+      "dictionary",
     ],
     defaultNS: "home",
   });

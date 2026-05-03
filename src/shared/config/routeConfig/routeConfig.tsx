@@ -29,6 +29,7 @@ import RegionsAdminPage from "@/pages/admin/regions/RegionsAdminPage";
 import AchievementsAdminPage from "@/pages/admin/achievements/AchievementsAdminPage";
 
 const MapPage = lazy(() => import("@/pages/map/MapPage"));
+const DictionaryPage = lazy(() => import("@/pages/dictionary/DictionaryPage"));
 
 export interface AppRouteConfig {
   path?: string;
@@ -83,6 +84,10 @@ export const routeConfig: AppRouteConfig[] = [
           {
             path: "folklore",
             element: <FolklorePage />,
+          },
+          {
+            path: "dictionary",
+            element: <DictionaryPage />,
           },
           {
             path: "progress",

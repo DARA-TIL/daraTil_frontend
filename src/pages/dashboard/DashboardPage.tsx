@@ -7,6 +7,7 @@ import { ProgressCard } from "../../features/dashboard/ui/ProgressCard";
 import { FeaturedFolkloreCard } from "../../features/dashboard/ui/FeaturedFolkloreCard";
 import { StreakCard } from "../../features/dashboard/ui/StreakCard";
 import { DailyChallengeCard } from "../../features/dashboard/ui/DailyChallengeCard";
+import { DictionarySummaryCard } from "../../features/dashboard/ui/DictionarySummaryCard";
 import { RecentActivityCard } from "../../features/dashboard/ui/RecentActivityCard";
 
 const DashboardPage: React.FC = () => {
@@ -29,7 +30,7 @@ const DashboardPage: React.FC = () => {
         }}
       >
         {/* LEFT COLUMN */}
-        <Grid size={{ xs: 6, md: 7 }}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <Stack spacing={2.5} sx={{ height: "100%" }}>
             <LessonsMapCard />
             <ProgressCard />
@@ -41,6 +42,7 @@ const DashboardPage: React.FC = () => {
           <Stack spacing={2.5} sx={{ height: "100%" }}>
             <FeaturedFolkloreCard />
             <StreakCard />
+            <DictionarySummaryCard />
             <DailyChallengeCard />
           </Stack>
         </Grid>

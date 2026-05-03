@@ -2,9 +2,14 @@ import React from "react";
 import { Box, Chip, Paper, Stack, Typography, useTheme } from "@mui/material";
 import SubjectIcon from "@mui/icons-material/Subject";
 import type { LessonBlock } from "../../model/types";
+import { useTranslation } from "react-i18next";
+import { AssistantSelectionSurface } from "@/features/assistant/ui/AssistantSelectionSurface";
+import { normalizeAssistantLanguage } from "@/features/assistant/model/helpers";
 
 const TextBlock: React.FC<{ block: LessonBlock }> = ({ block }) => {
   const theme = useTheme();
+  const { i18n } = useTranslation();
+  const contentText = block.contentText?.trim() || "";
 
   return (
     <Paper
@@ -68,15 +73,20 @@ const TextBlock: React.FC<{ block: LessonBlock }> = ({ block }) => {
         />
       </Stack>
 
-      <Typography
-        sx={{
-          mt: 1.2,
-          whiteSpace: "pre-wrap",
-          lineHeight: 1.65,
-        }}
+      <AssistantSelectionSurface
+        block={contentText}
+        language={normalizeAssistantLanguage(i18n.resolvedLanguage ?? i18n.language)}
       >
-        {block.contentText?.trim() ? block.contentText : "No text content."}
-      </Typography>
+        <Typography
+          sx={{
+            mt: 1.2,
+            whiteSpace: "pre-wrap",
+            lineHeight: 1.65,
+          }}
+        >
+          {contentText || "No text content."}
+        </Typography>
+      </AssistantSelectionSurface>
     </Paper>
   );
 };
