@@ -9,6 +9,7 @@ import { StreakCard } from "../../features/dashboard/ui/StreakCard";
 import { DictionarySummaryCard } from "../../features/dashboard/ui/DictionarySummaryCard";
 import { RecentActivityCard } from "../../features/dashboard/ui/RecentActivityCard";
 import { ActiveTimeEventCard } from "../../features/dashboard/ui/ActiveTimeEventCard";
+import { DashboardRankCard } from "../../features/dashboard/ui/DashboardRankCard";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const DashboardPage: React.FC = () => {
           <Stack spacing={2.5} sx={{ height: "100%" }}>
             <LessonsMapCard />
             <RecentActivityCard />
+            <DashboardRankCard />
           </Stack>
         </Grid>
 
