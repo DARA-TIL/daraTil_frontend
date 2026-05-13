@@ -19,6 +19,7 @@ import { useState, useContext } from "react";
 
 import { LanguageMenu } from "./LanguageMenu";
 import { ProfileMenu } from "./ProfileMenu";
+import NotificationsMenu from "@/features/notifications/ui/NotificationsMenu";
 
 import { ColorModeContext } from "@/layout/rootLayout/ColorModeContext";
 import { useTheme } from "@mui/material/styles";
@@ -157,6 +158,8 @@ const NavBar = () => {
             anchorEl={langAnchor}
             onClose={() => setLangAnchor(null)}
           />
+
+          <NotificationsMenu />
 
           {/* Auth */}
           {isAuth ? (

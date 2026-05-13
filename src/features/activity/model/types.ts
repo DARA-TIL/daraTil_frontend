@@ -3,6 +3,7 @@ export type ActivityAction =
   | "folklore_liked"
   | "folklore_disliked"
   | "folklore_read"
+  | "folklore_readed"
   | (string & {});
 
 export interface ActivityItem {

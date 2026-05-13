@@ -4,8 +4,9 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MapIcon from "@mui/icons-material/Map";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import SettingsIcon from "@mui/icons-material/Settings";
+import LeaderboardRoundedIcon from "@mui/icons-material/LeaderboardRounded";
 import TranslateRoundedIcon from "@mui/icons-material/TranslateRounded";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 export const profileMenuItems = [
@@ -15,7 +16,8 @@ export const profileMenuItems = [
   { icon: MapIcon, key: "map", path: "/app/map" },
   { icon: AutoStoriesIcon, key: "folklore", path: "/app/folklore" },
   { icon: TranslateRoundedIcon, key: "dictionary", path: "/app/dictionary" },
+  { icon: EventAvailableRoundedIcon, key: "events", path: "/app/events" },
   { icon: BarChartIcon, key: "progress", path: "/app/progress" },
-  { icon: SettingsIcon, key: "settings", path: "/app/settings" },
+  { icon: LeaderboardRoundedIcon, key: "leaderboard", path: "/app/leaderboard" },
   { icon: AdminPanelSettingsIcon, key: "admin", path: "/app/admin" },
 ];

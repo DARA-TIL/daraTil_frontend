@@ -1,56 +1,97 @@
+import {
+  parseNotification,
+} from "@/features/notifications/model/normalize";
+import type {
+  AppNotification,
+} from "@/features/notifications/model/types";
+
 export type WsNotificationKind =
-  | "achievement_unlocked"
+  | "reward"
   | "streak_increase"
   | "streak_reset"
-  | "unknown";
+  | "logout"
+  | "generic";
 
-export interface BaseWsNotification {
-  userId?: number;
-  type?: string;
+function normalizeMessageText(notification: AppNotification): string {
+  const parts = [notification.title, notification.message].filter(Boolean);
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0];
+  if (parts[0] === parts[1]) return parts[0];
+  return `${parts[0]}: ${parts[1]}`;
 }
 
-export interface AchievementWsNotification extends BaseWsNotification {
-  achievementId?: number;
-  achievementID?: number;
-}
-
-export interface StreakWsNotification extends BaseWsNotification {
-  streak?: number;
-}
-
-function normalizeType(raw: unknown): string {
-  return String(raw ?? "")
-    .trim()
+function normalizeSignalText(value: string): string {
+  return value
+    .toLowerCase()
     .replace(/[_\s-]+/g, "")
-    .toLowerCase();
+    .trim();
 }
 
-export function getWsNotificationKind(rawType: unknown): WsNotificationKind {
-  const type = normalizeType(rawType);
-
-  if (
-    type === "achieved" ||
-    type === "achievementunlocked" ||
-    type === "achievementunlock"
-  ) {
-    return "achievement_unlocked";
-  }
-
-  if (type === "streakincrease" || type === "streakincreased") {
-    return "streak_increase";
-  }
-
-  if (type === "streakreset" || type === "streakreseted") {
-    return "streak_reset";
-  }
-
-  return "unknown";
+function isAchievementRewardText(value: string): boolean {
+  return /achievement\s*unlocked/i.test(value);
 }
 
-export function parseWsNotification(raw: string): unknown | null {
+function isResetMessage(value: string): boolean {
+  const normalized = normalizeSignalText(value);
+
+  return (
+    normalized.includes("reset") ||
+    normalized.includes("loststreak") ||
+    normalized.includes("streaklost") ||
+    normalized.includes("streakreset") ||
+    normalized.includes("сброс") ||
+    normalized.includes("сброш") ||
+    normalized.includes("обнул") ||
+    normalized.includes("потер") ||
+    normalized.includes("үзіл") ||
+    normalized.includes("жоғалт") ||
+    normalized.includes("өш")
+  );
+}
+
+export function parseWsNotification(raw: string): AppNotification | null {
   try {
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return parseNotification(parsed);
   } catch {
     return null;
   }
+}
+
+export function getWsNotificationKind(
+  notification: AppNotification,
+): WsNotificationKind {
+  if (notification.type === "reward") return "reward";
+  if (notification.type === "logOut") return "logout";
+  if (notification.type === "streak") {
+    const signalText = [notification.title, notification.message]
+      .filter(Boolean)
+      .join(" ");
+
+    if (notification.entityId === 0 || isResetMessage(signalText)) {
+      return "streak_reset";
+    }
+
+    return "streak_increase";
+  }
+
+  return "generic";
+}
+
+export function getNotificationDisplayText(
+  notification: AppNotification,
+): string {
+  return normalizeMessageText(notification);
+}
+
+export function isAchievementRewardNotification(
+  notification: AppNotification,
+): boolean {
+  if (notification.type !== "reward") return false;
+
+  const signalText = [notification.title, notification.message]
+    .filter(Boolean)
+    .join(" ");
+
+  return isAchievementRewardText(signalText);
 }

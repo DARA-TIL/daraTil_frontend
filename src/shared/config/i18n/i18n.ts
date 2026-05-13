@@ -15,6 +15,10 @@ import enTests from "./locales/en/tests.json";
 import enAchievements from "./locales/en/achievements.json";
 import enAssistant from "./locales/en/assistant.json";
 import enDictionary from "./locales/en/dictionary.json";
+import enProfile from "./locales/en/profile.json";
+import enLeaderboard from "./locales/en/leaderboard.json";
+import enEvents from "./locales/en/events.json";
+import enNotifications from "./locales/en/notifications.json";
 
 // RU
 import ruNavbar from "./locales/ru/navbar.json";
@@ -29,6 +33,10 @@ import ruTests from "./locales/ru/tests.json";
 import ruAchievements from "./locales/ru/achievements.json";
 import ruAssistant from "./locales/ru/assistant.json";
 import ruDictionary from "./locales/ru/dictionary.json";
+import ruProfile from "./locales/ru/profile.json";
+import ruLeaderboard from "./locales/ru/leaderboard.json";
+import ruEvents from "./locales/ru/events.json";
+import ruNotifications from "./locales/ru/notifications.json";
 
 // KZ
 import kzNavbar from "./locales/kz/navbar.json";
@@ -43,6 +51,10 @@ import kzTests from "./locales/kz/tests.json";
 import kzAchievements from "./locales/kz/achievements.json";
 import kzAssistant from "./locales/kz/assistant.json";
 import kzDictionary from "./locales/kz/dictionary.json";
+import kzProfile from "./locales/kz/profile.json";
+import kzLeaderboard from "./locales/kz/leaderboard.json";
+import kzEvents from "./locales/kz/events.json";
+import kzNotifications from "./locales/kz/notifications.json";
 
 i18n
   .use(LanguageDetector)
@@ -67,6 +79,10 @@ i18n
         achievements: enAchievements,
         assistant: enAssistant,
         dictionary: enDictionary,
+        profile: enProfile,
+        leaderboard: enLeaderboard,
+        events: enEvents,
+        notifications: enNotifications,
       },
       ru: {
         navbar: ruNavbar,
@@ -81,6 +97,10 @@ i18n
         achievements: ruAchievements,
         assistant: ruAssistant,
         dictionary: ruDictionary,
+        profile: ruProfile,
+        leaderboard: ruLeaderboard,
+        events: ruEvents,
+        notifications: ruNotifications,
       },
       kz: {
         navbar: kzNavbar,
@@ -95,6 +115,10 @@ i18n
         achievements: kzAchievements,
         assistant: kzAssistant,
         dictionary: kzDictionary,
+        profile: kzProfile,
+        leaderboard: kzLeaderboard,
+        events: kzEvents,
+        notifications: kzNotifications,
       },
     },
     ns: [
@@ -110,6 +134,10 @@ i18n
       "tests",
       "assistant",
       "dictionary",
+      "profile",
+      "leaderboard",
+      "events",
+      "notifications",
     ],
     defaultNS: "home",
   });

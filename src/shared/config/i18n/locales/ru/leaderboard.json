@@ -1,0 +1,44 @@
+﻿{
+  "page": {
+    "title": "Лидерборд",
+    "subtitle": "Следите за сильнейшими учениками по XP, серии и количеству выученных слов.",
+    "myRank": "Ваше место: #{{rank}}",
+    "notInTop": "Пока не в текущем топе",
+    "limitLabel": "Топ {{count}}",
+    "topLimit": "Топ {{count}}"
+  },
+  "metrics": {
+    "xp": "XP",
+    "streak": "Серия",
+    "word": "Выученные слова",
+    "xpValue": "{{count}} XP",
+    "streakValue": "{{count}} дн.",
+    "wordValue": "{{count}} слов"
+  },
+  "descriptions": {
+    "xp": "Посмотрите, кто набрал больше всего XP.",
+    "streak": "Посмотрите, кто держит самую длинную активную серию.",
+    "word": "Посмотрите, кто выучил больше всего слов."
+  },
+  "sections": {
+    "ranking": "Рейтинг"
+  },
+  "podium": {
+    "rank": "Место #{{rank}}"
+  },
+  "labels": {
+    "unknownUser": "Неизвестный пользователь",
+    "wordSubtitle": "{{count}} завершенных уроков",
+    "levelSubtitle": "Уровень {{count}}",
+    "you": "Вы",
+    "level": "Уровень {{count}}",
+    "lessonsCompleted": "{{count}} завершенных уроков"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "noData": "Данных пока нет"
+  },
+  "empty": {
+    "noResults": "Пока нет результатов лидерборда."
+  }
+}

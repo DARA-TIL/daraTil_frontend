@@ -1,5 +1,6 @@
 import type React from "react";
 import { lazy } from "react";
+import { Navigate } from "react-router-dom";
 import RootLayout from "@/layout/rootLayout/RootLayout";
 import DashboardLayout from "@/layout/dashboardLayout/DashboardLayout";
 
@@ -12,7 +13,6 @@ import LessonsPage from "@/pages/lessons/LessonsPage";
 import FolklorePage from "@/pages/folklore/FolklorePage";
 import ProgressPage from "@/pages/progress/ProgressPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
-import SettingsPage from "@/pages/settings/SettingsPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import FolkloreAdminPage from "@/pages/admin/folklore/FolkloreAdminPage";
@@ -27,9 +27,14 @@ import UsersAdminPage from "@/pages/admin/users/UsersAdminPage";
 import UserEditAdminPage from "@/pages/admin/users/UserEditAdminPage";
 import RegionsAdminPage from "@/pages/admin/regions/RegionsAdminPage";
 import AchievementsAdminPage from "@/pages/admin/achievements/AchievementsAdminPage";
+import TimeEventsAdminPage from "@/pages/admin/timeEvents/TimeEventsAdminPage";
+import NotificationsAdminPage from "@/pages/admin/notifications/NotificationsAdminPage";
 
 const MapPage = lazy(() => import("@/pages/map/MapPage"));
 const DictionaryPage = lazy(() => import("@/pages/dictionary/DictionaryPage"));
+const LeaderboardPage = lazy(() => import("@/pages/leaderboard/LeaderboardPage"));
+const EventsPage = lazy(() => import("@/pages/events/EventsPage"));
+const NotificationsPage = lazy(() => import("@/pages/notifications/NotificationsPage"));
 
 export interface AppRouteConfig {
   path?: string;
@@ -90,6 +95,14 @@ export const routeConfig: AppRouteConfig[] = [
             element: <DictionaryPage />,
           },
           {
+            path: "events",
+            element: <EventsPage />,
+          },
+          {
+            path: "notifications",
+            element: <NotificationsPage />,
+          },
+          {
             path: "progress",
             element: <ProgressPage />,
           },
@@ -98,8 +111,12 @@ export const routeConfig: AppRouteConfig[] = [
             element: <ProfilePage />,
           },
           {
+            path: "leaderboard",
+            element: <LeaderboardPage />,
+          },
+          {
             path: "settings",
-            element: <SettingsPage />,
+            element: <Navigate to="/app/leaderboard" replace />,
           },
           {
             path: "lessons/:id",
@@ -190,6 +207,22 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <AchievementsAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/time-events",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <TimeEventsAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/notifications",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <NotificationsAdminPage />
               </ProtectedRoute>
             ),
           },

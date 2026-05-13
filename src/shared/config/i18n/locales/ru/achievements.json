@@ -38,7 +38,8 @@
     "folklore_readed": "Фольклор прочитан",
     "level_upgraded": "Уровень повышен",
     "region_slang_readed": "Региональный сленг прочитан",
-    "region_tradition_readed": "Региональная традиция прочитана"
+    "region_tradition_readed": "Региональная традиция прочитана",
+    "word_learned": "Слово изучено"
   },
   "notifications": {
     "achievementUnlockedGeneric": "Достижение открыто",

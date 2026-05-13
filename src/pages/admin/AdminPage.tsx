@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
+import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import { useTranslation } from "react-i18next";
 
 const AdminPage: React.FC = () => {
@@ -110,6 +112,30 @@ const AdminPage: React.FC = () => {
           })}
           icon={<EmojiEventsRoundedIcon />}
           to="/app/admin/achievements"
+        />
+
+        <Card
+          title={t("adminPage.cards.timeEvents.title", {
+            defaultValue: "Time events",
+          })}
+          subtitle={t("adminPage.cards.timeEvents.subtitle", {
+            defaultValue:
+              "Manage weekly and custom events, track action-based competition, and finish events with XP rewards for winners.",
+          })}
+          icon={<EventAvailableRoundedIcon />}
+          to="/app/admin/time-events"
+        />
+
+        <Card
+          title={t("adminPage.cards.notifications.title", {
+            defaultValue: "Notifications",
+          })}
+          subtitle={t("adminPage.cards.notifications.subtitle", {
+            defaultValue:
+              "Create global and user-scoped notifications, edit active records, and remove notifications by ID.",
+          })}
+          icon={<NotificationsRoundedIcon />}
+          to="/app/admin/notifications"
         />
       </Stack>
     </Box>

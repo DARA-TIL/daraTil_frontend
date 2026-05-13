@@ -38,7 +38,8 @@
     "folklore_readed": "Фольклор оқылды",
     "level_upgraded": "Деңгей көтерілді",
     "region_slang_readed": "Өңірлік сленг оқылды",
-    "region_tradition_readed": "Өңірлік дәстүр оқылды"
+    "region_tradition_readed": "Өңірлік дәстүр оқылды",
+    "word_learned": "Сөз үйренілді"
   },
   "notifications": {
     "achievementUnlockedGeneric": "Жетістік ашылды",

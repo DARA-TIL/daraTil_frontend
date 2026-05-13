@@ -26,8 +26,12 @@ function toNumber(value: unknown): number {
 }
 
 function normalizeActivity(dto: ActivityDto): ActivityItem {
+  const rawAction = String(dto.action ?? dto.Action ?? "").trim().toLowerCase();
+  const normalizedAction =
+    rawAction === "folklore_readed" ? "folklore_read" : rawAction;
+
   return {
-    action: String(dto.action ?? dto.Action ?? ""),
+    action: normalizedAction,
     entityID: toNumber(dto.entityID ?? dto.EntityID),
     entityType: String(dto.entityType ?? dto.EntityType ?? ""),
     id: toNumber(dto.id ?? dto.ID),

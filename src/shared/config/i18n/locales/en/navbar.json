@@ -1,8 +1,7 @@
-﻿{
+{
   "login": "Login",
   "register": "Register",
   "logout": "Logout",
-
   "profile": "Profile",
   "dashboard": "Dashboard",
   "lessons": "Lessons",
@@ -10,5 +9,8 @@
   "folklore": "Folklore",
   "dictionary": "Dictionary",
   "progress": "Achievements",
-  "settings": "Settings"
+  "leaderboard": "Leaderboard",
+  "notifications": "Notifications",
+  "settings": "Settings",
+  "events": "Events"
 }

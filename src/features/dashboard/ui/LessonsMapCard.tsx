@@ -1,288 +1,257 @@
-// src/pages/dashboard/components/LessonsMapCard.tsx
 import React from "react";
-import { Box, Chip, Paper, Stack, Typography, Button } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { Box, Button, Paper, Stack } from "@mui/material";
+import { alpha, useTheme } from "@mui/material/styles";
+import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+type RouteNode = {
+  x: number;
+  y: number;
+  state: "unlocked" | "current" | "locked";
+};
+
+const routePath = "M 42 186 C 116 112, 190 138, 242 98 S 348 66, 430 124";
+
 export const LessonsMapCard: React.FC = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
   const { t } = useTranslation("dashboard");
 
-  // данные, которые потом можно будет подменить с API/стора
-  const todayLabel = t("cards.today");
-  const mapTitle = t("cards.mapTitle");
-  const mapSubtitle = t("cards.mapSubtitle");
-
-  const mapPoints = [
-    {
-      top: "18%",
-      left: "16%",
-      label: t("cards.mapRegionWest", "West"),
-    },
-    {
-      top: "38%",
-      left: "46%",
-      label: t("cards.mapRegionNorth", "North"),
-    },
-    {
-      top: "64%",
-      left: "72%",
-      label: t("cards.mapRegionSouth", "South"),
-    },
+  const mapNodes: RouteNode[] = [
+    { x: 56, y: 178, state: "unlocked" },
+    { x: 146, y: 126, state: "unlocked" },
+    { x: 248, y: 100, state: "current" },
+    { x: 348, y: 92, state: "locked" },
+    { x: 430, y: 124, state: "locked" },
   ];
 
-  const nextLessonName = t("cards.nextLessonName");
-  const nextLessonRegion = t("cards.mapRegionNorth", "North");
-  const nextLessonUnit = 2;
-  const nextLessonMinutes = 15;
+  const getNodeStyles = (state: RouteNode["state"]) => {
+    switch (state) {
+      case "current":
+        return {
+          dot: "linear-gradient(135deg,#38bdf8,#6366f1)",
+          ring: "0 0 0 8px rgba(56,189,248,0.20), 0 0 28px rgba(99,102,241,0.42)",
+        };
+      case "unlocked":
+        return {
+          dot: "linear-gradient(135deg,#22c55e,#16a34a)",
+          ring: "0 0 0 6px rgba(34,197,94,0.16)",
+        };
+      default:
+        return {
+          dot: alpha("#94a3b8", 0.85),
+          ring: "0 0 0 5px rgba(148,163,184,0.16)",
+        };
+    }
+  };
 
   return (
     <Paper
       elevation={0}
-      sx={(theme) => ({
-        flex: 1.2,
-        borderRadius: 4,
-        p: 2.5,
-        display: "flex",
-        flexDirection: "column",
+      sx={{
+        borderRadius: 5,
+        p: { xs: 1.5, md: 2 },
         position: "relative",
         overflow: "hidden",
-        backgroundColor:
-          theme.palette.mode === "light" ? "#ffffff" : "rgba(15,23,42,0.9)",
+        background:
+          theme.palette.mode === "light"
+            ? "linear-gradient(145deg, rgba(255,255,255,0.98), rgba(244,247,255,0.98))"
+            : "linear-gradient(145deg, rgba(15,23,42,0.98), rgba(30,27,75,0.94))",
         border: `1px solid ${
           theme.palette.mode === "light"
-            ? "rgba(148,163,184,0.35)"
-            : "rgba(15,23,42,0.9)"
+            ? "rgba(148,163,184,0.24)"
+            : "rgba(99,102,241,0.18)"
         }`,
         boxShadow:
           theme.palette.mode === "light"
-            ? "0 12px 30px rgba(15,23,42,0.08)"
-            : "0 16px 40px rgba(0,0,0,0.9)",
-      })}
+            ? "0 24px 54px rgba(15,23,42,0.08)"
+            : "0 28px 70px rgba(2,6,23,0.48)",
+      }}
     >
-      {/* мягкий блик сверху, как в ProgressCard */}
       <Box
         sx={{
           position: "absolute",
-          top: -40,
-          right: -40,
-          width: 140,
-          height: 140,
-          borderRadius: "50%",
+          inset: 0,
           background:
-            "radial-gradient(circle at 30% 30%, rgba(59,130,246,0.25), transparent 60%)",
+            theme.palette.mode === "light"
+              ? "radial-gradient(circle at 12% 20%, rgba(56,189,248,0.18), transparent 26%), radial-gradient(circle at 88% 16%, rgba(99,102,241,0.18), transparent 24%), radial-gradient(circle at 76% 78%, rgba(34,197,94,0.12), transparent 20%)"
+              : "radial-gradient(circle at 10% 18%, rgba(56,189,248,0.18), transparent 26%), radial-gradient(circle at 86% 14%, rgba(139,92,246,0.18), transparent 22%), radial-gradient(circle at 74% 76%, rgba(34,197,94,0.12), transparent 20%)",
           pointerEvents: "none",
         }}
       />
 
-      {/* заголовок + Today */}
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-        sx={{ position: "relative", zIndex: 1 }}
-      >
-        <Box>
-          <Typography variant="h6" fontWeight={600}>
-            {mapTitle}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={(theme) => ({
-              mt: 0.5,
-              color:
-                theme.palette.mode === "light"
-                  ? "rgba(75,85,99,0.9)"
-                  : "rgba(156,163,175,0.95)",
-            })}
-          >
-            {mapSubtitle}
-          </Typography>
-        </Box>
-
-        <Chip
-          label={todayLabel}
-          size="small"
-          sx={{
-            borderRadius: 999,
-            fontWeight: 500,
-          }}
-        />
-      </Stack>
-
-      {/* псевдо-карта с маршрутом и точками, но уже как "внутренний блок" карточки */}
       <Box
-        sx={(theme) => ({
+        sx={{
           position: "relative",
-          flex: 1,
-          borderRadius: 3,
-          mt: 0.5,
-          mb: 2,
+          minHeight: { xs: 300, md: 340 },
+          borderRadius: 4,
           overflow: "hidden",
+          border: `1px solid ${
+            theme.palette.mode === "light"
+              ? "rgba(148,163,184,0.24)"
+              : "rgba(148,163,184,0.14)"
+          }`,
           background:
             theme.palette.mode === "light"
-              ? "linear-gradient(135deg,#e0f2fe,#eef2ff)"
-              : "linear-gradient(135deg,rgba(15,23,42,0.95),rgba(17,24,39,0.95))",
-          border:
-            theme.palette.mode === "light"
-              ? "1px solid rgba(148,163,184,0.6)"
-              : "1px solid rgba(55,65,81,0.9)",
-        })}
+              ? "linear-gradient(145deg, rgba(233,244,255,0.92), rgba(238,242,255,0.92))"
+              : "linear-gradient(145deg, rgba(15,23,42,0.92), rgba(17,24,39,0.96))",
+          mb: 1.5,
+        }}
       >
-        {/* сетка как карта */}
-        <Box
-          sx={(theme) => ({
-            position: "absolute",
-            inset: 0,
-            opacity: theme.palette.mode === "light" ? 0.45 : 0.22,
-            backgroundImage: `
-              linear-gradient(to right, rgba(148,163,184,0.4) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(148,163,184,0.35) 1px, transparent 1px)
-            `,
-            backgroundSize: "32px 32px",
-          })}
-        />
-
-        {/* линия маршрута */}
         <Box
           sx={{
             position: "absolute",
-            inset: 18,
-            borderRadius: 3,
-            border: "2px dashed rgba(37,99,235,0.7)",
-            borderStyle: "dashed",
+            inset: 0,
+            opacity: theme.palette.mode === "light" ? 0.6 : 0.18,
+            backgroundImage: `
+              linear-gradient(to right, rgba(148,163,184,0.45) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(148,163,184,0.38) 1px, transparent 1px)
+            `,
+            backgroundSize: "28px 28px",
           }}
         />
 
-        {/* точки - «уроки» */}
-        {mapPoints.map((point, idx) => (
-          <Box
-            key={point.label}
-            sx={{
-              position: "absolute",
-              top: point.top,
-              left: point.left,
-              transform: "translate(-50%, -50%)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 0.3,
-            }}
-          >
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                borderRadius: "50%",
-                border: "2px solid #ffffff",
-                background:
-                  idx === 1
-                    ? "linear-gradient(135deg,#2563eb,#a855f7)"
-                    : "rgba(59,130,246,0.8)",
-                boxShadow:
-                  idx === 1
-                    ? "0 0 0 6px rgba(37,99,235,0.35)"
-                    : "0 0 0 4px rgba(37,99,235,0.25)",
-              }}
-            />
-            <Typography
-              variant="caption"
-              sx={(theme) => ({
-                px: 0.6,
-                py: 0.1,
-                borderRadius: 999,
-                fontSize: 10,
-                fontWeight: 500,
-                color:
-                  theme.palette.mode === "light"
-                    ? "rgba(15,23,42,0.8)"
-                    : "rgba(226,232,240,0.85)",
-                bgcolor:
-                  theme.palette.mode === "light"
-                    ? "rgba(255,255,255,0.8)"
-                    : "rgba(15,23,42,0.9)",
-              })}
-            >
-              {point.label}
-            </Typography>
-          </Box>
-        ))}
-
-        {/* текст заглушки - поверх всего */}
         <Box
-          sx={(theme) => ({
+          sx={{
+            position: "absolute",
+            top: 18,
+            left: 18,
+            width: 88,
+            height: 88,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), rgba(125,211,252,0.08) 55%, transparent 72%)",
+            filter: "blur(0.2px)",
+            opacity: theme.palette.mode === "light" ? 0.9 : 0.55,
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            right: 22,
+            top: 24,
+            width: 136,
+            height: 136,
+            borderRadius: "50%",
+            border: `1px solid ${alpha("#cbd5e1", 0.16)}`,
+            background:
+              theme.palette.mode === "light"
+                ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.28), transparent 64%)"
+                : "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.12), transparent 64%)",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            right: 86,
+            top: 68,
+            width: 86,
+            height: 86,
+            borderRadius: "50%",
+            border: `1px solid ${alpha("#cbd5e1", 0.14)}`,
+          }}
+        />
+
+        <Box
+          component="svg"
+          viewBox="0 0 480 260"
+          preserveAspectRatio="none"
+          sx={{
             position: "absolute",
             inset: 0,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "flex-start",
-            p: 1.5,
-            pointerEvents: "none",
-            color:
-              theme.palette.mode === "light"
-                ? "rgba(15,23,42,0.75)"
-                : "rgba(209,213,219,0.85)",
-            fontSize: 13,
-            fontWeight: 500,
-            textShadow:
-              theme.palette.mode === "light"
-                ? "0 1px 2px rgba(255,255,255,0.9)"
-                : "0 1px 2px rgba(0,0,0,0.9)",
-          })}
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+          }}
         >
-          {t("cards.mapPlaceholder")}
+          <path
+            d={routePath}
+            fill="none"
+            stroke={theme.palette.mode === "light" ? "#93c5fd" : "#334155"}
+            strokeWidth="18"
+            strokeLinecap="round"
+            opacity="0.2"
+          />
+          <path
+            d={routePath}
+            fill="none"
+            stroke="url(#routeGradient)"
+            strokeWidth="5"
+            strokeLinecap="round"
+            strokeDasharray="6 10"
+          />
+          <defs>
+            <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#22c55e" />
+              <stop offset="42%" stopColor="#38bdf8" />
+              <stop offset="72%" stopColor="#6366f1" />
+              <stop offset="100%" stopColor="#a78bfa" />
+            </linearGradient>
+          </defs>
         </Box>
+
+        {mapNodes.map((node) => {
+          const styles = getNodeStyles(node.state);
+
+          return (
+            <Box
+              key={`${node.x}-${node.y}-${node.state}`}
+              sx={{
+                position: "absolute",
+                left: `${(node.x / 480) * 100}%`,
+                top: `${(node.y / 260) * 100}%`,
+                transform: "translate(-50%, -50%)",
+                zIndex: 3,
+              }}
+            >
+              <Box
+                sx={{
+                  width: node.state === "current" ? 20 : 16,
+                  height: node.state === "current" ? 20 : 16,
+                  borderRadius: "50%",
+                  border: "2px solid rgba(255,255,255,0.92)",
+                  background: styles.dot,
+                  boxShadow: styles.ring,
+                }}
+              />
+            </Box>
+          );
+        })}
       </Box>
 
-      {/* нижняя часть - следующий урок + кнопка */}
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        gap={2}
-        sx={{ position: "relative", zIndex: 1 }}
-      >
-        <Box>
-          <Typography variant="body2" color="text.secondary">
-            {t("cards.nextLesson")}
-          </Typography>
-          <Typography variant="subtitle1" fontWeight={600}>
-            {nextLessonName}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={(theme) => ({
-              color:
-                theme.palette.mode === "light"
-                  ? "rgba(55,65,81,0.85)"
-                  : "rgba(156,163,175,0.9)",
-            })}
-          >
-            {t("cards.nextLessonMeta", {
-              region: nextLessonRegion,
-              unit: nextLessonUnit,
-              minutes: nextLessonMinutes,
-            })}
-          </Typography>
-        </Box>
-
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1.2}>
         <Button
-          variant="contained"
-          size="small"
-          startIcon={<PlayArrowIcon />}
+          fullWidth
+          variant="outlined"
+          startIcon={<PlayArrowRoundedIcon />}
           onClick={() => navigate("/app/lessons")}
           sx={{
             borderRadius: 999,
-            px: 2.7,
-            py: 0.7,
-            fontWeight: 600,
-            boxShadow:
-              "0 10px 24px rgba(37,99,235,0.35), 0 0 0 1px rgba(255,255,255,0.2)",
+            py: 1,
+            fontWeight: 700,
           }}
         >
-          {t("cards.start")}
+          {t("actions.continue")}
+        </Button>
+
+        <Button
+          fullWidth
+          variant="contained"
+          startIcon={<TravelExploreRoundedIcon />}
+          onClick={() => navigate("/app/map")}
+          sx={{
+            borderRadius: 999,
+            py: 1,
+            fontWeight: 800,
+            boxShadow:
+              "0 14px 32px rgba(37,99,235,0.28), 0 0 0 1px rgba(255,255,255,0.12)",
+          }}
+        >
+          {t("actions.map")}
         </Button>
       </Stack>
     </Paper>

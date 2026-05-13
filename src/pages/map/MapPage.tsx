@@ -143,6 +143,7 @@ const MapPage: React.FC = () => {
               options={searchOptions}
               loading={itemsLoading}
               sx={{ minWidth: { xs: "100%", lg: 320 } }}
+              getOptionKey={(option) => option.code}
               getOptionLabel={(option) => option.name}
               onChange={(_, option) => {
                 if (!option) return;
@@ -156,8 +157,11 @@ const MapPage: React.FC = () => {
                   })}
                 />
               )}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
+              renderOption={(props, option) => {
+                const { key, ...optionProps } = props;
+
+                return (
+                <Box component="li" key={key} {...optionProps}>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Typography fontWeight={700}>{option.name}</Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -167,7 +171,8 @@ const MapPage: React.FC = () => {
                     </Typography>
                   </Stack>
                 </Box>
-              )}
+                );
+              }}
             />
           </Stack>
         </Paper>

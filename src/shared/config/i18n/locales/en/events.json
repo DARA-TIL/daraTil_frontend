@@ -1,0 +1,45 @@
+{
+  "page": {
+    "title": "Events",
+    "subtitle": "Join weekly and custom events, compete through tracked actions, and climb the leaderboard for XP rewards."
+  },
+  "summary": {
+    "total": "Total events",
+    "started": "Active now",
+    "waiting": "Upcoming",
+    "rewardPool": "XP reward pool"
+  },
+  "filters": {
+    "search": "Search events",
+    "all": "All"
+  },
+  "list": {
+    "title": "Available events",
+    "pool": "{{value}} XP pool",
+    "participants": "{{count}} participants"
+  },
+  "details": {
+    "pool": "{{value}} XP reward pool",
+    "noDescription": "This event tracks progress on selected actions and rewards the top participants with XP.",
+    "firstPlace": "1st place: {{value}} XP",
+    "secondPlace": "2nd place: {{value}} XP",
+    "thirdPlace": "3rd place: {{value}} XP"
+  },
+  "leaderboard": {
+    "title": "Public leaderboard",
+    "subtitle": "Top participants are ranked by the tracked action count for this event.",
+    "limit": "Top users",
+    "empty": "No participants yet.",
+    "unknown": "Unknown user",
+    "actionsCount": "{{count}} tracked actions",
+    "place": "Place #{{value}}",
+    "active": "Active",
+    "inactive": "Inactive",
+    "you": "You"
+  },
+  "empty": {
+    "list": "No events match the current filter.",
+    "detailsTitle": "Select an event",
+    "detailsDescription": "Choose a live or upcoming event to inspect rewards, timings, and the public leaderboard."
+  }
+}

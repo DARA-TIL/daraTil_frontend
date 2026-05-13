@@ -1,0 +1,44 @@
+﻿{
+  "page": {
+    "title": "Leaderboard",
+    "subtitle": "Track the strongest learners by XP, streak, and words learned across the platform.",
+    "myRank": "Your rank: #{{rank}}",
+    "notInTop": "Not in current top",
+    "limitLabel": "Top {{count}}",
+    "topLimit": "Top {{count}}"
+  },
+  "metrics": {
+    "xp": "XP",
+    "streak": "Streak",
+    "word": "Words learned",
+    "xpValue": "{{count}} XP",
+    "streakValue": "{{count}} days",
+    "wordValue": "{{count}} words"
+  },
+  "descriptions": {
+    "xp": "See who has accumulated the most XP.",
+    "streak": "See who keeps the longest active streak.",
+    "word": "See who has learned the most words."
+  },
+  "sections": {
+    "ranking": "Ranking"
+  },
+  "podium": {
+    "rank": "Rank #{{rank}}"
+  },
+  "labels": {
+    "unknownUser": "Unknown user",
+    "wordSubtitle": "{{count}} lessons completed",
+    "levelSubtitle": "Level {{count}}",
+    "you": "You",
+    "level": "Level {{count}}",
+    "lessonsCompleted": "{{count}} lessons completed"
+  },
+  "common": {
+    "loading": "Loading...",
+    "noData": "No data yet"
+  },
+  "empty": {
+    "noResults": "No leaderboard results yet."
+  }
+}

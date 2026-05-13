@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import { useTranslation } from "react-i18next";
 import { profileMenuItems } from "./navConfig";
 import { useNavigate } from "react-router-dom";
@@ -63,6 +64,13 @@ export const ProfileMenu = ({
           {t(item.key)}
         </MenuItem>
       ))}
+
+      <MenuItem onClick={() => navigateTo("/app/notifications")}>
+        <ListItemIcon>
+          <NotificationsRoundedIcon fontSize="small" />
+        </ListItemIcon>
+        {t("notifications", { defaultValue: "Notifications" })}
+      </MenuItem>
 
       <Divider />
 

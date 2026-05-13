@@ -38,7 +38,8 @@
     "folklore_readed": "Folklore read",
     "level_upgraded": "Level upgraded",
     "region_slang_readed": "Region slang read",
-    "region_tradition_readed": "Region tradition read"
+    "region_tradition_readed": "Region tradition read",
+    "word_learned": "Word learned"
   },
   "notifications": {
     "achievementUnlockedGeneric": "Achievement unlocked",

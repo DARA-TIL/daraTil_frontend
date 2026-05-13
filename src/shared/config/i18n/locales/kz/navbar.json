@@ -1,8 +1,7 @@
-﻿{
+{
   "login": "Кіру",
   "register": "Тіркелу",
   "logout": "Шығу",
-
   "profile": "Профиль",
   "dashboard": "Басты бет",
   "lessons": "Сабақтар",
@@ -10,5 +9,8 @@
   "folklore": "Фольклор",
   "dictionary": "Сөздік",
   "progress": "Жетістіктер",
-  "settings": "Баптаулар"
+  "leaderboard": "Лидерборд",
+  "notifications": "Хабарламалар",
+  "settings": "Баптаулар",
+  "events": "Ивенттер"
 }

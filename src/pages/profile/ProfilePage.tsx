@@ -1,11 +1,14 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
+import { useUserProfileStore } from "@/features/profile/store/useUserProfileStore";
 import ProfileSecurityTab from "@/features/profile/ui/tabs/ProfileSecurityTab";
 import ProfileLearningTab from "@/features/profile/ui/tabs/ProfileLearningTab";
 import ProfileActivityTab from "@/features/profile/ui/tabs/ProfileActivityTab";
@@ -15,32 +18,42 @@ type TabKey = "overview" | "learning" | "security" | "activity";
 
 const ProfilePage: React.FC = () => {
   const theme = useTheme();
+  const { t } = useTranslation("profile");
   const user = useAuthStore((s) => s.user);
+  const fetchAllAchievements = useAchievementsStore((s) => s.fetchAll);
+  const fetchProfile = useUserProfileStore((s) => s.fetchByUserId);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    void fetchProfile(user.id);
+    void fetchAllAchievements();
+  }, [user?.id, fetchAllAchievements, fetchProfile]);
 
   const tabs = useMemo(
     () => [
       {
         key: "overview" as const,
-        label: "Overview",
+        label: t("tabs.overview", { defaultValue: "Overview" }),
         icon: <PersonOutlineIcon />,
       },
       {
         key: "learning" as const,
-        label: "Learning",
+        label: t("tabs.learning", { defaultValue: "Learning" }),
         icon: <SchoolOutlinedIcon />,
       },
       {
         key: "security" as const,
-        label: "Security",
+        label: t("tabs.security", { defaultValue: "Security" }),
         icon: <SecurityOutlinedIcon />,
       },
       {
         key: "activity" as const,
-        label: "Activity",
+        label: t("tabs.activity", { defaultValue: "Activity" }),
         icon: <TimelineOutlinedIcon />,
       },
     ],
-    [],
+    [t],
   );
 
   const [tab, setTab] = useState<TabKey>("overview");
@@ -51,7 +64,7 @@ const ProfilePage: React.FC = () => {
     <Box>
       <Stack spacing={2.25} mb={2.5}>
         <Typography variant="h5" fontWeight={800}>
-          Profile
+          {t("pageTitle", { defaultValue: "Profile" })}
         </Typography>
 
         <Paper

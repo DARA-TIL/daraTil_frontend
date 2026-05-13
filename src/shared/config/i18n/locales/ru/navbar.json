@@ -1,8 +1,7 @@
-﻿{
+{
   "login": "Войти",
   "register": "Регистрация",
   "logout": "Выйти",
-
   "profile": "Профиль",
   "dashboard": "Панель",
   "lessons": "Уроки",
@@ -10,5 +9,8 @@
   "folklore": "Фольклор",
   "dictionary": "Словарь",
   "progress": "Достижения",
-  "settings": "Настройки"
+  "leaderboard": "Лидерборд",
+  "notifications": "Уведомления",
+  "settings": "Настройки",
+  "events": "Ивенты"
 }

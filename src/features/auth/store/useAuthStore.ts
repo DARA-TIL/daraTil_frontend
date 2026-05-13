@@ -14,6 +14,7 @@ import {
   type StreakStatusKind,
 } from "@/features/auth/model/streak";
 import { getRecord, isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
+import i18n from "@/shared/config/i18n/i18n";
 
 function unwrapAuth(payload: AuthResponse | unknown): AuthPayload | unknown {
   return unwrapApiData(payload);
@@ -366,10 +367,22 @@ export const useAuthStore = create<AuthState>((set) => {
               }
             : updated,
         }));
-        useUiStore.getState().showSnackbar("Profile updated", "success");
+        useUiStore.getState().showSnackbar(
+          i18n.t("messages.profileUpdated", {
+            ns: "profile",
+            defaultValue: "Profile updated",
+          }),
+          "success",
+        );
         return updated;
       } catch {
-        useUiStore.getState().showSnackbar("Failed to update profile", "error");
+        useUiStore.getState().showSnackbar(
+          i18n.t("messages.profileUpdateFailed", {
+            ns: "profile",
+            defaultValue: "Failed to update profile",
+          }),
+          "error",
+        );
         return null;
       }
     },

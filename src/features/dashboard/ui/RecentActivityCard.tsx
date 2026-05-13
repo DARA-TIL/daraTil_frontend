@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+﻿import React, { useEffect, useMemo } from "react";
 import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
@@ -35,15 +35,15 @@ export const RecentActivityCard: React.FC = () => {
     return items
       .filter((item) => userID <= 0 || item.userID === userID)
       .slice(0, 5)
-      .map((item) => {
+      .map((item, index) => {
         const timeAgo = formatRelativeActivityTime(item.time, locale, t);
         const entity = getActivityEntityLabel(item.entityType, item.entityID, t);
 
         return {
-          id: `${item.id}-${item.time}-${item.action}`,
+          id: `${item.id}-${item.time}-${item.action}-${index}`,
           title: getActivityTitle(item.action, t),
           meta: t("cards.activityMeta", {
-            defaultValue: "{{timeAgo}} • {{entity}}",
+            defaultValue: "{{timeAgo}} - {{entity}}",
             timeAgo,
             entity,
           }),
@@ -63,6 +63,7 @@ export const RecentActivityCard: React.FC = () => {
         p: 2.5,
         display: "flex",
         flexDirection: "column",
+        minHeight: 320,
         backgroundColor:
           theme.palette.mode === "light" ? "#ffffff" : "rgba(15,23,42,0.9)",
         border: `1px solid ${
@@ -152,3 +153,4 @@ export const RecentActivityCard: React.FC = () => {
     </Paper>
   );
 };
+

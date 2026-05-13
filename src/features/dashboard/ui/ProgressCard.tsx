@@ -1,23 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useUserProfileStore } from "@/features/profile/store/useUserProfileStore";
 
 export const ProgressCard: React.FC = () => {
-  const { t } = useTranslation("dashboard");
-
+  const { t } = useTranslation("profile");
   const user = useAuthStore((s) => s.user);
+  const profile = useUserProfileStore((s) => s.profile);
+  const fetchProfile = useUserProfileStore((s) => s.fetchByUserId);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    void fetchProfile(user.id, { silent: true });
+  }, [fetchProfile, user?.id]);
 
   const level = user?.progress?.level ?? 0;
   const currentXp = user?.progress?.xpTotal ?? 0;
-  const nextXp = user?.progress?.xpForNextLevel ?? 1;
-  const progress = Math.round((currentXp / nextXp) * 100);
+  const nextXp = Math.max(user?.progress?.xpForNextLevel ?? 1, 1);
+  const progress = Math.min(100, Math.round((currentXp / nextXp) * 100));
 
-  const completedLessons = 18;
-  const totalLessons = 24;
-  const wordsLearned = 320;
-  const timeHours = 5;
-  const timeMinutes = 20;
+  const completedLessons = profile?.lessonsCompleted ?? 0;
+  const wordsLearned = profile?.wordsLearned ?? 0;
+  const currentStreak = user?.streak?.currentStreak ?? 0;
 
   return (
     <Paper
@@ -43,7 +48,6 @@ export const ProgressCard: React.FC = () => {
         overflow: "hidden",
       })}
     >
-      {/* мягкий блик сверху */}
       <Box
         sx={{
           position: "absolute",
@@ -58,7 +62,6 @@ export const ProgressCard: React.FC = () => {
         }}
       />
 
-      {/* заголовок + круглый бейдж уровня */}
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -68,7 +71,7 @@ export const ProgressCard: React.FC = () => {
       >
         <Box>
           <Typography variant="h6" fontWeight={600}>
-            {t("cards.progressTitle")}
+            {t("cards.progressTitle", { defaultValue: "Your progress" })}
           </Typography>
           <Typography
             variant="body2"
@@ -81,6 +84,7 @@ export const ProgressCard: React.FC = () => {
             })}
           >
             {t("cards.progressSubtitle", {
+              defaultValue: "Level {{level}} - {{currentXp}} / {{nextXp}} XP",
               level,
               currentXp,
               nextXp,
@@ -88,7 +92,6 @@ export const ProgressCard: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* медаль уровня */}
         <Box
           sx={(theme) => ({
             width: 72,
@@ -118,7 +121,7 @@ export const ProgressCard: React.FC = () => {
               opacity: 0.85,
             }}
           >
-            {t("cards.levelLabel")}
+            {t("cards.levelLabel", { defaultValue: "Level" })}
           </Typography>
           <Typography
             variant="h5"
@@ -132,7 +135,6 @@ export const ProgressCard: React.FC = () => {
         </Box>
       </Stack>
 
-      {/* прогресс-бар XP */}
       <Box sx={{ mb: 2 }}>
         <LinearProgress
           variant="determinate"
@@ -158,10 +160,11 @@ export const ProgressCard: React.FC = () => {
           mt={0.6}
         >
           <Typography variant="caption" color="text.secondary">
-            {t("cards.xpLabel")}
+            {t("cards.xpLabel", { defaultValue: "XP progress" })}
           </Typography>
           <Typography variant="caption" sx={{ fontWeight: 500 }}>
             {t("cards.xpSummary", {
+              defaultValue: "{{progress}}% - {{currentXp}} / {{nextXp}} XP",
               progress,
               currentXp,
               nextXp,
@@ -170,14 +173,12 @@ export const ProgressCard: React.FC = () => {
         </Stack>
       </Box>
 
-      {/* три «круглых» статистики */}
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="space-between"
         sx={{ position: "relative", zIndex: 1 }}
       >
-        {/* Completed lessons */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
           <Box
             sx={(theme) => ({
@@ -208,12 +209,11 @@ export const ProgressCard: React.FC = () => {
               {t("cards.completedLessons")}
             </Typography>
             <Typography variant="subtitle2" fontWeight={600}>
-              {completedLessons} / {totalLessons}
+              {completedLessons}
             </Typography>
           </Box>
         </Box>
 
-        {/* Words learned */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
           <Box
             sx={(theme) => ({
@@ -249,7 +249,6 @@ export const ProgressCard: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Time spent */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
           <Box
             sx={(theme) => ({
@@ -273,16 +272,16 @@ export const ProgressCard: React.FC = () => {
               color: theme.palette.mode === "light" ? "#92400e" : "#fef9c3",
             })}
           >
-            {t("cards.timeShort", { hours: timeHours })}
+            {currentStreak}
           </Box>
           <Box>
             <Typography variant="body2" color="text.secondary">
-              {t("cards.timeSpent")}
+              {t("cards.profileStreak", { defaultValue: "Streak" })}
             </Typography>
             <Typography variant="subtitle2" fontWeight={600}>
-              {t("cards.timeFull", {
-                hours: timeHours,
-                minutes: timeMinutes,
+              {t("cards.streakCurrentValue", {
+                defaultValue: "{{count}} days",
+                count: currentStreak,
               })}
             </Typography>
           </Box>

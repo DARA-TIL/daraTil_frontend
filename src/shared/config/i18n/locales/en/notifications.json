@@ -1,0 +1,71 @@
+{
+  "menu": {
+    "open": "Open notifications",
+    "title": "Notifications",
+    "subtitle": "Recent system, reward, streak, and event updates.",
+    "viewAll": "View all",
+    "more": "Show the full notifications center"
+  },
+  "page": {
+    "title": "Notifications",
+    "subtitle": "Review system updates, reward messages, streak changes, and event announcements in one place.",
+    "readBehavior": "Opening this center syncs your recent notifications and marks the loaded items as seen.",
+    "selectTitle": "Select a notification",
+    "selectDescription": "Open any item from the list to inspect its full message, timing, and related destination."
+  },
+  "summary": {
+    "total": "Loaded notifications",
+    "reward": "Rewards",
+    "event": "Events",
+    "global": "Global messages"
+  },
+  "filters": {
+    "search": "Search notifications",
+    "type": "Type",
+    "scope": "Scope",
+    "limit": "Limit",
+    "allTypes": "All types",
+    "allScopes": "All scopes"
+  },
+  "actions": {
+    "refresh": "Refresh",
+    "clearAll": "Clear all",
+    "openRelated": "Open related page",
+    "remove": "Remove"
+  },
+  "confirm": {
+    "clearTitle": "Clear notifications?",
+    "clearMessage": "This will hide all notifications from your current list.",
+    "deleteTitle": "Remove notification?",
+    "deleteMessage": "This notification will be hidden from your personal list."
+  },
+  "list": {
+    "title": "Recent notifications"
+  },
+  "details": {
+    "createdAt": "Created: {{value}}",
+    "readAt": "Seen: {{value}}",
+    "unread": "Not seen yet",
+    "entityId": "Related entity ID: {{value}}"
+  },
+  "empty": {
+    "title": "No notifications yet",
+    "description": "When the platform has updates for you, they will appear here in real time.",
+    "message": "No additional message."
+  },
+  "states": {
+    "new": "New",
+    "seen": "Seen"
+  },
+  "types": {
+    "system": "System",
+    "event": "Event",
+    "streak": "Streak",
+    "reward": "Reward",
+    "logOut": "Log out"
+  },
+  "scopes": {
+    "user": "User",
+    "global": "Global"
+  }
+}

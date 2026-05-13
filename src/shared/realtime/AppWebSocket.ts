@@ -3,13 +3,14 @@ import { API_URL } from "@/shared/api/http";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
+import { useNotificationsStore } from "@/features/notifications/store/useNotificationsStore";
 import {
+  getNotificationDisplayText,
+  isAchievementRewardNotification,
   getWsNotificationKind,
   parseWsNotification,
-  type AchievementWsNotification,
-  type BaseWsNotification,
-  type StreakWsNotification,
 } from "./notifications";
+import type { AppNotification } from "@/features/notifications/model/types";
 
 const RECONNECT_DELAYS = [1000, 2000, 5000, 10000, 30000] as const;
 
@@ -53,8 +54,9 @@ function buildWsUrl(): string {
   return url.toString();
 }
 
-function isCurrentUserMessage(message: BaseWsNotification): boolean {
+function isCurrentUserMessage(message: AppNotification): boolean {
   const currentUserId = useAuthStore.getState().user?.id;
+  if (message.scope === "global") return true;
   if (!message.userId || !currentUserId) return true;
   return Number(message.userId) === Number(currentUserId);
 }
@@ -216,104 +218,140 @@ class AppWebSocket {
   }
 
   private handleMessage(raw: string) {
-    const data = parseWsNotification(raw);
-    if (!data || typeof data !== "object") {
+    const notification = parseWsNotification(raw);
+    if (!notification) {
       console.warn("Invalid WS message", raw);
       return;
     }
 
-    const base = data as BaseWsNotification;
-    if (!base.type) {
-      console.warn("WS message without type", data);
-      return;
+    if (!notification.isActive) return;
+    if (!isCurrentUserMessage(notification)) return;
+
+    const kind = getWsNotificationKind(notification);
+
+    if (kind !== "logout") {
+      useNotificationsStore.getState().receiveRealtime(notification);
     }
 
-    if (!isCurrentUserMessage(base)) return;
-
-    const kind = getWsNotificationKind(base.type);
-
-    if (kind === "achievement_unlocked") {
-      this.handleAchievementUnlocked(data as AchievementWsNotification);
+    if (kind === "reward") {
+      this.handleRewardNotification(notification);
       return;
     }
 
     if (kind === "streak_increase" || kind === "streak_reset") {
-      this.handleStreakMessage(data as StreakWsNotification, kind);
+      this.handleStreakMessage(notification, kind);
       return;
     }
 
-    console.warn("Unsupported WS notification type", data);
+    if (kind === "logout") {
+      this.handleLogoutNotification(notification);
+      return;
+    }
+
+    this.handleGenericNotification(notification);
   }
 
-  private handleAchievementUnlocked(message: AchievementWsNotification) {
-    const achievementId = Number(
-      message.achievementId ?? message.achievementID ?? 0,
-    );
-    if (!achievementId) return;
+  private handleRewardNotification(notification: AppNotification) {
+    const achievementReward = isAchievementRewardNotification(notification);
 
-    const userId =
-      Number(message.userId ?? 0) || useAuthStore.getState().user?.id || 0;
-    const achievementsStore = useAchievementsStore.getState();
-    const achievement = achievementsStore.items.find(
-      (item) => item.id === achievementId,
-    );
-
-    achievementsStore.markUnlocked(achievementId, userId);
-    void useAchievementsStore.getState().fetchAll(true, { silent: true });
+    if (achievementReward) {
+      void useAchievementsStore.getState().fetchAll(true, { silent: true });
+    }
 
     if (!shouldShowRealtimeToast()) return;
 
-    const notificationKey = achievement?.name
-      ? "notifications.achievementUnlocked"
-      : "notifications.achievementUnlockedGeneric";
+    const toastMessage =
+      getNotificationDisplayText(notification) ||
+      i18n.t(
+        achievementReward
+          ? "notifications.achievementUnlocked"
+          : "notifications.rewardReceived",
+        {
+          ns: "achievements",
+          defaultValue: achievementReward
+            ? "Achievement unlocked"
+            : "Reward received",
+        },
+      );
 
     useUiStore.getState().showSnackbar(
-      i18n.t(notificationKey, {
-        ns: "achievements",
-        defaultValue: achievement?.name
-          ? 'Achievement unlocked: "{{name}}"'
-          : "Achievement unlocked",
-        name: achievement?.name ?? "",
-      }),
+      toastMessage,
       "success",
-      {
-        actionLabel: i18n.t("notifications.view", {
-          ns: "achievements",
-          defaultValue: "View",
-        }),
-        actionTo: "/app/progress",
-      },
+      achievementReward
+        ? {
+            actionLabel: i18n.t("notifications.view", {
+              ns: "achievements",
+              defaultValue: "View",
+            }),
+            actionTo: "/app/progress",
+          }
+        : undefined,
     );
   }
 
   private handleStreakMessage(
-    message: StreakWsNotification,
+    notification: AppNotification,
     kind: "streak_increase" | "streak_reset",
   ) {
-    const streak = Number(message.streak ?? 0);
+    const hasSnapshot =
+      typeof notification.entityId === "number" &&
+      Number.isFinite(notification.entityId);
+    const streak = hasSnapshot ? Number(notification.entityId) : 0;
     const status = kind === "streak_reset" ? "Reset" : "Incremented";
 
-    useAuthStore.getState().applyStreakSnapshot(status, streak);
+    useAuthStore
+      .getState()
+      .applyStreakSnapshot(status, hasSnapshot ? streak : null);
 
     if (!shouldShowRealtimeToast()) return;
 
-    const key =
-      kind === "streak_reset"
-        ? "notifications.streakReset"
-        : "notifications.streakIncrease";
-    const defaultValue =
-      kind === "streak_reset"
-        ? "Your streak was reset. Start a new streak today."
-        : "You're on a {{count}}-day streak.";
+    const toastMessage =
+      getNotificationDisplayText(notification) ||
+      i18n.t(
+        kind === "streak_reset"
+          ? "notifications.streakReset"
+          : "notifications.streakIncrease",
+        {
+          ns: "achievements",
+          defaultValue:
+            kind === "streak_reset"
+              ? "Your streak was reset. Start a new streak today."
+              : "You're on a {{count}}-day streak.",
+          count: Math.max(0, streak),
+        },
+      );
 
     useUiStore.getState().showSnackbar(
-      i18n.t(key, {
-        ns: "achievements",
-        defaultValue,
-        count: Math.max(0, streak),
-      }),
+      toastMessage,
       kind === "streak_reset" ? "info" : "success",
     );
+  }
+
+  private handleLogoutNotification(notification: AppNotification) {
+    const text =
+      getNotificationDisplayText(notification) || "Your session was closed.";
+
+    this.disconnect();
+    localStorage.setItem("loggedOut", "true");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    useAuthStore.setState({ isAuth: false, user: null, isLoading: false });
+    useNotificationsStore.getState().reset();
+    useUiStore.getState().showSnackbar(text, "warning");
+
+    const pathname = window.location.pathname;
+    if (pathname !== "/login" && pathname !== "/register" && pathname !== "/forgot-password") {
+      window.location.replace("/login");
+    }
+  }
+
+  private handleGenericNotification(notification: AppNotification) {
+    if (!shouldShowRealtimeToast()) return;
+
+    const text = getNotificationDisplayText(notification);
+    if (!text) return;
+
+    useUiStore.getState().showSnackbar(text, "info");
   }
 }
 

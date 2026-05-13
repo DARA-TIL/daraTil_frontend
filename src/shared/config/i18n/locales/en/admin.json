@@ -43,6 +43,10 @@
       "achievements": {
         "title": "Achievements and rules",
         "subtitle": "Create achievements and control which actions affect streaks, activities, and achievements."
+      },
+      "timeEvents": {
+        "title": "Time events",
+        "subtitle": "Manage weekly and custom events, track action-based competition, and finish events with XP rewards for winners."
       }
     }
   },
@@ -400,6 +404,87 @@
     "edit": {
       "loadingTitle": "Edit user",
       "titleWithId": "Edit user #{{id}} - {{name}}"
+    }
+  },
+  "timeEvents": {
+    "title": "Time events",
+    "subtitle": "Manage weekly and custom competitive events, define tracked actions, and distribute XP rewards to top participants.",
+    "listTitle": "Events",
+    "emptyRange": "Choose the event time window",
+    "confirmFinish": "Finish this event now and distribute rewards to winners?",
+    "confirmDelete": "Delete this time event?",
+    "actions": {
+      "refresh": "Refresh events",
+      "new": "New event",
+      "applyFilters": "Apply filters",
+      "editing": "Editing",
+      "resetForm": "Reset form",
+      "finish": "Finish event",
+      "refreshParticipants": "Refresh leaderboard"
+    },
+    "summary": {
+      "total": "Total events",
+      "started": "Live now",
+      "waiting": "Scheduled",
+      "ended": "Finished"
+    },
+    "fields": {
+      "eventType": "Action",
+      "status": "Status",
+      "startDateFrom": "Start from",
+      "startDateTo": "Start to",
+      "endDateFrom": "End from",
+      "endDateTo": "End to",
+      "name": "Name",
+      "duration": "Duration (hours)",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "rewardFirst": "Reward for 1st place",
+      "rewardSecond": "Reward for 2nd place",
+      "rewardThird": "Reward for 3rd place",
+      "description": "Description"
+    },
+    "labels": {
+      "firstPlace": "1st place XP",
+      "secondPlace": "2nd place XP",
+      "thirdPlace": "3rd place XP",
+      "rewardPoolShort": "Reward pool",
+      "rewardPool": "Pool {{value}} XP",
+      "createMode": "Create mode",
+      "editMode": "Edit mode",
+      "newEvent": "New time event",
+      "durationHours": "{{count}} h"
+    },
+    "status": {
+      "started": "Started",
+      "ended": "Ended",
+      "waiting": "Waiting",
+      "canceled": "Canceled"
+    },
+    "validation": {
+      "required": "Fill in the required fields before saving.",
+      "endAfterStart": "End date must be later than start date.",
+      "noEndedCreate": "A new event cannot be created with ended status."
+    },
+    "snackbar": {
+      "created": "Time event created",
+      "saved": "Time event saved",
+      "deleted": "Time event deleted",
+      "finished": "Time event finished"
+    },
+    "participants": {
+      "title": "Participants leaderboard",
+      "subtitle": "Inspect top participants, action counts, and the current podium before finishing the event.",
+      "limit": "Top users",
+      "emptyNoEvent": "Select an event to inspect its participants leaderboard.",
+      "empty": "No participants yet.",
+      "countLabel": "{{count}} actions tracked",
+      "place": "Place #{{value}}",
+      "active": "Active",
+      "inactive": "Inactive",
+      "detailsTitle": "Selected participant",
+      "level": "Level {{value}}",
+      "streak": "Streak {{value}}"
     }
   }
 }

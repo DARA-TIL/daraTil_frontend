@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+﻿import React, { useEffect, useMemo } from "react";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ type ActivityTimelineItem = {
 
 const ProfileActivityTab: React.FC = () => {
   const theme = useTheme();
-  const { t, i18n } = useTranslation("dashboard");
+  const { t, i18n } = useTranslation("profile");
   const userID = useAuthStore((s) => s.user?.id ?? 0);
 
   const items = useActivityStore((s) => s.items);
@@ -39,16 +39,16 @@ const ProfileActivityTab: React.FC = () => {
 
     return items
       .filter((item) => userID <= 0 || item.userID === userID)
-      .map((item) => {
+      .map((item, index) => {
         const timeAgo = formatRelativeActivityTime(item.time, locale, t);
         const entity = getActivityEntityLabel(item.entityType, item.entityID, t);
 
         return {
-          key: `${item.id}-${item.time}-${item.action}`,
+          key: `${item.id}-${item.time}-${item.action}-${index}`,
           color: getActivityColor(item.action),
           title: getActivityTitle(item.action, t),
           meta: t("cards.activityMeta", {
-            defaultValue: "{{timeAgo}} • {{entity}}",
+            defaultValue: "{{timeAgo}} - {{entity}}",
             timeAgo,
             entity,
           }),
@@ -120,3 +120,5 @@ const ProfileActivityTab: React.FC = () => {
 };
 
 export default ProfileActivityTab;
+
+

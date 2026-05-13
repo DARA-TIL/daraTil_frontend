@@ -60,6 +60,35 @@ export const WordAssistantPopover: React.FC<Props> = ({
   const { t } = useTranslation("assistant");
   const [translateOptionsOpen, setTranslateOptionsOpen] = useState(false);
 
+  const keepSelectionAlive = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const keepInteraction = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
+  const handleKeyboardClick =
+    (handler: () => void) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (event.detail === 0) {
+        handler();
+      }
+    };
+
+  const handleMouseAction =
+    (handler: () => void) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      keepSelectionAlive(event);
+      handler();
+    };
+
+  const handleMouseTranslateAction =
+    (language: AssistantLanguage) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      keepSelectionAlive(event);
+      onTranslate(language);
+    };
+
   useEffect(() => {
     if (!open) {
       setTranslateOptionsOpen(false);
@@ -108,9 +137,16 @@ export const WordAssistantPopover: React.FC<Props> = ({
       ]}
       sx={{ zIndex: 1600 }}
     >
-      <ClickAwayListener onClickAway={onClose}>
+      <ClickAwayListener
+        mouseEvent="onMouseDown"
+        touchEvent="onTouchStart"
+        onClickAway={onClose}
+      >
         <Paper
           elevation={0}
+          onMouseDown={keepSelectionAlive}
+          onMouseUp={keepInteraction}
+          onClick={keepInteraction}
           sx={{
             width: 360,
             maxWidth: "min(calc(100vw - 32px), 360px)",
@@ -144,6 +180,7 @@ export const WordAssistantPopover: React.FC<Props> = ({
               </Box>
               <Button
                 onClick={onClose}
+                onMouseDown={keepSelectionAlive}
                 size="small"
                 color="inherit"
                 sx={{ minWidth: 36, px: 0.75 }}
@@ -162,7 +199,8 @@ export const WordAssistantPopover: React.FC<Props> = ({
           <Stack spacing={1.2} sx={{ p: 1.5 }}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
               <Button
-                onClick={onExplain}
+                onClick={handleKeyboardClick(onExplain)}
+                onMouseDown={handleMouseAction(onExplain)}
                 variant="contained"
                 startIcon={<AutoAwesomeRoundedIcon />}
                 disabled={Boolean(loadingAction) || favoriteLoading}
@@ -178,6 +216,7 @@ export const WordAssistantPopover: React.FC<Props> = ({
               >
                 <Button
                   onClick={() => setTranslateOptionsOpen((current) => !current)}
+                  onMouseDown={keepSelectionAlive}
                   variant="outlined"
                   startIcon={<TranslateRoundedIcon />}
                   endIcon={
@@ -201,7 +240,8 @@ export const WordAssistantPopover: React.FC<Props> = ({
                     {TRANSLATE_LANGUAGES.map((language) => (
                       <Button
                         key={language}
-                        onClick={() => onTranslate(language)}
+                        onClick={handleKeyboardClick(() => onTranslate(language))}
+                        onMouseDown={handleMouseTranslateAction(language)}
                         size="small"
                         variant="text"
                         disabled={Boolean(loadingAction) || favoriteLoading}
@@ -222,7 +262,8 @@ export const WordAssistantPopover: React.FC<Props> = ({
             </Stack>
 
             <Button
-              onClick={onFavorite}
+              onClick={handleKeyboardClick(onFavorite)}
+              onMouseDown={handleMouseAction(onFavorite)}
               variant={favoriteSaved ? "contained" : "text"}
               color={favoriteSaved ? "success" : "inherit"}
               startIcon={

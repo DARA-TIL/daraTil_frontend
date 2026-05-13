@@ -1,0 +1,44 @@
+﻿{
+  "page": {
+    "title": "Лидерборд",
+    "subtitle": "XP, серия және үйренген сөздер бойынша үздік оқушыларды бақылаңыз.",
+    "myRank": "Сіздің орныңыз: #{{rank}}",
+    "notInTop": "Әзірге осы топта жоқ",
+    "limitLabel": "Топ {{count}}",
+    "topLimit": "Топ {{count}}"
+  },
+  "metrics": {
+    "xp": "XP",
+    "streak": "Серия",
+    "word": "Үйренген сөздер",
+    "xpValue": "{{count}} XP",
+    "streakValue": "{{count}} күн",
+    "wordValue": "{{count}} сөз"
+  },
+  "descriptions": {
+    "xp": "Ең көп XP жинағандарды көріңіз.",
+    "streak": "Ең ұзақ белсенді серияны ұстап тұрғандарды көріңіз.",
+    "word": "Ең көп сөз үйренгендерді көріңіз."
+  },
+  "sections": {
+    "ranking": "Рейтинг"
+  },
+  "podium": {
+    "rank": "Орын #{{rank}}"
+  },
+  "labels": {
+    "unknownUser": "Белгісіз пайдаланушы",
+    "wordSubtitle": "{{count}} аяқталған сабақ",
+    "levelSubtitle": "Деңгей {{count}}",
+    "you": "Сіз",
+    "level": "Деңгей {{count}}",
+    "lessonsCompleted": "{{count}} аяқталған сабақ"
+  },
+  "common": {
+    "loading": "Жүктелуде...",
+    "noData": "Әзірге дерек жоқ"
+  },
+  "empty": {
+    "noResults": "Әзірге лидерборд нәтижелері жоқ."
+  }
+}

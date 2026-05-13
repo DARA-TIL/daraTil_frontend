@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Grid, Stack, TextField, Typography, Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import ProfileSectionCard from "../ProfileSectionCard";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 const ProfileSecurityTab: React.FC = () => {
+  const { t } = useTranslation("profile");
   const show = useUiStore((s) => s.showSnackbar);
 
   const [password, setPassword] = useState("");
@@ -13,11 +15,15 @@ const ProfileSecurityTab: React.FC = () => {
 
   const onChangePassword = async () => {
     if (!password.trim()) {
-      show("Password is required", "warning");
+      show(
+        t("security.passwordRequired", {
+          defaultValue: "Password is required",
+        }),
+        "warning",
+      );
       return;
     }
-    const ok = await updateProfile({ password: password.trim() });
-    if (ok) show("Password updated", "success");
+    await updateProfile({ password: password.trim() });
     setPassword("");
   };
 
@@ -26,12 +32,12 @@ const ProfileSecurityTab: React.FC = () => {
       <Grid size={{ xs: 12, md: 6 }}>
         <ProfileSectionCard>
           <Typography fontWeight={800} mb={2}>
-            Change password
+            {t("security.title", { defaultValue: "Change password" })}
           </Typography>
 
           <Stack spacing={2}>
             <TextField
-              label="New password"
+              label={t("security.newPassword", { defaultValue: "New password" })}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -39,7 +45,9 @@ const ProfileSecurityTab: React.FC = () => {
             />
 
             <Button variant="contained" onClick={onChangePassword}>
-              Update password
+              {t("security.updatePassword", {
+                defaultValue: "Update password",
+              })}
             </Button>
           </Stack>
         </ProfileSectionCard>
@@ -48,18 +56,27 @@ const ProfileSecurityTab: React.FC = () => {
       <Grid size={{ xs: 12, md: 6 }}>
         <ProfileSectionCard>
           <Typography fontWeight={800} mb={2}>
-            Security tips
+            {t("security.tipsTitle", { defaultValue: "Security tips" })}
           </Typography>
 
           <Stack spacing={1}>
             <Typography variant="body2" color="text.secondary">
-              - Use at least 8 characters
+              -{" "}
+              {t("security.tip1", {
+                defaultValue: "Use at least 8 characters",
+              })}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              - Mix letters, numbers and symbols
+              -{" "}
+              {t("security.tip2", {
+                defaultValue: "Mix letters, numbers, and symbols",
+              })}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              - Do not reuse passwords from other services
+              -{" "}
+              {t("security.tip3", {
+                defaultValue: "Do not reuse passwords from other services",
+              })}
             </Typography>
           </Stack>
         </ProfileSectionCard>

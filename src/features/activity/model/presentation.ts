@@ -21,6 +21,7 @@ export function getActivityColor(action: ActivityAction): string {
     case "folklore_disliked":
       return "#ef4444";
     case "folklore_read":
+    case "folklore_readed":
       return "#a855f7";
     default:
       return "#64748b";
@@ -42,6 +43,7 @@ export function getActivityTitle(action: ActivityAction, t: TranslateFn): string
         defaultValue: "Folklore disliked",
       });
     case "folklore_read":
+    case "folklore_readed":
       return t("cards.activityActionFolkloreRead", {
         defaultValue: "Folklore read",
       });
@@ -57,7 +59,44 @@ export function getActivityEntityLabel(
   entityID: number,
   t: TranslateFn,
 ): string {
-  const normalizedType = normalizeEntityType(entityType);
+  const normalizedSource = entityType.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  let normalizedType = "";
+
+  if (normalizedSource === "lesson" || normalizedSource === "lessons") {
+    normalizedType = t("cards.activityEntityLesson", {
+      defaultValue: "Lesson",
+    });
+  } else if (
+    normalizedSource === "folklore" ||
+    normalizedSource === "story" ||
+    normalizedSource === "stories"
+  ) {
+    normalizedType = t("cards.activityEntityFolklore", {
+      defaultValue: "Folklore",
+    });
+  } else if (
+    normalizedSource === "region_slang" ||
+    normalizedSource === "slang" ||
+    normalizedSource === "dialect"
+  ) {
+    normalizedType = t("cards.activityEntityDialect", {
+      defaultValue: "Dialect",
+    });
+  } else if (
+    normalizedSource === "region_tradition" ||
+    normalizedSource === "tradition"
+  ) {
+    normalizedType = t("cards.activityEntityTradition", {
+      defaultValue: "Tradition",
+    });
+  } else if (normalizedSource === "achievement") {
+    normalizedType = t("cards.activityEntityAchievement", {
+      defaultValue: "Achievement",
+    });
+  } else {
+    normalizedType = normalizeEntityType(entityType);
+  }
+
   const fallback = t("cards.activityEntityFallback", { defaultValue: "Entity" });
 
   if (!normalizedType && entityID <= 0) return fallback;
