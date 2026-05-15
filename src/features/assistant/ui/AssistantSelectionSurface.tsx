@@ -168,6 +168,7 @@ export const AssistantSelectionSurface: React.FC<Props> = ({
           setResult({
             kind,
             text: response.result,
+            translationPreview: response.translation,
           });
         }
       } catch (requestError) {

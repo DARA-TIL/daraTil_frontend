@@ -5,7 +5,6 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import GlobalSnackbar from "@/shared/lib/GlobalSnackbar";
 import GlobalConfirmDialog from "@/shared/lib/GlobalConfirmDialog";
 import { appWebSocket } from "@/shared/realtime/AppWebSocket";
-import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
 import { useNotificationsStore } from "@/features/notifications/store/useNotificationsStore";
 import { useAiChatStore } from "@/features/aiChat/store/useAiChatStore";
 
@@ -37,25 +36,28 @@ function App() {
   }, [isAuth]);
 
   useEffect(() => {
-    const syncRealtimeState = () => {
+    let lastReconnectAt = 0;
+
+    const reconnectRealtime = () => {
       if (!useAuthStore.getState().isAuth) return;
+      const now = Date.now();
+      if (now - lastReconnectAt < 3_000) return;
+      lastReconnectAt = now;
 
       appWebSocket.connect();
-      void useAuthStore.getState().checkAuth();
-      void useAchievementsStore.getState().fetchAll(true, { silent: true });
     };
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        syncRealtimeState();
+        reconnectRealtime();
       }
     };
 
-    window.addEventListener("focus", syncRealtimeState);
+    window.addEventListener("focus", reconnectRealtime);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      window.removeEventListener("focus", syncRealtimeState);
+      window.removeEventListener("focus", reconnectRealtime);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);

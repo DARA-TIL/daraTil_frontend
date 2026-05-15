@@ -5,7 +5,11 @@
   DictionaryTranslationsMap,
   DictionaryUpdateDto,
 } from "./types";
-import { compactDictionaryMap, normalizeDictionaryLanguage } from "./helpers";
+import {
+  compactDictionaryMap,
+  normalizeDictionaryLanguage,
+  resolveDictionaryLanguageKey,
+} from "./helpers";
 
 type RawRecord = Record<string, unknown>;
 
@@ -39,7 +43,7 @@ export function normalizeDictionaryMap(value: unknown): DictionaryTranslationsMa
   return compactDictionaryMap(
     Object.fromEntries(
       Object.entries(value).map(([key, itemValue]) => [
-        normalizeDictionaryLanguage(key),
+        resolveDictionaryLanguageKey(key),
         asString(itemValue),
       ]),
     ),
@@ -50,14 +54,23 @@ export function normalizeDictionaryEntry(dto: unknown): DictionaryEntry {
   const record = isRecord(dto) ? dto : {};
 
   return {
-    context: asString(record.context),
+    context: asString(record.context ?? record.Context),
     id: asNumber(record.id ?? record.ID),
-    originalWord: asString(record.originalWord ?? record.word ?? record.original_word),
+    originalWord: asString(
+      record.originalWord ??
+        record.OriginalWord ??
+        record.word ??
+        record.original_word,
+    ),
     wordExplainingTranslations: normalizeDictionaryMap(
-      record.wordExplainingTranslations ?? record.word_explaining_translations,
+      record.wordExplainingTranslations ??
+        record.WordExplainingTranslations ??
+        record.word_explaining_translations,
     ),
     wordTranslations: normalizeDictionaryMap(
-      record.wordTranslations ?? record.word_translations,
+      record.wordTranslations ??
+        record.WordTranslations ??
+        record.word_translations,
     ),
   };
 }

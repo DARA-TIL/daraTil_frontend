@@ -30,7 +30,9 @@
   "messages": {
     "assistant": "Assistant",
     "you": "You",
-    "typing": "Assistant is typing..."
+    "typing": "Assistant is typing...",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "composer": {
     "placeholder": "Ask anything about language, lessons, folklore, or dialects...",

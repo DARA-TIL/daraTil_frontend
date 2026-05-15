@@ -1,18 +1,59 @@
-ï»¿import type {
+import type {
   DictionaryEntry,
   DictionaryLanguage,
   DictionaryTranslationsMap,
 } from "./types";
 
-export function normalizeDictionaryLanguage(value: string): DictionaryLanguage {
+function mapDictionaryLanguageAlias(value: string): DictionaryLanguage | null {
   const normalized = String(value || "").trim().toUpperCase();
 
-  if (normalized === "KK") return "KZ";
-  if (normalized === "KZ" || normalized === "RU" || normalized === "EN") {
-    return normalized;
+  if (
+    normalized === "KZ" ||
+    normalized === "KK" ||
+    normalized === "KAZ" ||
+    normalized === "KAZAKH" ||
+    normalized === "?ÀÇ" ||
+    normalized === "?ÀÇÀ?"
+  ) {
+    return "KZ";
   }
 
-  return "EN";
+  if (
+    normalized === "RU" ||
+    normalized === "RUS" ||
+    normalized === "RUSSIAN" ||
+    normalized === "ÐÓ" ||
+    normalized === "ÐÓÑÑÊÈÉ"
+  ) {
+    return "RU";
+  }
+
+  if (
+    normalized === "EN" ||
+    normalized === "ENG" ||
+    normalized === "ENGLISH" ||
+    normalized === "ÀÍÃË" ||
+    normalized === "ÀÍÃËÈÉÑÊÈÉ"
+  ) {
+    return "EN";
+  }
+
+  if (normalized.includes("KZ") || normalized.includes("KK")) return "KZ";
+  if (normalized.includes("RU")) return "RU";
+  if (normalized.includes("EN")) return "EN";
+
+  return null;
+}
+
+export function normalizeDictionaryLanguage(value: string): DictionaryLanguage {
+  return mapDictionaryLanguageAlias(value) ?? "EN";
+}
+
+export function resolveDictionaryLanguageKey(value: string): string {
+  const alias = mapDictionaryLanguageAlias(value);
+  if (alias) return alias;
+
+  return String(value || "").trim();
 }
 
 function getLanguageFallbacks(language: DictionaryLanguage): DictionaryLanguage[] {
@@ -25,7 +66,7 @@ export function compactDictionaryMap(
 ): DictionaryTranslationsMap {
   return Object.fromEntries(
     Object.entries(source)
-      .map(([key, value]) => [normalizeDictionaryLanguage(key), String(value || "").trim()] as const)
+      .map(([key, value]) => [resolveDictionaryLanguageKey(key), String(value || "").trim()] as const)
       .filter(([, value]) => Boolean(value)),
   );
 }

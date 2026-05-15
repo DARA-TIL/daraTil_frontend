@@ -135,11 +135,26 @@ export const useDictionaryStore = create<DictionaryState>((set, get) => ({
     set({
       selectedId: id,
       selectedItem: cached,
-      selectedLoading: true,
+      selectedLoading: !cached,
     });
 
     if (!force && cached) {
-      set({ selectedLoading: false });
+      void DictionaryService.getById(id)
+        .then((item) => {
+          set((state) => ({
+            selectedItem: state.selectedId === id ? item : state.selectedItem,
+            selectedLoading: state.selectedId === id ? false : state.selectedLoading,
+            cache: {
+              ...state.cache,
+              [id]: item,
+            },
+          }));
+        })
+        .catch(() => {
+          set((state) => ({
+            selectedLoading: state.selectedId === id ? false : state.selectedLoading,
+          }));
+        });
       return;
     }
 

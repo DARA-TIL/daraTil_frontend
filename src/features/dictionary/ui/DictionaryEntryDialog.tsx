@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { DICTIONARY_LANGUAGES, type DictionaryCreateDto, type DictionaryEntry, type DictionaryLanguage, type DictionaryUpdateDto } from "../model/types";
-import { compactDictionaryMap } from "../model/helpers";
+import { compactDictionaryMap, resolveDictionaryLanguageKey } from "../model/helpers";
 
 type Mode = "create" | "edit";
 
@@ -37,10 +37,18 @@ function createEmptyMap(): DraftMap {
 }
 
 function normalizeDraftMap(source?: Record<string, string>): DraftMap {
+  const normalizedEntries = Object.entries(source ?? {}).reduce<Record<string, string>>(
+    (acc, [key, value]) => {
+      acc[resolveDictionaryLanguageKey(key)] = String(value ?? "");
+      return acc;
+    },
+    {},
+  );
+
   return {
-    KZ: String(source?.KZ ?? ""),
-    RU: String(source?.RU ?? ""),
-    EN: String(source?.EN ?? ""),
+    KZ: String(normalizedEntries.KZ ?? ""),
+    RU: String(normalizedEntries.RU ?? ""),
+    EN: String(normalizedEntries.EN ?? ""),
   };
 }
 

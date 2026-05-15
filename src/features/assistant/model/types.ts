@@ -8,6 +8,7 @@ export interface AssistantWordRequest {
 
 export interface ExplainWordResponse {
   result: string;
+  translation?: string;
 }
 
 export interface TranslateWordResponse {
@@ -22,4 +23,5 @@ export interface AssistantResponseState {
   text: string;
   context?: string;
   targetLanguage?: AssistantLanguage;
+  translationPreview?: string;
 }

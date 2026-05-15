@@ -214,12 +214,14 @@ const DashboardLayout: React.FC = () => {
                 py: 0.8,
                 border: "1px solid transparent",
                 "& .MuiListItemIcon-root": {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   mr: sidebarExpanded ? 1.5 : 0,
                   minWidth: "auto",
                   width: 34,
                   height: 34,
                   borderRadius: 2.2,
-                  justifyContent: "center",
                   transition:
                     "margin-right 0.18s ease, background-color 0.18s ease, color 0.18s ease",
                   backgroundColor: selected
@@ -256,6 +258,7 @@ const DashboardLayout: React.FC = () => {
                 "&::before": {
                   content: '""',
                   position: "absolute",
+                  display: sidebarExpanded ? "block" : "none",
                   left: 8,
                   top: "50%",
                   transform: "translateY(-50%)",

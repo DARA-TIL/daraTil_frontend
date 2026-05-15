@@ -8,6 +8,7 @@
     "loadingTranslate": "Translating word...",
     "resultExplain": "Explanation",
     "resultTranslate": "Translation to {{language}}",
+    "translationLabel": "Translation",
     "contextLabel": "Context",
     "languageNames": {
       "KZ": "Kazakh",

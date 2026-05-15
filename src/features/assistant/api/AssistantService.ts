@@ -14,11 +14,17 @@ function parseExplainResponse(payload: unknown): ExplainWordResponse {
   }
 
   const result = data.result.trim();
-  if (!result) {
+  const context = typeof data.context === "string" ? data.context.trim() : "";
+  const normalizedExplainResult = context || result;
+
+  if (!normalizedExplainResult) {
     throw new Error("Assistant returned empty explain result.");
   }
 
-  return { result };
+  return {
+    result: normalizedExplainResult,
+    translation: context && result ? result : "",
+  };
 }
 
 function parseTranslateResponse(payload: unknown): TranslateWordResponse {

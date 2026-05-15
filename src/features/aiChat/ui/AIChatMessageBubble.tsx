@@ -1,9 +1,13 @@
-import React from "react";
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import React, { useMemo, useState } from "react";
+import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import type { AIChatUiMessage } from "../model/types";
+import AiChatFormattedMessage from "./AiChatFormattedMessage";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   message: AIChatUiMessage;
@@ -20,6 +24,26 @@ const AIChatMessageBubble: React.FC<Props> = ({
 }) => {
   const theme = useTheme();
   const isAssistant = align === "left";
+  const { t } = useTranslation("aiChat");
+  const [copied, setCopied] = useState(false);
+
+  const copyLabel = useMemo(
+    () =>
+      copied
+        ? t("messages.copied", { defaultValue: "Copied" })
+        : t("messages.copy", { defaultValue: "Copy" }),
+    [copied, t],
+  );
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message.message);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <Stack
@@ -72,16 +96,10 @@ const AIChatMessageBubble: React.FC<Props> = ({
             : "0 18px 34px rgba(37,99,235,0.24)",
         }}
       >
-        <Typography
-          sx={{
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-            lineHeight: 1.65,
-            fontSize: 15,
-          }}
-        >
-          {message.message}
-        </Typography>
+        <AiChatFormattedMessage
+          text={message.message}
+          color={isAssistant ? theme.palette.text.primary : "#f8fafc"}
+        />
 
         <Stack
           direction="row"
@@ -101,16 +119,49 @@ const AIChatMessageBubble: React.FC<Props> = ({
             {senderLabel}
           </Typography>
 
-          <Typography
-            variant="caption"
-            sx={{
-              color: isAssistant
-                ? theme.palette.text.secondary
-                : "rgba(255,255,255,0.72)",
-            }}
-          >
-            {message.pending ? "..." : message.failed ? "!" : timeLabel}
-          </Typography>
+          <Stack direction="row" spacing={0.35} alignItems="center">
+            {isAssistant ? (
+              <Tooltip title={copyLabel}>
+                <span>
+                  <IconButton
+                    size="small"
+                    onClick={handleCopy}
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      color: copied
+                        ? "#22c55e"
+                        : isAssistant
+                          ? theme.palette.text.secondary
+                          : "rgba(255,255,255,0.72)",
+                      "&:hover": {
+                        backgroundColor: isAssistant
+                          ? alpha(theme.palette.text.primary, 0.06)
+                          : "rgba(255,255,255,0.12)",
+                      },
+                    }}
+                  >
+                    {copied ? (
+                      <CheckRoundedIcon sx={{ fontSize: 15 }} />
+                    ) : (
+                      <ContentCopyRoundedIcon sx={{ fontSize: 15 }} />
+                    )}
+                  </IconButton>
+                </span>
+              </Tooltip>
+            ) : null}
+
+            <Typography
+              variant="caption"
+              sx={{
+                color: isAssistant
+                  ? theme.palette.text.secondary
+                  : "rgba(255,255,255,0.72)",
+              }}
+            >
+              {message.pending ? "..." : message.failed ? "!" : timeLabel}
+            </Typography>
+          </Stack>
         </Stack>
       </Box>
 

@@ -317,6 +317,35 @@ export const WordAssistantPopover: React.FC<Props> = ({
                     {result.text}
                   </Typography>
 
+                  {result.kind === "explain" && result.translationPreview ? (
+                    <Box
+                      sx={{
+                        mt: 0.5,
+                        p: 1,
+                        borderRadius: 2,
+                        backgroundColor: "rgba(37,99,235,0.06)",
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        fontWeight={800}
+                        color="text.secondary"
+                        sx={{ display: "block", mb: 0.35 }}
+                      >
+                        {t("popover.translationLabel", {
+                          defaultValue: "Translation",
+                        })}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ whiteSpace: "pre-wrap", lineHeight: 1.55 }}
+                      >
+                        {result.translationPreview}
+                      </Typography>
+                    </Box>
+                  ) : null}
+
                   {result.context ? (
                     <Box
                       sx={{

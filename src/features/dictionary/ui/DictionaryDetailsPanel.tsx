@@ -151,6 +151,18 @@ export const DictionaryDetailsPanel: React.FC<Props> = ({
   }
 
   const completion = getDictionaryCompletion(item);
+  const translationLanguages = [
+    ...DICTIONARY_LANGUAGES,
+    ...Object.keys(item.wordTranslations).filter(
+      (itemLanguage) => !DICTIONARY_LANGUAGES.includes(itemLanguage as DictionaryLanguage),
+    ),
+  ];
+  const explanationLanguages = [
+    ...DICTIONARY_LANGUAGES,
+    ...Object.keys(item.wordExplainingTranslations).filter(
+      (itemLanguage) => !DICTIONARY_LANGUAGES.includes(itemLanguage as DictionaryLanguage),
+    ),
+  ];
 
   let content: React.ReactNode;
 
@@ -181,7 +193,7 @@ export const DictionaryDetailsPanel: React.FC<Props> = ({
   } else if (tab === "translations") {
     content = (
       <Stack spacing={1.15}>
-        {DICTIONARY_LANGUAGES.map((itemLanguage) => {
+        {translationLanguages.map((itemLanguage) => {
           const value = String(item.wordTranslations[itemLanguage] ?? "").trim();
           const active = itemLanguage === language;
 
@@ -225,7 +237,7 @@ export const DictionaryDetailsPanel: React.FC<Props> = ({
   } else {
     content = (
       <Stack spacing={1.15}>
-        {DICTIONARY_LANGUAGES.map((itemLanguage) => {
+        {explanationLanguages.map((itemLanguage) => {
           const value = String(
             item.wordExplainingTranslations[itemLanguage] ?? "",
           ).trim();

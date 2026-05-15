@@ -8,6 +8,7 @@
     "loadingTranslate": "Переводим слово...",
     "resultExplain": "Объяснение",
     "resultTranslate": "Перевод на {{language}}",
+    "translationLabel": "Перевод",
     "contextLabel": "Контекст",
     "languageNames": {
       "KZ": "казахский",

@@ -210,6 +210,23 @@ export const useAuthStore = create<AuthState>((set) => {
     }
   };
 
+  const hydrateCurrentUser = async (): Promise<IUser | null> => {
+    try {
+      const meResponse = await $api.get("/auth/me", {
+        skipAuthRefresh: true,
+      });
+      const user = normalizeUserFromBackend(meResponse.data);
+
+      if (user) {
+        setUserWithStreakEvent(user, true);
+      }
+
+      return user;
+    } catch {
+      return null;
+    }
+  };
+
   return {
     user: null,
     isAuth: false,
@@ -300,10 +317,11 @@ export const useAuthStore = create<AuthState>((set) => {
       const refreshToken = extractRefreshToken(response.data);
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 
-      const user = normalizeUserFromBackend(response.data);
-      setUserWithStreakEvent(user, Boolean(user));
+      const fallbackUser = normalizeUserFromBackend(response.data);
+      setUserWithStreakEvent(fallbackUser, Boolean(fallbackUser));
 
-      return user;
+      const hydratedUser = await hydrateCurrentUser();
+      return hydratedUser ?? fallbackUser;
     },
 
     register: async (name, email, password) => {
@@ -318,10 +336,11 @@ export const useAuthStore = create<AuthState>((set) => {
       const refreshToken = extractRefreshToken(response.data);
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 
-      const user = normalizeUserFromBackend(response.data);
-      setUserWithStreakEvent(user, Boolean(user));
+      const fallbackUser = normalizeUserFromBackend(response.data);
+      setUserWithStreakEvent(fallbackUser, Boolean(fallbackUser));
 
-      return user;
+      const hydratedUser = await hydrateCurrentUser();
+      return hydratedUser ?? fallbackUser;
     },
 
     logout: async () => {

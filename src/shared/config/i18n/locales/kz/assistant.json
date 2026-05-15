@@ -1,13 +1,14 @@
 {
   "popover": {
     "title": "Сөз көмекшісі",
-    "dictionaryHint": "Түсіндіру не аудару жасағаннан кейін сөз автоматты түрде сөздігіңізге қосылады.",
+    "dictionaryHint": "Түсіндіру не аудару жасалғаннан кейін сөз автоматты түрде сөздігіңізге қосылады.",
     "explain": "Түсіндіру",
     "translate": "Аудару",
     "loadingExplain": "Түсіндірме дайындалып жатыр...",
     "loadingTranslate": "Сөз аударылып жатыр...",
     "resultExplain": "Түсіндірме",
     "resultTranslate": "{{language}} тіліне аударма",
+    "translationLabel": "Аударма",
     "contextLabel": "Контекст",
     "languageNames": {
       "KZ": "қазақша",

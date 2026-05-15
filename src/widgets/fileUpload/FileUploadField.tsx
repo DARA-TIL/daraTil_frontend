@@ -71,6 +71,7 @@ const FileUploadField: React.FC<Props> = ({
           />
 
           <Button
+            type="button"
             variant="outlined"
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
@@ -80,6 +81,7 @@ const FileUploadField: React.FC<Props> = ({
 
           {file && (
             <Button
+              type="button"
               variant="text"
               color="error"
               onClick={() => {
