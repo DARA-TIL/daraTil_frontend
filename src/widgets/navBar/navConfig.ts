@@ -6,6 +6,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LeaderboardRoundedIcon from "@mui/icons-material/LeaderboardRounded";
 import TranslateRoundedIcon from "@mui/icons-material/TranslateRounded";
+import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
@@ -16,6 +17,7 @@ export const profileMenuItems = [
   { icon: MapIcon, key: "map", path: "/app/map" },
   { icon: AutoStoriesIcon, key: "folklore", path: "/app/folklore" },
   { icon: TranslateRoundedIcon, key: "dictionary", path: "/app/dictionary" },
+  { icon: SmartToyRoundedIcon, key: "aiChat", path: "/app/ai-chat" },
   { icon: EventAvailableRoundedIcon, key: "events", path: "/app/events" },
   { icon: BarChartIcon, key: "progress", path: "/app/progress" },
   { icon: LeaderboardRoundedIcon, key: "leaderboard", path: "/app/leaderboard" },

@@ -32,6 +32,7 @@ import NotificationsAdminPage from "@/pages/admin/notifications/NotificationsAdm
 
 const MapPage = lazy(() => import("@/pages/map/MapPage"));
 const DictionaryPage = lazy(() => import("@/pages/dictionary/DictionaryPage"));
+const AIChatPage = lazy(() => import("@/pages/aiChat/AIChatPage"));
 const LeaderboardPage = lazy(() => import("@/pages/leaderboard/LeaderboardPage"));
 const EventsPage = lazy(() => import("@/pages/events/EventsPage"));
 const NotificationsPage = lazy(() => import("@/pages/notifications/NotificationsPage"));
@@ -93,6 +94,10 @@ export const routeConfig: AppRouteConfig[] = [
           {
             path: "dictionary",
             element: <DictionaryPage />,
+          },
+          {
+            path: "ai-chat",
+            element: <AIChatPage />,
           },
           {
             path: "events",

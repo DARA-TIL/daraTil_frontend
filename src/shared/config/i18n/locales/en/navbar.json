@@ -1,4 +1,4 @@
-{
+﻿{
   "login": "Login",
   "register": "Register",
   "logout": "Logout",
@@ -8,6 +8,7 @@
   "map": "Map",
   "folklore": "Folklore",
   "dictionary": "Dictionary",
+  "aiChat": "AI Chat",
   "progress": "Achievements",
   "leaderboard": "Leaderboard",
   "notifications": "Notifications",

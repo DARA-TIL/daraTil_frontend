@@ -19,6 +19,7 @@ import enProfile from "./locales/en/profile.json";
 import enLeaderboard from "./locales/en/leaderboard.json";
 import enEvents from "./locales/en/events.json";
 import enNotifications from "./locales/en/notifications.json";
+import enAiChat from "./locales/en/aiChat.json";
 
 // RU
 import ruNavbar from "./locales/ru/navbar.json";
@@ -37,6 +38,7 @@ import ruProfile from "./locales/ru/profile.json";
 import ruLeaderboard from "./locales/ru/leaderboard.json";
 import ruEvents from "./locales/ru/events.json";
 import ruNotifications from "./locales/ru/notifications.json";
+import ruAiChat from "./locales/ru/aiChat.json";
 
 // KZ
 import kzNavbar from "./locales/kz/navbar.json";
@@ -55,6 +57,7 @@ import kzProfile from "./locales/kz/profile.json";
 import kzLeaderboard from "./locales/kz/leaderboard.json";
 import kzEvents from "./locales/kz/events.json";
 import kzNotifications from "./locales/kz/notifications.json";
+import kzAiChat from "./locales/kz/aiChat.json";
 
 i18n
   .use(LanguageDetector)
@@ -83,6 +86,7 @@ i18n
         leaderboard: enLeaderboard,
         events: enEvents,
         notifications: enNotifications,
+        aiChat: enAiChat,
       },
       ru: {
         navbar: ruNavbar,
@@ -101,6 +105,7 @@ i18n
         leaderboard: ruLeaderboard,
         events: ruEvents,
         notifications: ruNotifications,
+        aiChat: ruAiChat,
       },
       kz: {
         navbar: kzNavbar,
@@ -119,6 +124,7 @@ i18n
         leaderboard: kzLeaderboard,
         events: kzEvents,
         notifications: kzNotifications,
+        aiChat: kzAiChat,
       },
     },
     ns: [
@@ -138,6 +144,7 @@ i18n
       "leaderboard",
       "events",
       "notifications",
+      "aiChat",
     ],
     defaultNS: "home",
   });

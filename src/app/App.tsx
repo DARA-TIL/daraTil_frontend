@@ -7,6 +7,7 @@ import GlobalConfirmDialog from "@/shared/lib/GlobalConfirmDialog";
 import { appWebSocket } from "@/shared/realtime/AppWebSocket";
 import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
 import { useNotificationsStore } from "@/features/notifications/store/useNotificationsStore";
+import { useAiChatStore } from "@/features/aiChat/store/useAiChatStore";
 
 function App() {
   const checkAuth = useAuthStore((s) => s.checkAuth);
@@ -27,6 +28,7 @@ function App() {
     } else {
       appWebSocket.disconnect();
       useNotificationsStore.getState().reset();
+      useAiChatStore.getState().reset();
     }
 
     return () => {

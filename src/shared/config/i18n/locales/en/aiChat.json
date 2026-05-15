@@ -1,0 +1,63 @@
+﻿{
+  "page": {
+    "newConversation": "New conversation",
+    "chatReady": "Ask follow-up questions, request examples, or continue the thread.",
+    "welcomeSubtitle": "Start a new AI conversation and keep all your language help in one place."
+  },
+  "status": {
+    "idle": "Idle",
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "reconnecting": "Reconnecting...",
+    "error": "Connection issue",
+    "sendUnavailable": "Wait until the AI chat connection is ready."
+  },
+  "sidebar": {
+    "newChat": "New chat",
+    "searchPlaceholder": "Search chats...",
+    "totalChats": "{{count}} chats",
+    "filteredChats": "{{count}} visible",
+    "emptyTitle": "No chats yet",
+    "emptyDescription": "Start a new conversation and your AI chats will appear here.",
+    "previewFallback": "No messages yet",
+    "rename": "Rename",
+    "delete": "Delete"
+  },
+  "empty": {
+    "title": "Start your AI chat",
+    "subtitle": "Ask about grammar, request examples, explore dialects, or get help with lessons in a clean conversation flow."
+  },
+  "messages": {
+    "assistant": "Assistant",
+    "you": "You",
+    "typing": "Assistant is typing..."
+  },
+  "composer": {
+    "placeholder": "Ask anything about language, lessons, folklore, or dialects...",
+    "hintReady": "Enter sends the message. Shift + Enter creates a new line.",
+    "hintWaiting": "Waiting for the real-time connection before sending messages.",
+    "send": "Send",
+    "sending": "Sending..."
+  },
+  "rename": {
+    "title": "Rename chat",
+    "label": "Chat name",
+    "confirm": "Save"
+  },
+  "confirm": {
+    "deleteTitle": "Delete chat?",
+    "deleteMessage": "The chat \"{{name}}\" and its saved history will be removed."
+  },
+  "common": {
+    "cancel": "Cancel"
+  },
+  "snackbar": {
+    "deleted": "Chat deleted.",
+    "renamed": "Chat renamed."
+  },
+  "suggestions": {
+    "one": "Explain Kazakh case endings with simple examples.",
+    "two": "Give me dialect words from western Kazakhstan.",
+    "three": "Help me prepare for my next lesson quiz."
+  }
+}

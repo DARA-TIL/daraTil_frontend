@@ -1,4 +1,4 @@
-{
+﻿{
   "login": "Кіру",
   "register": "Тіркелу",
   "logout": "Шығу",
@@ -8,6 +8,7 @@
   "map": "Карта",
   "folklore": "Фольклор",
   "dictionary": "Сөздік",
+  "aiChat": "AI чат",
   "progress": "Жетістіктер",
   "leaderboard": "Лидерборд",
   "notifications": "Хабарламалар",

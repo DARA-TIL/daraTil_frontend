@@ -1,4 +1,4 @@
-{
+﻿{
   "login": "Войти",
   "register": "Регистрация",
   "logout": "Выйти",
@@ -8,6 +8,7 @@
   "map": "Карта",
   "folklore": "Фольклор",
   "dictionary": "Словарь",
+  "aiChat": "AI чат",
   "progress": "Достижения",
   "leaderboard": "Лидерборд",
   "notifications": "Уведомления",
