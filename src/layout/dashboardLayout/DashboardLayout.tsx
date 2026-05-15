@@ -1,64 +1,63 @@
-// src/layout/dashboardLayout/DashboardLayout.tsx
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
+  ButtonBase,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
-  IconButton,
-  useMediaQuery,
   Tooltip,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import KeyboardDoubleArrowLeftRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowLeftRounded";
+import KeyboardDoubleArrowRightRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowRightRounded";
 import { useTranslation } from "react-i18next";
-
 import { profileMenuItems } from "@/widgets/navBar/navConfig";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
-const expandedWidth = 260;
-const collapsedWidth = 68;
+const expandedWidth = 264;
+const collapsedWidth = 82;
+const navBarHeight = 74;
+const sidebarGap = 14;
+const sidebarInset = 12;
 
 const DashboardLayout: React.FC = () => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
-
-  const [isOpen, setIsOpen] = useState(true);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   const { t } = useTranslation("navbar");
   const location = useLocation();
   const navigate = useNavigate();
 
-  const toggleSidebar = () => setIsOpen((prev) => !prev);
-  const toggleMobileSidebar = () => setMobileOpen((prev) => !prev);
+  const [isOpen, setIsOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const sidebarExpanded = isMdUp ? isOpen : true;
-
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore((state) => state.user);
   const role = String(user?.role ?? "").toLowerCase();
   const isAdmin = role === "admin";
-
-  const menuItems = profileMenuItems.filter((x) =>
-    x.path.startsWith("/app/admin") ? isAdmin : true,
-  );
-
-  const isAuth = useAuthStore((s) => s.isAuth);
-  const isLoading = useAuthStore((s) => s.isLoading);
-  const checkAuth = useAuthStore((s) => s.checkAuth);
+  const isAuth = useAuthStore((state) => state.isAuth);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const checkAuth = useAuthStore((state) => state.checkAuth);
 
   useEffect(() => {
     if (isAuth && !user && !isLoading) {
-      checkAuth();
+      void checkAuth();
     }
-  }, [isAuth, user, isLoading, checkAuth]);
+  }, [checkAuth, isAuth, isLoading, user]);
+
+  const sidebarExpanded = isMdUp ? isOpen : true;
+  const menuItems = profileMenuItems.filter((item) =>
+    item.path.startsWith("/app/admin") ? isAdmin : true,
+  );
+
+  const toggleSidebar = () => setIsOpen((prev) => !prev);
+  const toggleMobileSidebar = () => setMobileOpen((prev) => !prev);
 
   const drawerContent = (
     <Box
@@ -68,58 +67,90 @@ const DashboardLayout: React.FC = () => {
         flexDirection: "column",
       }}
     >
-      {/* HEADER SIDEBAR */}
       <Toolbar
         sx={{
-          minHeight: 56,
-          px: 1.5,
+          minHeight: 68,
+          px: 1.25,
           display: "flex",
-          justifyContent: isMdUp ? "flex-end" : "space-between",
-          borderBottom: "none",
+          justifyContent: isMdUp ? (sidebarExpanded ? "flex-end" : "center") : "space-between",
+          borderBottom: "1px solid",
+          borderColor:
+            theme.palette.mode === "light"
+              ? "rgba(148,163,184,0.18)"
+              : "rgba(51,65,85,0.34)",
         }}
       >
-        {/* desktop - одна кнопка со стрелкой */}
-        {isMdUp && (
-          <IconButton
-            onClick={toggleSidebar}
-            size="small"
-            sx={{
-              borderRadius: 999,
-              bgcolor:
-                theme.palette.mode === "light"
-                  ? "rgba(255,255,255,0.9)"
-                  : "rgba(15,23,42,0.9)",
-              boxShadow:
-                theme.palette.mode === "light"
-                  ? "0 6px 16px rgba(15,23,42,0.18)"
-                  : "0 10px 22px rgba(0,0,0,0.7)",
-              border: "1px solid",
-              borderColor:
-                theme.palette.mode === "light"
-                  ? "rgba(148,163,184,0.35)"
-                  : "rgba(15,23,42,0.9)",
-              "&:hover": {
+        {isMdUp ? (
+          <Tooltip
+            title={
+              isOpen
+                ? t("collapseSidebar", { defaultValue: "Collapse sidebar" })
+                : t("expandSidebar", { defaultValue: "Expand sidebar" })
+            }
+            placement="right"
+            arrow
+          >
+            <ButtonBase
+              onClick={toggleSidebar}
+              sx={{
+                minWidth: sidebarExpanded ? 124 : 42,
+                height: 42,
+                px: sidebarExpanded ? 1.4 : 0,
+                borderRadius: 999,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: sidebarExpanded ? 0.9 : 0,
+                color: theme.palette.text.primary,
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? "rgba(255,255,255,0.86)"
+                    : "rgba(15,23,42,0.86)",
                 boxShadow:
                   theme.palette.mode === "light"
-                    ? "0 10px 22px rgba(15,23,42,0.25)"
-                    : "0 14px 26px rgba(0,0,0,0.85)",
-                bgcolor:
+                    ? "0 10px 24px rgba(15,23,42,0.12)"
+                    : "0 16px 30px rgba(2,6,23,0.42)",
+                border: "1px solid",
+                borderColor:
                   theme.palette.mode === "light"
-                    ? "rgba(248,250,252,1)"
-                    : "rgba(15,23,42,1)",
-              },
-            }}
-          >
-            {isOpen ? (
-              <ChevronLeftIcon fontSize="small" />
-            ) : (
-              <ChevronRightIcon fontSize="small" />
-            )}
-          </IconButton>
-        )}
+                    ? "rgba(148,163,184,0.28)"
+                    : "rgba(71,85,105,0.42)",
+                transition:
+                  "background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, min-width 180ms ease",
+                "&:hover": {
+                  transform: "translateY(-1px)",
+                  boxShadow:
+                    theme.palette.mode === "light"
+                      ? "0 16px 30px rgba(15,23,42,0.16)"
+                      : "0 18px 36px rgba(2,6,23,0.52)",
+                  backgroundColor:
+                    theme.palette.mode === "light"
+                      ? "rgba(255,255,255,0.96)"
+                      : "rgba(15,23,42,0.96)",
+                },
+              }}
+            >
+              {isOpen ? (
+                <KeyboardDoubleArrowLeftRoundedIcon fontSize="small" />
+              ) : (
+                <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
+              )}
 
-        {/* mobile - крестик внутри дровера */}
-        {!isMdUp && (
+              {sidebarExpanded ? (
+                <Box
+                  component="span"
+                  sx={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t("collapseSidebar", { defaultValue: "Collapse" })}
+                </Box>
+              ) : null}
+            </ButtonBase>
+          </Tooltip>
+        ) : (
           <IconButton
             onClick={toggleMobileSidebar}
             size="small"
@@ -134,16 +165,15 @@ const DashboardLayout: React.FC = () => {
               },
             }}
           >
-            <CloseIcon fontSize="small" />
+            <CloseRoundedIcon fontSize="small" />
           </IconButton>
         )}
       </Toolbar>
 
-      {/* NAV ITEMS */}
       <List
         sx={{
           flex: 1,
-          py: 1,
+          py: 1.2,
           overflowY: "auto",
           "&::-webkit-scrollbar": {
             width: 4,
@@ -173,51 +203,67 @@ const DashboardLayout: React.FC = () => {
               }}
               sx={{
                 position: "relative",
-                mx: 1,
-                mb: 0.8,
-                borderRadius: 2.5,
+                mx: 1.1,
+                mb: 0.9,
+                minHeight: 54,
+                borderRadius: 3,
                 justifyContent: sidebarExpanded ? "flex-start" : "center",
                 transition:
-                  "background-color 0.2s ease, transform 0.2s ease, padding 0.2s ease",
-                px: sidebarExpanded ? 1.75 : 1,
-                py: 1,
+                  "background-color 0.18s ease, transform 0.18s ease, padding 0.18s ease, border-color 0.18s ease",
+                px: sidebarExpanded ? 1.45 : 1,
+                py: 0.8,
+                border: "1px solid transparent",
                 "& .MuiListItemIcon-root": {
-                  mr: sidebarExpanded ? 1.8 : 0,
+                  mr: sidebarExpanded ? 1.5 : 0,
                   minWidth: "auto",
+                  width: 34,
+                  height: 34,
+                  borderRadius: 2.2,
                   justifyContent: "center",
-                  transition: "margin-right 0.2s ease",
+                  transition:
+                    "margin-right 0.18s ease, background-color 0.18s ease, color 0.18s ease",
+                  backgroundColor: selected
+                    ? "rgba(255,255,255,0.16)"
+                    : theme.palette.mode === "light"
+                      ? "rgba(148,163,184,0.12)"
+                      : "rgba(15,23,42,0.9)",
                 },
                 "& .MuiListItemIcon-root svg": {
                   fontSize: 20,
                 },
                 "&.Mui-selected": {
-                  backgroundImage: theme.gradients.cardSoft,
+                  backgroundImage: theme.gradients.sidebarActive,
                   color: "#f9fafb",
+                  borderColor: "rgba(255,255,255,0.08)",
                   "& .MuiListItemIcon-root svg": {
                     color: "#f9fafb",
                   },
                   "&:hover": {
-                    backgroundImage: theme.gradients.cardSoft,
+                    backgroundImage: theme.gradients.sidebarActive,
                   },
                 },
                 "&:hover": {
-                  transform: "translateX(2px)",
+                  transform: "translateX(3px)",
+                  borderColor:
+                    theme.palette.mode === "light"
+                      ? "rgba(148,163,184,0.2)"
+                      : "rgba(71,85,105,0.32)",
                   backgroundColor:
                     theme.palette.mode === "light"
-                      ? "rgba(148,163,184,0.12)"
-                      : "rgba(15,23,42,0.9)",
+                      ? "rgba(255,255,255,0.7)"
+                      : "rgba(15,23,42,0.92)",
                 },
                 "&::before": {
                   content: '""',
                   position: "absolute",
-                  left: 6,
+                  left: 8,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  width: 3,
-                  height: selected ? "60%" : "0%",
+                  width: 4,
+                  height: selected ? "56%" : "0%",
                   borderRadius: 999,
                   backgroundColor: selected
-                    ? "rgba(248,250,252,0.95)"
+                    ? "rgba(248,250,252,0.9)"
                     : "transparent",
                   transition: "height 0.2s ease, background-color 0.2s ease",
                 },
@@ -227,30 +273,24 @@ const DashboardLayout: React.FC = () => {
                 <item.icon />
               </ListItemIcon>
 
-              {sidebarExpanded && (
+              {sidebarExpanded ? (
                 <ListItemText
                   primary={t(item.key)}
                   sx={{
-                    opacity: sidebarExpanded ? 1 : 0,
-                    transition: "opacity 0.2s ease",
+                    opacity: 1,
                     "& .MuiTypography-root": {
                       fontSize: 14,
-                      fontWeight: selected ? 600 : 500,
+                      fontWeight: selected ? 700 : 600,
                     },
                   }}
                 />
-              )}
+              ) : null}
             </ListItemButton>
           );
 
           if (!sidebarExpanded && isMdUp) {
             return (
-              <Tooltip
-                key={item.key}
-                title={t(item.key)}
-                placement="right"
-                arrow
-              >
+              <Tooltip key={item.key} title={t(item.key)} placement="right" arrow>
                 {button}
               </Tooltip>
             );
@@ -264,8 +304,7 @@ const DashboardLayout: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {/* DESKTOP DRAWER */}
-      {isMdUp && (
+      {isMdUp ? (
         <Drawer
           variant="permanent"
           open={isOpen}
@@ -274,33 +313,33 @@ const DashboardLayout: React.FC = () => {
             flexShrink: 0,
             transition: "width 0.25s ease",
             [`& .MuiDrawer-paper`]: {
-              width: isOpen ? expandedWidth : collapsedWidth,
+              width: (isOpen ? expandedWidth : collapsedWidth) - sidebarInset,
               position: "fixed",
-              left: 0,
-              top: 64,
-              height: "calc(100% - 64px)",
+              left: sidebarInset,
+              top: navBarHeight + sidebarGap,
+              bottom: sidebarGap,
+              height: "auto",
               transition: "width 0.25s ease",
               boxSizing: "border-box",
               overflowX: "hidden",
               borderRight: "1px solid",
+              borderTopRightRadius: 28,
+              borderBottomRightRadius: 28,
               borderColor:
                 theme.palette.mode === "light"
                   ? "rgba(148,163,184,0.35)"
                   : "rgba(15,23,42,0.9)",
-              backgroundColor:
+              background:
                 theme.palette.mode === "light"
-                  ? "rgba(249,250,251,0.96)"
-                  : "rgba(15,23,42,0.96)",
+                  ? "linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.98))"
+                  : "linear-gradient(180deg, rgba(15,23,42,0.98), rgba(2,6,23,0.98))",
               backdropFilter: "blur(18px)",
             },
           }}
         >
           {drawerContent}
         </Drawer>
-      )}
-
-      {/* MOBILE DRAWER */}
-      {!isMdUp && (
+      ) : (
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -308,7 +347,13 @@ const DashboardLayout: React.FC = () => {
           ModalProps={{ keepMounted: true }}
           sx={{
             [`& .MuiDrawer-paper`]: {
-              width: expandedWidth,
+              width: `min(${expandedWidth}px, calc(100% - ${sidebarInset * 2}px))`,
+              left: sidebarInset,
+              top: navBarHeight + sidebarGap,
+              bottom: sidebarGap,
+              height: "auto",
+              borderTopRightRadius: 28,
+              borderBottomRightRadius: 28,
             },
           }}
         >
@@ -316,7 +361,6 @@ const DashboardLayout: React.FC = () => {
         </Drawer>
       )}
 
-      {/* MAIN CONTENT */}
       <Box
         component="main"
         sx={{
@@ -324,22 +368,22 @@ const DashboardLayout: React.FC = () => {
           px: 0,
           pt: 10,
           pb: 4,
-          transition: "margin-left 0.25s ease",
         }}
       >
         <Outlet />
       </Box>
 
-      {/* MOBILE: одна кнопка-бургер снаружи */}
-      {!isMdUp && (
+      {!isMdUp ? (
         <IconButton
           onClick={toggleMobileSidebar}
           sx={{
             position: "fixed",
             top: 76,
             left: 16,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-            borderRadius: 999,
+            zIndex: (currentTheme) => currentTheme.zIndex.drawer + 1,
+            width: 46,
+            height: 46,
+            borderRadius: 2.5,
             bgcolor: "background.paper",
             boxShadow: 3,
             border: "1px solid",
@@ -350,9 +394,9 @@ const DashboardLayout: React.FC = () => {
             },
           }}
         >
-          <MenuIcon />
+          <MenuRoundedIcon />
         </IconButton>
-      )}
+      ) : null}
     </Box>
   );
 };

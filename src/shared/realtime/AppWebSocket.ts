@@ -1,9 +1,14 @@
 import i18n from "@/shared/config/i18n/i18n";
-import { API_URL } from "@/shared/api/http";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
 import { useNotificationsStore } from "@/features/notifications/store/useNotificationsStore";
+import {
+  buildWebSocketUrl,
+  getWsAuthMode,
+  hasWsCredentials,
+  isWsDisabledByEnv,
+} from "./wsConfig";
 import {
   getNotificationDisplayText,
   isAchievementRewardNotification,
@@ -16,42 +21,6 @@ const RECONNECT_DELAYS = [1000, 2000, 5000, 10000, 30000] as const;
 
 function isBrowser(): boolean {
   return typeof window !== "undefined" && typeof WebSocket !== "undefined";
-}
-
-function getConfiguredWsUrl(): string | null {
-  return import.meta.env.VITE_WS_URL ?? null;
-}
-
-function getWsAuthMode(): "cookie" | "query" | "none" {
-  const value = String(import.meta.env.VITE_WS_AUTH_MODE ?? "none").toLowerCase();
-
-  if (value === "cookie" || value === "query") return value;
-  return "none";
-}
-
-function isWsDisabledByEnv(): boolean {
-  const value = String(import.meta.env.VITE_WS_ENABLED ?? "true").toLowerCase();
-
-  return value === "false" || value === "0";
-}
-
-function buildWsUrl(): string {
-  const explicitUrl = getConfiguredWsUrl();
-  const url = new URL(explicitUrl || API_URL, window.location.origin);
-
-  if (!explicitUrl) {
-    url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
-    url.pathname = `${url.pathname.replace(/\/$/, "")}/ws`;
-  }
-
-  const token = localStorage.getItem("token");
-  if (token && getWsAuthMode() === "query" && !url.searchParams.has("token")) {
-    // Opt-in only: query tokens leak into browser/network logs.
-    // Use VITE_WS_AUTH_MODE=query only if the backend explicitly supports it.
-    url.searchParams.set("token", token);
-  }
-
-  return url.toString();
 }
 
 function isCurrentUserMessage(message: AppNotification): boolean {
@@ -73,6 +42,7 @@ class AppWebSocket {
   private warnedHandshakeFailure = false;
   private warnedDisabled = false;
   private warnedMissingAuthMode = false;
+  private warnedMissingToken = false;
 
   connect() {
     if (!isBrowser()) return;
@@ -82,6 +52,10 @@ class AppWebSocket {
     }
     if (getWsAuthMode() === "none") {
       this.warnOnceMissingAuthMode();
+      return;
+    }
+    if (!hasWsCredentials()) {
+      this.warnOnceMissingToken();
       return;
     }
     if (!useAuthStore.getState().isAuth) return;
@@ -99,7 +73,7 @@ class AppWebSocket {
     let opened = false;
 
     try {
-      this.ws = new WebSocket(buildWsUrl());
+      this.ws = new WebSocket(buildWebSocketUrl("/ws"));
     } catch (error) {
       console.warn("WS connection creation failed", error);
       this.scheduleReconnect();
@@ -160,6 +134,7 @@ class AppWebSocket {
   private scheduleReconnect() {
     if (!this.shouldReconnect) return;
     if (isWsDisabledByEnv()) return;
+    if (!hasWsCredentials()) return;
     if (!useAuthStore.getState().isAuth) return;
     if (localStorage.getItem("loggedOut") === "true") return;
 
@@ -196,24 +171,35 @@ class AppWebSocket {
   }
 
   private handleHandshakeFailure(event: CloseEvent) {
-    this.shouldReconnect = false;
-    this.clearReconnectTimer();
+    if (!this.warnedHandshakeFailure && import.meta.env.DEV) {
+      this.warnedHandshakeFailure = true;
 
-    if (this.warnedHandshakeFailure || !import.meta.env.DEV) return;
-    this.warnedHandshakeFailure = true;
+      console.warn(
+        [
+          "WS closed before connection opened.",
+          "Browser WebSocket cannot send Authorization headers.",
+          "Backend /api/ws must support cookie auth or opt-in query-token auth.",
+          "If query auth is supported, set VITE_WS_AUTH_MODE=query.",
+        ].join(" "),
+        {
+          code: event.code,
+          reason: event.reason,
+          wasClean: event.wasClean,
+        },
+      );
+    }
 
+    this.scheduleReconnect();
+  }
+
+  private warnOnceMissingToken() {
+    if (this.warnedMissingToken || !import.meta.env.DEV) return;
+    this.warnedMissingToken = true;
     console.warn(
       [
-        "WS closed before connection opened.",
-        "Browser WebSocket cannot send Authorization headers.",
-        "Backend /api/ws must support cookie auth or opt-in query-token auth.",
-        "If query auth is supported, set VITE_WS_AUTH_MODE=query.",
+        "WS not started because VITE_WS_AUTH_MODE=query requires an access token.",
+        "The current frontend auth state does not have a token in localStorage yet.",
       ].join(" "),
-      {
-        code: event.code,
-        reason: event.reason,
-        wasClean: event.wasClean,
-      },
     );
   }
 

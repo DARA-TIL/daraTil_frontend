@@ -57,6 +57,8 @@ export const ActiveTimeEventCard: React.FC = () => {
       sx={(theme) => ({
         borderRadius: 4,
         p: 2.5,
+        height: "100%",
+        minHeight: 292,
         position: "relative",
         overflow: "hidden",
         backgroundImage: theme.gradients.cardSoft,

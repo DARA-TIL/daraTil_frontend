@@ -15,14 +15,14 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import { LanguageMenu } from "./LanguageMenu";
 import { ProfileMenu } from "./ProfileMenu";
 import NotificationsMenu from "@/features/notifications/ui/NotificationsMenu";
 
-import { ColorModeContext } from "@/layout/rootLayout/ColorModeContext";
 import { useTheme } from "@mui/material/styles";
+import { useColorMode } from "@/shared/theme/sharedColorMode";
 
 const NavBar = () => {
   const { t } = useTranslation("navbar");
@@ -40,7 +40,38 @@ const NavBar = () => {
   const initials = username.charAt(0).toUpperCase();
 
   const theme = useTheme();
-  const { toggleColorMode } = useContext(ColorModeContext);
+  const { toggleColorMode } = useColorMode();
+
+  const controlSx = {
+    width: 42,
+    height: 42,
+    borderRadius: 999,
+    border:
+      theme.palette.mode === "light"
+        ? "1px solid rgba(148,163,184,0.3)"
+        : "1px solid rgba(71,85,105,0.42)",
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? "rgba(255,255,255,0.82)"
+        : "rgba(15,23,42,0.82)",
+    boxShadow:
+      theme.palette.mode === "light"
+        ? "0 10px 24px rgba(15,23,42,0.08)"
+        : "0 12px 28px rgba(2,6,23,0.34)",
+    backdropFilter: "blur(10px)",
+    transition: "transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      boxShadow:
+        theme.palette.mode === "light"
+          ? "0 14px 28px rgba(15,23,42,0.12)"
+          : "0 16px 34px rgba(2,6,23,0.44)",
+      backgroundColor:
+        theme.palette.mode === "light"
+          ? "rgba(255,255,255,0.94)"
+          : "rgba(15,23,42,0.94)",
+    },
+  };
 
   const handleLoginClick = () => {
     const isAuthPage =
@@ -77,59 +108,69 @@ const NavBar = () => {
     >
       <Toolbar
         sx={{
-          minHeight: 64,
+          minHeight: 74,
           display: "flex",
           justifyContent: "space-between",
-          px: { xs: 1.5, sm: 3, md: 4 },
+          px: { xs: 1.5, sm: 2.5, md: 3.25 },
         }}
       >
-        {/* Logo / brand */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1.5,
+            gap: 1.2,
             cursor: "pointer",
+            minWidth: 0,
           }}
           onClick={() => navigate("/")}
         >
           <Box
             sx={(theme) => ({
-              width: 32,
-              height: 32,
-              borderRadius: "12px",
+              width: 38,
+              height: 38,
+              borderRadius: "14px",
               backgroundImage: theme.gradients.dashboardHeader,
-              boxShadow: "0 10px 24px rgba(15,23,42,0.35)",
+              boxShadow:
+                theme.palette.mode === "light"
+                  ? "0 14px 28px rgba(37,99,235,0.2)"
+                  : "0 14px 28px rgba(2,6,23,0.45)",
             })}
           />
           <Typography
             variant="h6"
             sx={{
-              fontWeight: 700,
-              letterSpacing: 0.3,
+              fontWeight: 800,
+              letterSpacing: 0.2,
+              whiteSpace: "nowrap",
             }}
           >
             Dara Til
           </Typography>
         </Box>
 
-        {/* Right controls */}
-        <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
-          {/* Theme toggle */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            alignItems: "center",
+            px: 0.6,
+            py: 0.45,
+            borderRadius: 999,
+            backgroundColor:
+              theme.palette.mode === "light"
+                ? "rgba(248,250,252,0.72)"
+                : "rgba(15,23,42,0.62)",
+            border:
+              theme.palette.mode === "light"
+                ? "1px solid rgba(148,163,184,0.18)"
+                : "1px solid rgba(51,65,85,0.34)",
+            backdropFilter: "blur(14px)",
+          }}
+        >
           <IconButton
             color="inherit"
             onClick={toggleColorMode}
-            sx={{
-              borderRadius: 999,
-              border:
-                theme.palette.mode === "light"
-                  ? "1px solid rgba(148,163,184,0.4)"
-                  : "1px solid rgba(30,64,175,0.9)",
-              backgroundColor:
-                theme.palette.mode === "light"
-                  ? "rgba(255,255,255,0.9)"
-                  : "rgba(15,23,42,0.9)",
-            }}
+            sx={controlSx}
           >
             {theme.palette.mode === "light" ? (
               <DarkModeIcon />
@@ -138,18 +179,11 @@ const NavBar = () => {
             )}
           </IconButton>
 
-          {/* Language */}
           <IconButton
             id="language"
             color="inherit"
             onClick={(e) => setLangAnchor(e.currentTarget)}
-            sx={{
-              borderRadius: 999,
-              border:
-                theme.palette.mode === "light"
-                  ? "1px solid rgba(148,163,184,0.4)"
-                  : "1px solid rgba(30,64,175,0.9)",
-            }}
+            sx={controlSx}
           >
             <LanguageIcon />
           </IconButton>
@@ -161,7 +195,6 @@ const NavBar = () => {
 
           <NotificationsMenu />
 
-          {/* Auth */}
           {isAuth ? (
             <>
               <IconButton
@@ -169,14 +202,15 @@ const NavBar = () => {
                 color="inherit"
                 onClick={(e) => setProfileAnchor(e.currentTarget)}
                 sx={{
-                  p: 0.5,
+                  p: 0.45,
+                  ...controlSx,
                 }}
               >
                 <Avatar
                   sx={(theme) => ({
-                    width: 32,
-                    height: 32,
-                    fontSize: 16,
+                    width: 34,
+                    height: 34,
+                    fontSize: 15,
                     backgroundImage: theme.gradients.dashboardHeader,
                     color: "#fff",
                     boxShadow: "0 10px 22px rgba(15,23,42,0.35)",
@@ -198,7 +232,7 @@ const NavBar = () => {
               <Button
                 color="inherit"
                 onClick={handleLoginClick}
-                sx={{ textTransform: "none", fontWeight: 500 }}
+                sx={{ textTransform: "none", fontWeight: 600 }}
               >
                 {t("login")}
               </Button>

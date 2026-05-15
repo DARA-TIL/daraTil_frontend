@@ -53,6 +53,7 @@ export const LessonsMapCard: React.FC = () => {
       sx={{
         borderRadius: 5,
         p: { xs: 1.5, md: 2 },
+        height: "100%",
         position: "relative",
         overflow: "hidden",
         background:

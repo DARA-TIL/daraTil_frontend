@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import type {
-  AuthResponse,
   AuthPayload,
+  AuthResponse,
 } from "@/features/auth/model/response/AuthResponse";
 import { isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
 
@@ -24,9 +24,9 @@ function unwrapAuth(payload: AuthResponse | unknown): AuthPayload | unknown {
 }
 
 function extractAccessToken(payload: AuthResponse | unknown): string | null {
-  const p = unwrapAuth(payload);
-  if (!isRecord(p)) return null;
-  return typeof p.accessToken === "string" ? p.accessToken : null;
+  const parsed = unwrapAuth(payload);
+  if (!isRecord(parsed)) return null;
+  return typeof parsed.accessToken === "string" ? parsed.accessToken : null;
 }
 
 function shouldFallbackToPost(error: unknown): boolean {
@@ -48,10 +48,11 @@ $api.interceptors.request.use((config) => {
     config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
-// один refresh запрос на все 401
+// Keep only one refresh request in flight for concurrent 401 responses.
 let refreshPromise: Promise<string> | null = null;
 
 $api.interceptors.response.use(
@@ -59,13 +60,15 @@ $api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriableRequestConfig | undefined;
 
-    if (!error.response || !originalRequest) return Promise.reject(error);
+    if (!error.response || !originalRequest) {
+      return Promise.reject(error);
+    }
 
     const status = error.response.status;
     const isRefreshRequest =
-      originalRequest?.url?.includes("/auth/refresh") ||
-      originalRequest?.url?.includes("auth/refresh");
-    const skipAutoRefresh = Boolean(originalRequest?.skipAuthRefresh);
+      originalRequest.url?.includes("/auth/refresh") ||
+      originalRequest.url?.includes("auth/refresh");
+    const skipAutoRefresh = Boolean(originalRequest.skipAuthRefresh);
 
     if (
       status === 401 &&
@@ -78,32 +81,38 @@ $api.interceptors.response.use(
       try {
         if (!refreshPromise) {
           refreshPromise = (async () => {
-            // 1) пробуем GET
+            // Try GET first because some backend deployments expose refresh as GET.
             try {
-              const res = await axios.get<AuthResponse>(
+              const response = await axios.get<AuthResponse>(
                 `${API_URL}/auth/refresh`,
                 {
                   withCredentials: true,
                 },
               );
-              const token = extractAccessToken(res.data);
-              if (!token)
+
+              const token = extractAccessToken(response.data);
+              if (!token) {
                 throw new Error("Refresh: no accessToken in response");
+              }
+
               return token;
             } catch (getError) {
               if (!shouldFallbackToPost(getError)) {
                 throw getError;
               }
 
-              // 2) fallback на POST (если бэк поменяет метод)
-              const res = await axios.post<AuthResponse>(
+              // Fall back to POST when backend refresh uses a different method.
+              const response = await axios.post<AuthResponse>(
                 `${API_URL}/auth/refresh`,
                 {},
                 { withCredentials: true },
               );
-              const token = extractAccessToken(res.data);
-              if (!token)
+
+              const token = extractAccessToken(response.data);
+              if (!token) {
                 throw new Error("Refresh: no accessToken in response");
+              }
+
               return token;
             }
           })()
@@ -119,10 +128,13 @@ $api.interceptors.response.use(
 
         const newToken = await refreshPromise;
 
+        if (!originalRequest.headers) {
+          originalRequest.headers = new AxiosHeaders();
+        }
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
         return $api(originalRequest);
-      } catch (e) {
+      } catch (refreshError) {
         localStorage.setItem("lastPage", window.location.pathname);
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
@@ -131,7 +143,7 @@ $api.interceptors.response.use(
           window.location.replace("/login");
         }
 
-        return Promise.reject(e);
+        return Promise.reject(refreshError);
       }
     }
 

@@ -1,4 +1,9 @@
-import { API_URL } from "@/shared/api/http";
+import {
+  buildWebSocketUrl,
+  getWsAuthMode,
+  hasWsCredentials,
+  isWsDisabledByEnv,
+} from "@/shared/realtime/wsConfig";
 import {
   normalizeAiChatEvent,
 } from "../model/normalize";
@@ -9,42 +14,6 @@ import type {
 } from "../model/types";
 
 const RECONNECT_DELAYS = [1000, 2000, 5000, 10000, 30000] as const;
-
-function getWsAuthMode(): "cookie" | "query" | "none" {
-  const value = String(import.meta.env.VITE_WS_AUTH_MODE ?? "none").toLowerCase();
-  if (value === "cookie" || value === "query") return value;
-  return "none";
-}
-
-function isWsDisabledByEnv(): boolean {
-  const value = String(import.meta.env.VITE_WS_ENABLED ?? "true").toLowerCase();
-  return value === "false" || value === "0";
-}
-
-function buildAiChatWsUrl(): string {
-  const configuredBase = String(import.meta.env.VITE_WS_URL ?? API_URL);
-  const url = new URL(configuredBase, window.location.origin);
-
-  if (url.protocol === "http:" || url.protocol === "https:") {
-    url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
-  }
-
-  const cleanPath = url.pathname.replace(/\/$/, "");
-  if (!cleanPath.endsWith("/ws/aiChat")) {
-    if (cleanPath.endsWith("/ws")) {
-      url.pathname = `${cleanPath}/aiChat`;
-    } else {
-      url.pathname = `${cleanPath}/ws/aiChat`;
-    }
-  }
-
-  const token = localStorage.getItem("token");
-  if (token && getWsAuthMode() === "query") {
-    url.searchParams.set("token", token);
-  }
-
-  return url.toString();
-}
 
 export class AIChatSocket {
   private ws: WebSocket | null = null;
@@ -70,6 +39,11 @@ export class AIChatSocket {
       this.updateStatus("error");
       return;
     }
+    if (!hasWsCredentials()) {
+      this.emitError("AI chat WebSocket query auth requires an access token.");
+      this.updateStatus("error");
+      return;
+    }
 
     if (
       this.ws &&
@@ -83,7 +57,16 @@ export class AIChatSocket {
     this.clearReconnectTimer();
     this.updateStatus(this.reconnectAttempt > 0 ? "reconnecting" : "connecting");
 
-    const socket = new WebSocket(buildAiChatWsUrl());
+    let socket: WebSocket;
+    try {
+      socket = new WebSocket(buildWebSocketUrl("/ws/aiChat"));
+    } catch {
+      this.updateStatus("error");
+      this.emitError("Failed to create AI chat connection.");
+      this.scheduleReconnect();
+      return;
+    }
+
     this.ws = socket;
 
     socket.onopen = () => {
@@ -154,6 +137,11 @@ export class AIChatSocket {
   }
 
   private scheduleReconnect() {
+    if (!this.shouldReconnect) return;
+    if (isWsDisabledByEnv()) return;
+    if (getWsAuthMode() === "none") return;
+    if (!hasWsCredentials()) return;
+
     const delay =
       RECONNECT_DELAYS[
         Math.min(this.reconnectAttempt, RECONNECT_DELAYS.length - 1)

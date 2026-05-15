@@ -3,39 +3,39 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import RootLayout from "@/layout/rootLayout/RootLayout";
 import DashboardLayout from "@/layout/dashboardLayout/DashboardLayout";
-
 import Home from "@/pages/home/Home";
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
 import NotFound from "@/pages/notFound/NotFound";
-import DashboardPage from "@/pages/dashboard/DashboardPage";
-import LessonsPage from "@/pages/lessons/LessonsPage";
-import FolklorePage from "@/pages/folklore/FolklorePage";
-import ProgressPage from "@/pages/progress/ProgressPage";
-import ProfilePage from "@/pages/profile/ProfilePage";
 import ProtectedRoute from "./ProtectedRoute";
-import ForgotPassword from "@/pages/auth/ForgotPassword";
-import FolkloreAdminPage from "@/pages/admin/folklore/FolkloreAdminPage";
-import FolkloreCreatePage from "@/pages/admin/folklore/FolkloreCreatePage";
-import FolkloreEditPage from "@/pages/admin/folklore/FolkloreEditPage";
-import AdminPage from "@/pages/admin/AdminPage";
-import LessonDetailsPage from "@/pages/lessons/LessonDetailsPage";
-import LessonEditPage from "@/pages/admin/lessons/LessonEditPage";
-import LessonsAdminPage from "@/pages/admin/lessons/LessonsAdminPage";
-import LessonCreatePage from "@/pages/admin/lessons/LessonCreatePage";
-import UsersAdminPage from "@/pages/admin/users/UsersAdminPage";
-import UserEditAdminPage from "@/pages/admin/users/UserEditAdminPage";
-import RegionsAdminPage from "@/pages/admin/regions/RegionsAdminPage";
-import AchievementsAdminPage from "@/pages/admin/achievements/AchievementsAdminPage";
-import TimeEventsAdminPage from "@/pages/admin/timeEvents/TimeEventsAdminPage";
-import NotificationsAdminPage from "@/pages/admin/notifications/NotificationsAdminPage";
 
+const ForgotPassword = lazy(() => import("@/pages/auth/ForgotPassword"));
+const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
+const LessonsPage = lazy(() => import("@/pages/lessons/LessonsPage"));
+const LessonDetailsPage = lazy(() => import("@/pages/lessons/LessonDetailsPage"));
 const MapPage = lazy(() => import("@/pages/map/MapPage"));
+const FolklorePage = lazy(() => import("@/pages/folklore/FolklorePage"));
 const DictionaryPage = lazy(() => import("@/pages/dictionary/DictionaryPage"));
 const AIChatPage = lazy(() => import("@/pages/aiChat/AIChatPage"));
-const LeaderboardPage = lazy(() => import("@/pages/leaderboard/LeaderboardPage"));
 const EventsPage = lazy(() => import("@/pages/events/EventsPage"));
 const NotificationsPage = lazy(() => import("@/pages/notifications/NotificationsPage"));
+const ProgressPage = lazy(() => import("@/pages/progress/ProgressPage"));
+const ProfilePage = lazy(() => import("@/pages/profile/ProfilePage"));
+const LeaderboardPage = lazy(() => import("@/pages/leaderboard/LeaderboardPage"));
+
+const AdminPage = lazy(() => import("@/pages/admin/AdminPage"));
+const FolkloreAdminPage = lazy(() => import("@/pages/admin/folklore/FolkloreAdminPage"));
+const FolkloreCreatePage = lazy(() => import("@/pages/admin/folklore/FolkloreCreatePage"));
+const FolkloreEditPage = lazy(() => import("@/pages/admin/folklore/FolkloreEditPage"));
+const LessonsAdminPage = lazy(() => import("@/pages/admin/lessons/LessonsAdminPage"));
+const LessonCreatePage = lazy(() => import("@/pages/admin/lessons/LessonCreatePage"));
+const LessonEditPage = lazy(() => import("@/pages/admin/lessons/LessonEditPage"));
+const UsersAdminPage = lazy(() => import("@/pages/admin/users/UsersAdminPage"));
+const UserEditAdminPage = lazy(() => import("@/pages/admin/users/UserEditAdminPage"));
+const RegionsAdminPage = lazy(() => import("@/pages/admin/regions/RegionsAdminPage"));
+const AchievementsAdminPage = lazy(() => import("@/pages/admin/achievements/AchievementsAdminPage"));
+const TimeEventsAdminPage = lazy(() => import("@/pages/admin/timeEvents/TimeEventsAdminPage"));
+const NotificationsAdminPage = lazy(() => import("@/pages/admin/notifications/NotificationsAdminPage"));
 
 export interface AppRouteConfig {
   path?: string;
@@ -63,10 +63,8 @@ export const routeConfig: AppRouteConfig[] = [
       },
       {
         path: "forgot-password",
-        element: <ForgotPassword />, // ← новый публичный роут
+        element: <ForgotPassword />,
       },
-
-      // приватная ветка /app
       {
         path: "app",
         element: (
@@ -85,7 +83,7 @@ export const routeConfig: AppRouteConfig[] = [
           },
           {
             path: "map",
-            element: <MapPage />, // твой существующий Map, но только для авторизованных
+            element: <MapPage />,
           },
           {
             path: "folklore",
@@ -128,6 +126,14 @@ export const routeConfig: AppRouteConfig[] = [
             element: <LessonDetailsPage />,
           },
           {
+            path: "admin",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <AdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
             path: "admin/folklore",
             element: (
               <ProtectedRoute requiredRole="admin">
@@ -148,14 +154,6 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <FolkloreEditPage />
-              </ProtectedRoute>
-            ),
-          },
-          {
-            path: "admin",
-            element: (
-              <ProtectedRoute requiredRole="admin">
-                <AdminPage />
               </ProtectedRoute>
             ),
           },

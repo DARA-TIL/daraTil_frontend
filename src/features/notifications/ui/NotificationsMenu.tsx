@@ -62,11 +62,33 @@ const NotificationsMenu: React.FC = () => {
           color="inherit"
           onClick={(event) => setAnchorEl(event.currentTarget)}
           sx={{
+            width: 42,
+            height: 42,
             borderRadius: 999,
             border:
               theme.palette.mode === "light"
-                ? "1px solid rgba(148,163,184,0.4)"
-                : "1px solid rgba(30,64,175,0.9)",
+                ? "1px solid rgba(148,163,184,0.3)"
+                : "1px solid rgba(71,85,105,0.42)",
+            backgroundColor:
+              theme.palette.mode === "light"
+                ? "rgba(255,255,255,0.82)"
+                : "rgba(15,23,42,0.82)",
+            boxShadow:
+              theme.palette.mode === "light"
+                ? "0 10px 24px rgba(15,23,42,0.08)"
+                : "0 12px 28px rgba(2,6,23,0.34)",
+            transition: "transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease",
+            "&:hover": {
+              transform: "translateY(-1px)",
+              boxShadow:
+                theme.palette.mode === "light"
+                  ? "0 14px 28px rgba(15,23,42,0.12)"
+                  : "0 16px 34px rgba(2,6,23,0.44)",
+              backgroundColor:
+                theme.palette.mode === "light"
+                  ? "rgba(255,255,255,0.94)"
+                  : "rgba(15,23,42,0.94)",
+            },
           }}
         >
           <Badge

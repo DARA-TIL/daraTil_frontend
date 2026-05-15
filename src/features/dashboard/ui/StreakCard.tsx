@@ -98,6 +98,8 @@ export const StreakCard: React.FC = () => {
       elevation={0}
       sx={(theme) => ({
         flex: 1,
+        height: "100%",
+        minHeight: 278,
         borderRadius: 4,
         p: 2.5,
         display: "flex",

@@ -1,40 +1,41 @@
-import React, {
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
-import { ThemeProvider, CssBaseline } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { PaletteMode } from "@mui/material";
-import { getAppTheme } from "./theme";
 import { SharedColorModeContext } from "./sharedColorMode";
+import { getAppTheme } from "./theme";
 
 const STORAGE_KEY = "daratil-color-mode";
+
+function getInitialMode(): PaletteMode {
+  if (typeof window === "undefined") return "light";
+
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  if (stored === "light" || stored === "dark") {
+    return stored;
+  }
+
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
 
 export const ColorModeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [mode, setMode] = useState<PaletteMode>("light");
+  const [mode, setMode] = useState<PaletteMode>(() => getInitialMode());
 
-  // читаем сохранённый режим из localStorage
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "light" || stored === "dark") {
-      setMode(stored);
-    }
-  }, []);
+    window.localStorage.setItem(STORAGE_KEY, mode);
+  }, [mode]);
 
   const value = useMemo(
     () => ({
       mode,
       toggleColorMode: () => {
-        setMode((prev) => {
-          const next = prev === "light" ? "dark" : "light";
-          window.localStorage.setItem(STORAGE_KEY, next);
-          return next;
-        });
+        setMode((prev) => (prev === "light" ? "dark" : "light"));
       },
     }),
-    [mode]
+    [mode],
   );
 
   const theme = useMemo(() => getAppTheme(mode), [mode]);

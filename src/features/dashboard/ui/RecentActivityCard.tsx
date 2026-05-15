@@ -63,6 +63,7 @@ export const RecentActivityCard: React.FC = () => {
         p: 2.5,
         display: "flex",
         flexDirection: "column",
+        height: "100%",
         minHeight: 320,
         backgroundColor:
           theme.palette.mode === "light" ? "#ffffff" : "rgba(15,23,42,0.9)",

@@ -30,26 +30,51 @@ const DashboardPage: React.FC = () => {
           minHeight: { xs: "auto", md: "calc(100vh - 210px)" },
         }}
       >
-        {/* LEFT COLUMN */}
-        <Grid size={{ xs: 12, md: 7 }}>
+        <Grid size={{ xs: 12, xl: 7 }}>
           <Stack spacing={2.5} sx={{ height: "100%" }}>
-            <LessonsMapCard />
+            <Box sx={{ minHeight: { xs: "auto", xl: 520 } }}>
+              <LessonsMapCard />
+            </Box>
+          </Stack>
+        </Grid>
+
+        <Grid size={{ xs: 12, xl: 5 }}>
+          <Stack spacing={2.5} sx={{ height: "100%" }}>
+            <Grid container spacing={2.5} alignItems="stretch">
+              <Grid size={{ xs: 12 }}>
+                <FeaturedFolkloreCard />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <StreakCard />
+              </Grid>
+            </Grid>
+          </Stack>
+        </Grid>
+
+        <Grid size={{ xs: 12, xl: 6 }}>
+          <Box sx={{ height: "100%" }}>
             <RecentActivityCard />
+          </Box>
+        </Grid>
+
+        <Grid size={{ xs: 12, xl: 6 }}>
+          <Box sx={{ height: "100%" }}>
             <DashboardRankCard />
-          </Stack>
+          </Box>
         </Grid>
 
-        {/* RIGHT COLUMN */}
-        <Grid size={{ xs: 12, md:5 }}>
-          <Stack spacing={2.5} sx={{ height: "100%" }}>
-            <FeaturedFolkloreCard />
-            <StreakCard />
+        <Grid size={{ xs: 12, xl: 6 }}>
+          <Box sx={{ height: "100%" }}>
             <DictionarySummaryCard />
-            <ActiveTimeEventCard />
-          </Stack>
+          </Box>
         </Grid>
 
-        {/* BOTTOM FULL-WIDTH */}
+        <Grid size={{ xs: 12, xl: 6 }}>
+          <Box sx={{ height: "100%" }}>
+            <ActiveTimeEventCard />
+          </Box>
+        </Grid>
+
         <Grid size={{ xs: 12 }}>
           <ProgressCard />
         </Grid>

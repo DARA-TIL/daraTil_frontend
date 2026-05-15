@@ -163,6 +163,8 @@ export const DashboardRankCard: React.FC = () => {
       sx={{
         borderRadius: 4,
         p: 2.4,
+        height: "100%",
+        minHeight: 292,
         position: "relative",
         overflow: "hidden",
         background:
