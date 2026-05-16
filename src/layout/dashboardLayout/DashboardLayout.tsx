@@ -93,7 +93,7 @@ const DashboardLayout: React.FC = () => {
             <ButtonBase
               onClick={toggleSidebar}
               sx={{
-                minWidth: sidebarExpanded ? 124 : 42,
+                minWidth: sidebarExpanded ? 42 : 42,
                 height: 42,
                 px: sidebarExpanded ? 1.4 : 0,
                 borderRadius: 999,
@@ -145,7 +145,7 @@ const DashboardLayout: React.FC = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {t("collapseSidebar", { defaultValue: "Collapse" })}
+                  {t("collapseSidebar", { defaultValue: "" })}
                 </Box>
               ) : null}
             </ButtonBase>
