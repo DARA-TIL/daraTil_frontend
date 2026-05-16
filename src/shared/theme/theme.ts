@@ -116,7 +116,8 @@ export const getAppTheme = (mode: PaletteMode) =>
     },
 
     typography: {
-      fontFamily: '"Inter","Roboto","Helvetica","Arial",sans-serif',
+      fontFamily:
+        '"Noto Sans","Segoe UI","Helvetica Neue","Arial",sans-serif',
       h4: {
         fontWeight: 700,
       },

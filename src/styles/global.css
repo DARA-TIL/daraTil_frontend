@@ -1,1 +1,9 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+:root {
+  font-family: "Noto Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  font-family: "Noto Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
