@@ -8,12 +8,13 @@ import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
+import RecordVoiceOverRoundedIcon from "@mui/icons-material/RecordVoiceOverRounded";
 import { useTranslation } from "react-i18next";
 
 const AdminPage: React.FC = () => {
   const theme = useTheme();
   const nav = useNavigate();
-  const { t } = useTranslation("admin");
+  const { t } = useTranslation(["admin", "pronunciation"]);
 
   const Card = ({
     title,
@@ -56,7 +57,7 @@ const AdminPage: React.FC = () => {
             boxShadow: "0 10px 24px rgba(15,23,42,0.25)",
           }}
         >
-          {t("common.open")}
+          {t("admin.open", { ns: "pronunciation", defaultValue: "Open" })}
         </Button>
       </Stack>
     </Paper>
@@ -136,6 +137,20 @@ const AdminPage: React.FC = () => {
           })}
           icon={<NotificationsRoundedIcon />}
           to="/app/admin/notifications"
+        />
+
+        <Card
+          title={t("admin.cardTitle", {
+            ns: "pronunciation",
+            defaultValue: "Speech tests",
+          })}
+          subtitle={t("admin.cardSubtitle", {
+            ns: "pronunciation",
+            defaultValue:
+              "Create pronunciation tasks with Kazakh text, translations, and difficulty levels.",
+          })}
+          icon={<RecordVoiceOverRoundedIcon />}
+          to="/app/admin/speech-tests"
         />
       </Stack>
     </Box>

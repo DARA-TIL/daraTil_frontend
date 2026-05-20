@@ -17,6 +17,7 @@ const MapPage = lazy(() => import("@/pages/map/MapPage"));
 const FolklorePage = lazy(() => import("@/pages/folklore/FolklorePage"));
 const DictionaryPage = lazy(() => import("@/pages/dictionary/DictionaryPage"));
 const AIChatPage = lazy(() => import("@/pages/aiChat/AIChatPage"));
+const PronunciationPage = lazy(() => import("@/pages/pronunciation/PronunciationPage"));
 const EventsPage = lazy(() => import("@/pages/events/EventsPage"));
 const NotificationsPage = lazy(() => import("@/pages/notifications/NotificationsPage"));
 const ProgressPage = lazy(() => import("@/pages/progress/ProgressPage"));
@@ -36,6 +37,7 @@ const RegionsAdminPage = lazy(() => import("@/pages/admin/regions/RegionsAdminPa
 const AchievementsAdminPage = lazy(() => import("@/pages/admin/achievements/AchievementsAdminPage"));
 const TimeEventsAdminPage = lazy(() => import("@/pages/admin/timeEvents/TimeEventsAdminPage"));
 const NotificationsAdminPage = lazy(() => import("@/pages/admin/notifications/NotificationsAdminPage"));
+const SpeechTestsAdminPage = lazy(() => import("@/pages/admin/speechTests/SpeechTestsAdminPage"));
 
 export interface AppRouteConfig {
   path?: string;
@@ -96,6 +98,10 @@ export const routeConfig: AppRouteConfig[] = [
           {
             path: "ai-chat",
             element: <AIChatPage />,
+          },
+          {
+            path: "pronunciation",
+            element: <PronunciationPage />,
           },
           {
             path: "events",
@@ -226,6 +232,14 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <NotificationsAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/speech-tests",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <SpeechTestsAdminPage />
               </ProtectedRoute>
             ),
           },

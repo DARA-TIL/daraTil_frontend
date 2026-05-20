@@ -20,6 +20,7 @@ import enLeaderboard from "./locales/en/leaderboard.json";
 import enEvents from "./locales/en/events.json";
 import enNotifications from "./locales/en/notifications.json";
 import enAiChat from "./locales/en/aiChat.json";
+import enPronunciation from "./locales/en/pronunciation.json";
 
 // RU
 import ruNavbar from "./locales/ru/navbar.json";
@@ -39,6 +40,7 @@ import ruLeaderboard from "./locales/ru/leaderboard.json";
 import ruEvents from "./locales/ru/events.json";
 import ruNotifications from "./locales/ru/notifications.json";
 import ruAiChat from "./locales/ru/aiChat.json";
+import ruPronunciation from "./locales/ru/pronunciation.json";
 
 // KZ
 import kzNavbar from "./locales/kz/navbar.json";
@@ -58,6 +60,7 @@ import kzLeaderboard from "./locales/kz/leaderboard.json";
 import kzEvents from "./locales/kz/events.json";
 import kzNotifications from "./locales/kz/notifications.json";
 import kzAiChat from "./locales/kz/aiChat.json";
+import kzPronunciation from "./locales/kz/pronunciation.json";
 
 i18n
   .use(LanguageDetector)
@@ -87,6 +90,7 @@ i18n
         events: enEvents,
         notifications: enNotifications,
         aiChat: enAiChat,
+        pronunciation: enPronunciation,
       },
       ru: {
         navbar: ruNavbar,
@@ -106,6 +110,7 @@ i18n
         events: ruEvents,
         notifications: ruNotifications,
         aiChat: ruAiChat,
+        pronunciation: ruPronunciation,
       },
       kz: {
         navbar: kzNavbar,
@@ -125,6 +130,7 @@ i18n
         events: kzEvents,
         notifications: kzNotifications,
         aiChat: kzAiChat,
+        pronunciation: kzPronunciation,
       },
     },
     ns: [
@@ -145,6 +151,7 @@ i18n
       "events",
       "notifications",
       "aiChat",
+      "pronunciation",
     ],
     defaultNS: "home",
   });

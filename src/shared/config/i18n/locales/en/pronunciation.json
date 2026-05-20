@@ -1,0 +1,124 @@
+{
+  "page": {
+    "title": "Pronunciation practice",
+    "subtitle": "Read the Kazakh phrase aloud, record your voice, and get AI feedback on pronunciation."
+  },
+  "empty": {
+    "title": "Train your pronunciation",
+    "subtitle": "Start a session to receive a Kazakh phrase, record your voice, and compare your pronunciation with AI feedback.",
+    "noTaskTitle": "No task available",
+    "noTaskSubtitle": "The session is active, but the backend did not return a new speech test."
+  },
+  "actions": {
+    "start": "Start practice",
+    "restart": "Restart practice",
+    "finish": "Finish session",
+    "record": "Record",
+    "rerecord": "Record again",
+    "stop": "Stop",
+    "clearAudio": "Clear audio",
+    "check": "Check pronunciation",
+    "next": "Next test",
+    "tryNext": "Try again",
+    "resetPage": "Reset page"
+  },
+  "recording": {
+    "title": "Record your voice",
+    "recording": "Recording...",
+    "hint": "Speak clearly and keep the phrase in one natural sentence.",
+    "unsupported": "Audio recording is not supported in this browser.",
+    "permissionError": "Microphone access failed. Allow microphone permission and try again."
+  },
+  "feedback": {
+    "correct": "Pronunciation looks good",
+    "incorrect": "Needs more practice",
+    "empty": "The backend did not return detailed feedback."
+  },
+  "result": {
+    "title": "Session complete",
+    "subtitle": "Your pronunciation practice was saved and the reward was applied.",
+    "correct": "{{count}} correct",
+    "reward": "+{{reward}} XP"
+  },
+  "session": {
+    "title": "Session progress",
+    "task": "Task #{{id}}",
+    "correctCount": "{{count}} correct",
+    "attempts": "{{count}} attempts",
+    "accuracy": "{{value}}% accuracy",
+    "sourceOfTruth": "Final score and reward are calculated by the backend when you finish the session."
+  },
+  "states": {
+    "current": "Current state",
+    "idle": "Idle",
+    "ready": "Ready",
+    "recording": "Recording",
+    "recorded": "Recorded",
+    "checking": "Checking",
+    "feedback": "Feedback",
+    "finished": "Finished",
+    "loadingTest": "Loading pronunciation task..."
+  },
+  "tips": {
+    "title": "Recording tips",
+    "read": "Read the Kazakh phrase before recording.",
+    "quiet": "Try to record in a quiet place.",
+    "natural": "Speak naturally, not too fast."
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "admin": {
+    "open": "Open",
+    "cardTitle": "Speech tests",
+    "cardSubtitle": "Create pronunciation tasks with Kazakh text, translations, and difficulty levels.",
+    "title": "Speech tests admin",
+    "subtitle": "Create Kazakh pronunciation tasks, translations, and difficulty levels.",
+    "listTitle": "Pronunciation tasks",
+    "total": "{{count}} total",
+    "empty": "No speech tests found.",
+    "taskId": "#{{id}}",
+    "previewTitle": "New pronunciation task",
+    "previewSubtitle": "Kazakh phrase, Russian translation, English translation, and difficulty.",
+    "note": "Users will receive the Kazakh text as the phrase to pronounce. The translation shown in the practice UI follows the current app language.",
+    "confirmDeleteTitle": "Delete speech test?",
+    "confirmDeleteMessage": "This pronunciation task will be removed from the admin collection.",
+    "fields": {
+      "kzText": "Kazakh text",
+      "ruText": "Russian text",
+      "enText": "English text",
+      "difficulty": "Difficulty"
+    },
+    "filters": {
+      "search": "Search",
+      "all": "All"
+    },
+    "mode": {
+      "create": "Create mode",
+      "edit": "Edit mode"
+    },
+    "actions": {
+      "refresh": "Refresh tests",
+      "new": "New test",
+      "reset": "Reset",
+      "resetForm": "Reset form",
+      "create": "Create",
+      "save": "Save",
+      "delete": "Delete"
+    },
+    "pagination": {
+      "summary": "Showing {{from}}-{{to}} of {{total}}",
+      "perPage": "Per page"
+    },
+    "validation": {
+      "required": "Fill all text fields and choose a difficulty."
+    },
+    "snackbar": {
+      "created": "Speech test created",
+      "saved": "Speech test saved",
+      "deleted": "Speech test deleted"
+    }
+  }
+}

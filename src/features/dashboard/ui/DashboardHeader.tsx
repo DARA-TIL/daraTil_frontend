@@ -8,6 +8,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MapIcon from "@mui/icons-material/Map";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import QuizIcon from "@mui/icons-material/Quiz";
+import RecordVoiceOverRoundedIcon from "@mui/icons-material/RecordVoiceOverRounded";
 
 const pillSx = {
   borderRadius: 999,
@@ -80,6 +81,23 @@ export const DashboardHeader: React.FC = () => {
       to: "/app/folklore",
       variant: "outlined" as const,
       icon: <AutoStoriesIcon />,
+      sx: {
+        borderColor: "rgba(255,255,255,0.3)",
+        color: "#fff",
+        "&:hover": {
+          borderColor: "#fff",
+          bgcolor: "rgba(15,23,42,0.16)",
+        },
+      },
+    },
+    {
+      key: "pronunciation",
+      label: t("actions.pronunciation", {
+        defaultValue: "Pronunciation",
+      }),
+      to: "/app/pronunciation",
+      variant: "outlined" as const,
+      icon: <RecordVoiceOverRoundedIcon />,
       sx: {
         borderColor: "rgba(255,255,255,0.3)",
         color: "#fff",
