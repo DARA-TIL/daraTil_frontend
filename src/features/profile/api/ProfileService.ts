@@ -51,7 +51,7 @@ const ProfileService = {
     if (payload.role !== undefined) body.Role = payload.role;
     if (payload.password !== undefined) body.Password = payload.password;
 
-    const res = await $api.patch<ApiData<unknown>>("/user/update", body);
+    const res = await $api.post<ApiData<unknown>>("/user/update", body);
     return normalizeUser(res.data.data);
   },
 

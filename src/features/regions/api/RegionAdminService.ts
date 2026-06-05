@@ -1,5 +1,6 @@
 import $api from "@/shared/api/http";
 import type {
+  RegionCreateDto,
   RegionSlangCreateDto,
   RegionSlangTranslationCreateDto,
   RegionSlangTranslationUpdateDto,
@@ -14,8 +15,20 @@ import type {
 } from "../model/types";
 
 const RegionAdminService = {
+  async createRegion(payload: RegionCreateDto): Promise<void> {
+    await $api.post("/region/create", payload);
+  },
+
+  async createAllRegions(): Promise<void> {
+    await $api.post("/region/createAll");
+  },
+
   async updateRegion(payload: RegionUpdateDto): Promise<void> {
     await $api.patch("/region/update", payload);
+  },
+
+  async deleteRegion(id: number): Promise<void> {
+    await $api.delete(`/region/delete/${id}`);
   },
 
   async createSlang(payload: RegionSlangCreateDto): Promise<void> {

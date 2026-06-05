@@ -53,6 +53,26 @@ import { useTranslation } from "react-i18next";
 
 type TimeEventDraft = TimeEventUpdateDto;
 
+type ParticipantDraft = {
+  id: number;
+  userId: number;
+  timeEventId: number;
+  count: number;
+  place: number;
+  isActive: boolean;
+};
+
+function createEmptyParticipantDraft(timeEventId = 0): ParticipantDraft {
+  return {
+    id: 0,
+    userId: 0,
+    timeEventId,
+    count: 0,
+    place: 0,
+    isActive: true,
+  };
+}
+
 function roundToNextHour(date: Date): Date {
   const result = new Date(date);
   result.setMinutes(0, 0, 0);
@@ -174,8 +194,20 @@ export const TimeEventsManagementPage: React.FC = () => {
   const update = useTimeEventsAdminStore((state) => state.update);
   const finish = useTimeEventsAdminStore((state) => state.finish);
   const remove = useTimeEventsAdminStore((state) => state.delete);
+  const createParticipant = useTimeEventsAdminStore(
+    (state) => state.createParticipant,
+  );
+  const updateParticipant = useTimeEventsAdminStore(
+    (state) => state.updateParticipant,
+  );
+  const deleteParticipant = useTimeEventsAdminStore(
+    (state) => state.deleteParticipant,
+  );
 
   const [draft, setDraft] = useState<TimeEventDraft>(createEmptyDraft());
+  const [participantDraft, setParticipantDraft] = useState<ParticipantDraft>(
+    createEmptyParticipantDraft(),
+  );
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(6);
 
@@ -186,6 +218,7 @@ export const TimeEventsManagementPage: React.FC = () => {
   useEffect(() => {
     if (!selected) {
       setDraft(createEmptyDraft());
+      setParticipantDraft(createEmptyParticipantDraft());
       return;
     }
 
@@ -202,7 +235,28 @@ export const TimeEventsManagementPage: React.FC = () => {
       rewardSecond: selected.rewardSecond,
       rewardThird: selected.rewardThird,
     });
+    setParticipantDraft((current) =>
+      current.id
+        ? current
+        : createEmptyParticipantDraft(selected.id),
+    );
   }, [selected]);
+
+  useEffect(() => {
+    if (!selectedParticipant) {
+      setParticipantDraft(createEmptyParticipantDraft(selectedId ?? 0));
+      return;
+    }
+
+    setParticipantDraft({
+      id: selectedParticipant.id,
+      userId: selectedParticipant.userId,
+      timeEventId: selectedParticipant.timeEventId,
+      count: selectedParticipant.count,
+      place: selectedParticipant.place,
+      isActive: selectedParticipant.isActive,
+    });
+  }, [selectedId, selectedParticipant]);
 
   const rows = getFilteredItems();
 
@@ -1300,6 +1354,246 @@ export const TimeEventsManagementPage: React.FC = () => {
                     </Button>
                   </Stack>
                 </Stack>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 1.5,
+                    mb: 1.5,
+                    borderRadius: 3,
+                    borderColor: theme.customColors.sidebarBorder,
+                    backgroundColor: alpha(theme.palette.success.main, 0.04),
+                  }}
+                >
+                  <Stack gap={1.5}>
+                    <Stack
+                      direction={{ xs: "column", md: "row" }}
+                      justifyContent="space-between"
+                      gap={1}
+                    >
+                      <Box>
+                        <Typography fontWeight={900}>
+                          {participantDraft.id
+                            ? t("timeEvents.participants.editTitle", {
+                                ns: "admin",
+                                defaultValue: "Edit participant #{{id}}",
+                                id: participantDraft.id,
+                              })
+                            : t("timeEvents.participants.createTitle", {
+                                ns: "admin",
+                                defaultValue: "Create participant",
+                              })}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("timeEvents.participants.editorSubtitle", {
+                            ns: "admin",
+                            defaultValue:
+                              "Manually manage participant action count, place, and active state.",
+                          })}
+                        </Typography>
+                      </Box>
+
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        disabled={!selectedId}
+                        onClick={() => {
+                          clearSelectedParticipant();
+                          setParticipantDraft(
+                            createEmptyParticipantDraft(selectedId ?? 0),
+                          );
+                        }}
+                      >
+                        {t("timeEvents.participants.new", {
+                          ns: "admin",
+                          defaultValue: "New participant",
+                        })}
+                      </Button>
+                    </Stack>
+
+                    <Stack direction={{ xs: "column", md: "row" }} gap={1.25}>
+                      <TextField
+                        label={t("timeEvents.participants.userId", {
+                          ns: "admin",
+                          defaultValue: "User ID",
+                        })}
+                        type="number"
+                        size="small"
+                        value={participantDraft.userId}
+                        onChange={(event) =>
+                          setParticipantDraft((current) => ({
+                            ...current,
+                            userId: Number(event.target.value) || 0,
+                          }))
+                        }
+                        disabled={!selectedId}
+                        fullWidth
+                      />
+                      <TextField
+                        label={t("timeEvents.participants.count", {
+                          ns: "admin",
+                          defaultValue: "Count",
+                        })}
+                        type="number"
+                        size="small"
+                        value={participantDraft.count}
+                        onChange={(event) =>
+                          setParticipantDraft((current) => ({
+                            ...current,
+                            count: Math.max(0, Number(event.target.value) || 0),
+                          }))
+                        }
+                        disabled={!selectedId}
+                        fullWidth
+                      />
+                      <TextField
+                        label={t("timeEvents.participants.placeInput", {
+                          ns: "admin",
+                          defaultValue: "Place",
+                        })}
+                        type="number"
+                        size="small"
+                        value={participantDraft.place}
+                        onChange={(event) =>
+                          setParticipantDraft((current) => ({
+                            ...current,
+                            place: Math.max(0, Number(event.target.value) || 0),
+                          }))
+                        }
+                        disabled={!selectedId}
+                        fullWidth
+                      />
+                      <TextField
+                        label={t("timeEvents.participants.state", {
+                          ns: "admin",
+                          defaultValue: "State",
+                        })}
+                        value={participantDraft.isActive ? "true" : "false"}
+                        onChange={(event) =>
+                          setParticipantDraft((current) => ({
+                            ...current,
+                            isActive: event.target.value === "true",
+                          }))
+                        }
+                        select
+                        size="small"
+                        disabled={!selectedId}
+                        fullWidth
+                      >
+                        <MenuItem value="true">
+                          {t("timeEvents.participants.active", {
+                            ns: "admin",
+                            defaultValue: "Active",
+                          })}
+                        </MenuItem>
+                        <MenuItem value="false">
+                          {t("timeEvents.participants.inactive", {
+                            ns: "admin",
+                            defaultValue: "Inactive",
+                          })}
+                        </MenuItem>
+                      </TextField>
+                    </Stack>
+
+                    <Stack direction={{ xs: "column", sm: "row" }} gap={1}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={
+                          actionLoading ||
+                          !selectedId ||
+                          !participantDraft.userId
+                        }
+                        startIcon={
+                          participantDraft.id ? (
+                            <SaveRoundedIcon />
+                          ) : (
+                            <AddRoundedIcon />
+                          )
+                        }
+                        onClick={async () => {
+                          const ok = participantDraft.id
+                            ? await updateParticipant({
+                                id: participantDraft.id,
+                                userId: participantDraft.userId,
+                                timeEventId:
+                                  participantDraft.timeEventId || selectedId || 0,
+                                count: participantDraft.count,
+                                place: participantDraft.place,
+                                isActive: participantDraft.isActive,
+                              })
+                            : await createParticipant({
+                                userId: participantDraft.userId,
+                                timeEventId: selectedId || 0,
+                                count: participantDraft.count,
+                                place: participantDraft.place,
+                                isActive: participantDraft.isActive,
+                              });
+
+                          if (ok) {
+                            showSnackbar(
+                              participantDraft.id
+                                ? t("timeEvents.participants.saved", {
+                                    ns: "admin",
+                                    defaultValue: "Participant saved",
+                                  })
+                                : t("timeEvents.participants.created", {
+                                    ns: "admin",
+                                    defaultValue: "Participant created",
+                                  }),
+                              "success",
+                            );
+                          }
+                        }}
+                      >
+                        {participantDraft.id
+                          ? t("common.save", { ns: "admin" })
+                          : t("common.create", { ns: "admin" })}
+                      </Button>
+
+                      {participantDraft.id ? (
+                        <Button
+                          color="error"
+                          size="small"
+                          startIcon={<DeleteOutlineRoundedIcon />}
+                          disabled={actionLoading}
+                          onClick={async () => {
+                            const ok = await requestConfirm({
+                              title: t("timeEvents.participants.deleteTitle", {
+                                ns: "admin",
+                                defaultValue: "Delete participant",
+                              }),
+                              message: t("timeEvents.participants.confirmDelete", {
+                                ns: "admin",
+                                defaultValue: "Delete this participant?",
+                              }),
+                              confirmLabel: t("common.delete", { ns: "admin" }),
+                              variant: "danger",
+                            });
+                            if (!ok) return;
+                            const deleted = await deleteParticipant(
+                              participantDraft.id,
+                            );
+                            if (deleted) {
+                              setParticipantDraft(
+                                createEmptyParticipantDraft(selectedId ?? 0),
+                              );
+                              showSnackbar(
+                                t("timeEvents.participants.deleted", {
+                                  ns: "admin",
+                                  defaultValue: "Participant deleted",
+                                }),
+                                "success",
+                              );
+                            }
+                          }}
+                        >
+                          {t("common.delete", { ns: "admin" })}
+                        </Button>
+                      ) : null}
+                    </Stack>
+                  </Stack>
+                </Paper>
 
                 {!selectedId ? (
                   <Typography color="text.secondary">

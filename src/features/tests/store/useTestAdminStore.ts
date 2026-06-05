@@ -24,6 +24,10 @@ type State = {
     payload: { testId: number; text: string },
   ) => Promise<boolean>;
   deleteQuestion: (lessonId: number, questionId: number) => Promise<boolean>;
+  updateQuestionText: (
+    lessonId: number,
+    payload: { id: number; text: string },
+  ) => Promise<boolean>;
 
   addOption: (
     lessonId: number,
@@ -122,6 +126,21 @@ export const useTestAdminStore = create<State>((set, get) => ({
       await TestService.deleteQuestion(questionId);
       await get().fetchByLesson(lessonId);
       useUiStore.getState().showSnackbar("Question deleted", "success");
+      return true;
+    } catch (e) {
+      useUiStore.getState().showSnackbar(getErrorMessage(e), "error");
+      return false;
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  updateQuestionText: async (lessonId, payload) => {
+    set({ loading: true });
+    try {
+      await TestService.updateQuestion(payload);
+      await get().fetchByLesson(lessonId);
+      useUiStore.getState().showSnackbar("Question saved", "success");
       return true;
     } catch (e) {
       useUiStore.getState().showSnackbar(getErrorMessage(e), "error");

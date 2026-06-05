@@ -57,6 +57,7 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
 
   const addQuestion = useTestAdminStore((s) => s.addQuestion);
   const deleteQuestion = useTestAdminStore((s) => s.deleteQuestion);
+  const updateQuestionText = useTestAdminStore((s) => s.updateQuestionText);
 
   const addOption = useTestAdminStore((s) => s.addOption);
   const updateOption = useTestAdminStore((s) => s.updateOption);
@@ -320,6 +321,9 @@ const LessonTestAdminTab: React.FC<Props> = ({ lessonId }) => {
               q={q}
               loading={loading}
               onDelete={() => deleteQuestion(lessonId, q.id)}
+              onSaveQuestion={(text) =>
+                updateQuestionText(lessonId, { id: q.id, text })
+              }
               onDraftText={(text) => setDraftQuestionText(q.id, text)}
               onAddOption={(text, isCorrect) =>
                 addOption(lessonId, { questionId: q.id, text, isCorrect })
@@ -347,6 +351,7 @@ function QuestionCard(props: {
   q: QuestionDto;
   loading: boolean;
   onDelete: () => Promise<boolean>;
+  onSaveQuestion: (text: string) => Promise<boolean>;
   onDraftText: (text: string) => void;
   onAddOption: (text: string, isCorrect: boolean) => Promise<boolean>;
   onUpdateOption: (
@@ -365,6 +370,7 @@ function QuestionCard(props: {
     q,
     loading,
     onDelete,
+    onSaveQuestion,
     onDraftText,
     onAddOption,
     onUpdateOption,
@@ -534,6 +540,17 @@ function QuestionCard(props: {
             flexWrap="wrap"
             useFlexGap
           >
+            <Button
+              variant="outlined"
+              startIcon={<SaveOutlinedIcon />}
+              disabled={loading || !qText.trim()}
+              onClick={() => onSaveQuestion(qText.trim())}
+            >
+              {t("admin.actions.saveQuestion", {
+                defaultValue: "Save question",
+              })}
+            </Button>
+
             <Button
               variant="outlined"
               startIcon={<AutoFixHighOutlinedIcon />}

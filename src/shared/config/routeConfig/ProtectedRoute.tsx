@@ -42,15 +42,41 @@ const ProtectedRoute: React.FC<Props> = ({ children, requiredRole }) => {
     );
   }, [requiredRole]);
 
+  const hasRequiredRole =
+    !required || (user ? required.includes(normalizeRole(user.role)) : false);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!isAuth) {
+      const key = `login:${location.pathname}${location.search}`;
+      if (notifiedRef.current !== key) {
+        notifiedRef.current = key;
+        showSnackbar("Please log in to access this page", "warning");
+      }
+      return;
+    }
+
+    if (user && !hasRequiredRole) {
+      const key = `denied:${location.pathname}`;
+      if (notifiedRef.current !== key) {
+        notifiedRef.current = key;
+        showSnackbar("Access denied", "error");
+      }
+    }
+  }, [
+    hasRequiredRole,
+    isAuth,
+    isLoading,
+    location.pathname,
+    location.search,
+    showSnackbar,
+    user,
+  ]);
+
   if (isLoading) return null;
 
   if (!isAuth) {
-    const key = `login:${location.pathname}${location.search}`;
-    if (notifiedRef.current !== key) {
-      notifiedRef.current = key;
-      showSnackbar("Please log in to access this page", "warning");
-    }
-
     const next = encodeURIComponent(location.pathname + location.search);
     return <Navigate to={`/login?next=${next}`} replace />;
   }
@@ -59,15 +85,7 @@ const ProtectedRoute: React.FC<Props> = ({ children, requiredRole }) => {
   if (!user) return null;
 
   if (required) {
-    const userRole = normalizeRole(user.role);
-    const allowed = required.includes(userRole);
-
-    if (!allowed) {
-      const key = `denied:${location.pathname}`;
-      if (notifiedRef.current !== key) {
-        notifiedRef.current = key;
-        showSnackbar("Access denied", "error");
-      }
+    if (!hasRequiredRole) {
       return <Navigate to="/app" replace />;
     }
   }

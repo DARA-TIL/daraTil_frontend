@@ -6,6 +6,8 @@ import type {
   TimeEvent,
   TimeEventCreateDto,
   TimeEventParticipant,
+  TimeEventParticipantCreateDto,
+  TimeEventParticipantUpdateDto,
   TimeEventQuery,
   TimeEventUpdateDto,
 } from "../model/types";
@@ -49,6 +51,9 @@ type TimeEventsAdminState = {
   update: (payload: TimeEventUpdateDto) => Promise<boolean>;
   finish: (id: number) => Promise<boolean>;
   delete: (id: number) => Promise<boolean>;
+  createParticipant: (payload: TimeEventParticipantCreateDto) => Promise<boolean>;
+  updateParticipant: (payload: TimeEventParticipantUpdateDto) => Promise<boolean>;
+  deleteParticipant: (id: number) => Promise<boolean>;
 };
 
 function mergeTimeEvent(items: TimeEvent[], event: TimeEvent): TimeEvent[] {
@@ -384,6 +389,55 @@ export const useTimeEventsAdminStore = create<TimeEventsAdminState>((set, get) =
         }));
         return true;
       }, "Failed to delete time event");
+
+      return Boolean(result);
+    },
+
+    createParticipant: async (payload) => {
+      const result = await withAction(async () => {
+        const participant = await TimeEventsService.createParticipant(payload);
+        await get().fetchParticipants(get().participantsLimit);
+        if (participant) {
+          set({
+            selectedParticipantId: participant.id,
+            selectedParticipant: participant,
+          });
+        }
+        return true;
+      }, "Failed to create participant");
+
+      return Boolean(result);
+    },
+
+    updateParticipant: async (payload) => {
+      const result = await withAction(async () => {
+        const participant = await TimeEventsService.updateParticipant(payload);
+        await get().fetchParticipants(get().participantsLimit);
+        if (participant) {
+          set({
+            selectedParticipantId: participant.id,
+            selectedParticipant: participant,
+          });
+        }
+        return true;
+      }, "Failed to update participant");
+
+      return Boolean(result);
+    },
+
+    deleteParticipant: async (id) => {
+      const result = await withAction(async () => {
+        await TimeEventsService.deleteParticipant(id);
+        set((state) => ({
+          participants: state.participants.filter((item) => item.id !== id),
+          selectedParticipantId:
+            state.selectedParticipantId === id ? null : state.selectedParticipantId,
+          selectedParticipant:
+            state.selectedParticipantId === id ? null : state.selectedParticipant,
+        }));
+        await get().fetchParticipants(get().participantsLimit);
+        return true;
+      }, "Failed to delete participant");
 
       return Boolean(result);
     },

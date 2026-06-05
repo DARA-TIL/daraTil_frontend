@@ -92,3 +92,20 @@ export interface TimeEventUpdateDto {
   startDate: string;
   status: TimeEventStatus;
 }
+
+export interface TimeEventParticipantCreateDto {
+  userId: number;
+  timeEventId: number;
+  count?: number;
+  isActive?: boolean;
+  place?: number;
+}
+
+export interface TimeEventParticipantUpdateDto {
+  id: number;
+  userId?: number;
+  timeEventId?: number;
+  count?: number;
+  isActive?: boolean;
+  place?: number;
+}

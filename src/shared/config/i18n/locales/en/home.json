@@ -1,3 +1,69 @@
 {
-  "home": "Home"
+  "home": "Home",
+  "hero": {
+    "title": "Learn Kazakh language",
+    "titleAccent": "easily and enjoyably",
+    "subtitle": "An interactive platform for learning Kazakh with an AI assistant, lessons, pronunciation practice, and cultural immersion",
+    "cta": "Start Learning",
+    "ctaSecondary": "Learn More"
+  },
+  "stats": {
+    "lessons": "Lessons",
+    "users": "Users",
+    "words": "Words in dictionary",
+    "regions": "Regions"
+  },
+  "features": {
+    "sectionTitle": "Platform Features",
+    "sectionSubtitle": "Everything you need for effective Kazakh language learning in one place",
+    "lessons": {
+      "title": "Interactive Lessons",
+      "desc": "Structured lessons with exercises, tests, and progressive learning from beginner to advanced level"
+    },
+    "ai": {
+      "title": "AI Assistant",
+      "desc": "A smart chatbot to help with translation, explain grammar, and create a personalized learning program"
+    },
+    "pronunciation": {
+      "title": "Pronunciation Training",
+      "desc": "Speech recognition helps perfect your Kazakh pronunciation with real-time feedback"
+    },
+    "dictionary": {
+      "title": "Dictionary",
+      "desc": "Comprehensive Kazakh-Russian dictionary with usage examples, transcription, and audio pronunciation"
+    },
+    "folklore": {
+      "title": "Folklore & Culture",
+      "desc": "Immerse yourself in Kazakh culture through folk tales, legends, and traditions in the original language"
+    },
+    "map": {
+      "title": "Map of Kazakhstan",
+      "desc": "Interactive regional map with unique content about culture, traditions, and dialects of each region"
+    }
+  },
+  "howItWorks": {
+    "sectionTitle": "How It Works",
+    "sectionSubtitle": "Three simple steps to fluency in Kazakh",
+    "step1": {
+      "title": "Sign Up",
+      "desc": "Create an account and take an initial test to determine your level"
+    },
+    "step2": {
+      "title": "Learn Every Day",
+      "desc": "Complete lessons, practice pronunciation, and chat with the AI assistant"
+    },
+    "step3": {
+      "title": "Track Progress",
+      "desc": "Monitor your stats, earn achievements, and compete on the leaderboard"
+    }
+  },
+  "cta": {
+    "title": "Ready to start learning?",
+    "subtitle": "Join thousands of users who are already learning Kazakh with Daratil",
+    "button": "Create a free account"
+  },
+  "footer": {
+    "description": "A platform for learning the Kazakh language using modern technology and artificial intelligence",
+    "rights": "© 2025 Daratil. All rights reserved."
+  }
 }

@@ -9,6 +9,7 @@ import TranslateRoundedIcon from "@mui/icons-material/TranslateRounded";
 import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded";
 import RecordVoiceOverRoundedIcon from "@mui/icons-material/RecordVoiceOverRounded";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
+import CreditCardRoundedIcon from "@mui/icons-material/CreditCardRounded";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 export const profileMenuItems = [
@@ -23,5 +24,6 @@ export const profileMenuItems = [
   { icon: EventAvailableRoundedIcon, key: "events", path: "/app/events" },
   { icon: BarChartIcon, key: "progress", path: "/app/progress" },
   { icon: LeaderboardRoundedIcon, key: "leaderboard", path: "/app/leaderboard" },
+  { icon: CreditCardRoundedIcon, key: "subscriptions", path: "/app/subscriptions" },
   { icon: AdminPanelSettingsIcon, key: "admin", path: "/app/admin" },
 ];

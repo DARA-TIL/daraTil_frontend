@@ -23,6 +23,7 @@ import NotificationsMenu from "@/features/notifications/ui/NotificationsMenu";
 
 import { useTheme } from "@mui/material/styles";
 import { useColorMode } from "@/shared/theme/sharedColorMode";
+import daratilIcon from "@/shared/assets/image/daratil_icon.jpg";
 
 const NavBar = () => {
   const { t } = useTranslation("navbar");
@@ -125,14 +126,18 @@ const NavBar = () => {
           onClick={() => navigate("/")}
         >
           <Box
+            component="img"
+            src={daratilIcon}
+            alt="Daratil"
             sx={(theme) => ({
-              width: 38,
-              height: 38,
-              borderRadius: "14px",
-              backgroundImage: theme.gradients.dashboardHeader,
+              width: 42,
+              height: 42,
+              borderRadius: "13px",
+              objectFit: "cover",
+              display: "block",
               boxShadow:
                 theme.palette.mode === "light"
-                  ? "0 14px 28px rgba(37,99,235,0.2)"
+                  ? "0 14px 28px rgba(15,23,42,0.16)"
                   : "0 14px 28px rgba(2,6,23,0.45)",
             })}
           />
@@ -144,7 +149,7 @@ const NavBar = () => {
               whiteSpace: "nowrap",
             }}
           >
-            Dara Til
+            Daratil
           </Typography>
         </Box>
 

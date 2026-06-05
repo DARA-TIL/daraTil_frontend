@@ -46,7 +46,7 @@ const UserService = {
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;
     if (payload.password !== undefined) body.Password = payload.password;
 
-    const res = await $api.put<ApiData<UserDto>>(`/user/update`, body);
+    const res = await $api.post<ApiData<UserDto>>(`/user/update`, body);
     return normalizeUser(res.data.data);
   },
 
@@ -65,7 +65,7 @@ const UserService = {
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;
     if (payload.password !== undefined) body.Password = payload.password;
 
-    const res = await $api.put<ApiData<UserDto>>(`/user/update/${id}`, body);
+    const res = await $api.post<ApiData<UserDto>>(`/user/update/${id}`, body);
     return normalizeUser(res.data.data);
   },
 

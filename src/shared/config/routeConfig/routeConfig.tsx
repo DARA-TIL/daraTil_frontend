@@ -23,6 +23,7 @@ const NotificationsPage = lazy(() => import("@/pages/notifications/Notifications
 const ProgressPage = lazy(() => import("@/pages/progress/ProgressPage"));
 const ProfilePage = lazy(() => import("@/pages/profile/ProfilePage"));
 const LeaderboardPage = lazy(() => import("@/pages/leaderboard/LeaderboardPage"));
+const SubscriptionsPage = lazy(() => import("@/pages/subscriptions/SubscriptionsPage"));
 
 const AdminPage = lazy(() => import("@/pages/admin/AdminPage"));
 const FolkloreAdminPage = lazy(() => import("@/pages/admin/folklore/FolkloreAdminPage"));
@@ -38,6 +39,7 @@ const AchievementsAdminPage = lazy(() => import("@/pages/admin/achievements/Achi
 const TimeEventsAdminPage = lazy(() => import("@/pages/admin/timeEvents/TimeEventsAdminPage"));
 const NotificationsAdminPage = lazy(() => import("@/pages/admin/notifications/NotificationsAdminPage"));
 const SpeechTestsAdminPage = lazy(() => import("@/pages/admin/speechTests/SpeechTestsAdminPage"));
+const SubscriptionsAdminPage = lazy(() => import("@/pages/admin/subscriptions/SubscriptionsAdminPage"));
 
 export interface AppRouteConfig {
   path?: string;
@@ -122,6 +124,10 @@ export const routeConfig: AppRouteConfig[] = [
           {
             path: "leaderboard",
             element: <LeaderboardPage />,
+          },
+          {
+            path: "subscriptions",
+            element: <SubscriptionsPage />,
           },
           {
             path: "settings",
@@ -240,6 +246,14 @@ export const routeConfig: AppRouteConfig[] = [
             element: (
               <ProtectedRoute requiredRole="admin">
                 <SpeechTestsAdminPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "admin/subscriptions",
+            element: (
+              <ProtectedRoute requiredRole="admin">
+                <SubscriptionsAdminPage />
               </ProtectedRoute>
             ),
           },

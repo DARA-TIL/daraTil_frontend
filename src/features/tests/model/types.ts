@@ -49,6 +49,16 @@ export type CreateQuestionDto = {
   options: Array<{ text: string; isCorrect: boolean }>;
 };
 
+export type UpdateQuestionDto = {
+  id: number;
+  text?: string;
+  questionOptionsUpd?: Array<{
+    id: number;
+    text?: string;
+    isCorrect?: boolean;
+  }>;
+};
+
 export type CreateOptionDto = {
   questionId: number;
   text: string;

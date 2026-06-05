@@ -50,6 +50,9 @@ export interface Region {
   translations: RegionTranslation[];
 }
 
+export type RegionCreateDto = Omit<Region, "id" | "regionStatus"> &
+  Partial<Pick<Region, "id" | "regionStatus">>;
+
 export type RegionUpdateDto = Region;
 
 export type RegionSlangCreateDto = RegionSlang;

@@ -20,3 +20,5 @@ export interface Achievement {
 
 export type AchievementCreateDto = Achievement;
 export type AchievementUpdateDto = Achievement;
+export type UserAchievementCreateDto = UserAchievement;
+export type UserAchievementUpdateDto = UserAchievement;

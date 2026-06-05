@@ -3,6 +3,8 @@ import type {
   TimeEvent,
   TimeEventCreateDto,
   TimeEventParticipant,
+  TimeEventParticipantCreateDto,
+  TimeEventParticipantUpdateDto,
   TimeEventQuery,
   TimeEventUpdateDto,
 } from "../model/types";
@@ -105,6 +107,24 @@ const TimeEventsService = {
   async getParticipantById(id: number): Promise<TimeEventParticipant | null> {
     const response = await $api.get(`/timeEventParticipant/${id}`);
     return unwrapTimeEventParticipantPayload(response.data);
+  },
+
+  async createParticipant(
+    payload: TimeEventParticipantCreateDto,
+  ): Promise<TimeEventParticipant | null> {
+    const response = await $api.post("/timeEventParticipant/", payload);
+    return unwrapTimeEventParticipantPayload(response.data);
+  },
+
+  async updateParticipant(
+    payload: TimeEventParticipantUpdateDto,
+  ): Promise<TimeEventParticipant | null> {
+    const response = await $api.patch("/timeEventParticipant/", payload);
+    return unwrapTimeEventParticipantPayload(response.data);
+  },
+
+  async deleteParticipant(id: number): Promise<void> {
+    await $api.delete(`/timeEventParticipant/${id}`);
   },
 };
 

@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
       }}
     >
       <Typography variant="body2" color="text.secondary">
-        © {year} Dara Til
+        © {year} Daratil
       </Typography>
     </Box>
   );

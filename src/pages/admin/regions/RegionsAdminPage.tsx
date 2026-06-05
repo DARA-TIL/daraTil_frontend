@@ -14,6 +14,8 @@ import {
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,14 +24,39 @@ import {
 } from "@/features/regions/model/helpers";
 import { useRegionsAdminStore } from "@/features/regions/store/useRegionsAdminStore";
 import { RegionAdminEditor } from "@/features/regions/ui/admin/RegionAdminEditor";
+import { requestConfirm } from "@/shared/store/useConfirmDialogStore";
+import { useUiStore } from "@/shared/store/useUiStore";
+
+type CreateRegionDraft = {
+  code: string;
+  kind: string;
+  requiredLevel: number;
+  isActive: boolean;
+  imageUrl: string;
+};
+
+function createEmptyRegionDraft(): CreateRegionDraft {
+  return {
+    code: "",
+    kind: "region",
+    requiredLevel: 1,
+    isActive: true,
+    imageUrl: "",
+  };
+}
 
 const RegionsAdminPage: React.FC = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const { t, i18n } = useTranslation("admin");
+  const showSnackbar = useUiStore((state) => state.showSnackbar);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [createDraft, setCreateDraft] = useState<CreateRegionDraft>(
+    createEmptyRegionDraft(),
+  );
 
   const loading = useRegionsAdminStore((state) => state.loading);
   const selectedId = useRegionsAdminStore((state) => state.selectedId);
@@ -41,6 +68,10 @@ const RegionsAdminPage: React.FC = () => {
   const getFilteredItems = useRegionsAdminStore((state) => state.getFilteredItems);
   const fetchAll = useRegionsAdminStore((state) => state.fetchAll);
   const selectById = useRegionsAdminStore((state) => state.selectById);
+  const actionLoading = useRegionsAdminStore((state) => state.actionLoading);
+  const createRegion = useRegionsAdminStore((state) => state.createRegion);
+  const createAllRegions = useRegionsAdminStore((state) => state.createAllRegions);
+  const deleteRegion = useRegionsAdminStore((state) => state.deleteRegion);
 
   useEffect(() => {
     void fetchAll();
@@ -92,14 +123,214 @@ const RegionsAdminPage: React.FC = () => {
           </Typography>
         </Box>
 
-        <Button
-          variant="outlined"
-          startIcon={<RefreshRoundedIcon />}
-          onClick={() => void fetchAll(true)}
-        >
-          {t("regions.actions.refresh", { defaultValue: "Refresh regions" })}
-        </Button>
+        <Stack direction={{ xs: "column", sm: "row" }} gap={1}>
+          <Button
+            variant="outlined"
+            startIcon={<RefreshRoundedIcon />}
+            onClick={() => void fetchAll(true)}
+          >
+            {t("regions.actions.refresh", { defaultValue: "Refresh regions" })}
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<AddRoundedIcon />}
+            disabled={actionLoading}
+            onClick={async () => {
+              const ok = await requestConfirm({
+                title: t("regions.actions.importAll", {
+                  defaultValue: "Import default regions",
+                }),
+                message: t("regions.confirmCreateAll", {
+                  defaultValue:
+                    "Create all pre-imported Kazakhstan regions from backend geojson?",
+                }),
+                confirmLabel: t("regions.actions.importAll", {
+                  defaultValue: "Import all",
+                }),
+              });
+              if (!ok) return;
+              const created = await createAllRegions();
+              if (created) {
+                showSnackbar(
+                  t("regions.snackbar.imported", {
+                    defaultValue: "Default regions imported",
+                  }),
+                  "success",
+                );
+              }
+            }}
+          >
+            {t("regions.actions.importAll", { defaultValue: "Import all" })}
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddRoundedIcon />}
+            onClick={() => setShowCreateForm((current) => !current)}
+          >
+            {t("regions.actions.newRegion", { defaultValue: "New region" })}
+          </Button>
+          {selectedId ? (
+            <Button
+              color="error"
+              variant="text"
+              startIcon={<DeleteOutlineRoundedIcon />}
+              disabled={actionLoading}
+              onClick={async () => {
+                const ok = await requestConfirm({
+                  title: t("regions.actions.deleteRegion", {
+                    defaultValue: "Delete region",
+                  }),
+                  message: t("regions.confirmDeleteRegion", {
+                    defaultValue: "Delete selected region?",
+                  }),
+                  confirmLabel: t("common.delete"),
+                  variant: "danger",
+                });
+                if (!ok) return;
+                const deleted = await deleteRegion(selectedId);
+                if (deleted) {
+                  showSnackbar(
+                    t("regions.snackbar.deleted", {
+                      defaultValue: "Region deleted",
+                    }),
+                    "success",
+                  );
+                }
+              }}
+            >
+              {t("common.delete")}
+            </Button>
+          ) : null}
+        </Stack>
       </Stack>
+
+      {showCreateForm ? (
+        <Paper
+          sx={{
+            p: 2,
+            mb: 2,
+            border: "1px solid",
+            borderColor: theme.customColors.sidebarBorder,
+            backgroundColor: "background.paper",
+          }}
+        >
+          <Stack gap={2}>
+            <Typography fontWeight={900}>
+              {t("regions.createTitle", { defaultValue: "Create region" })}
+            </Typography>
+            <Stack direction={{ xs: "column", md: "row" }} gap={2}>
+              <TextField
+                label={t("regions.fields.code", { defaultValue: "Code" })}
+                value={createDraft.code}
+                onChange={(event) =>
+                  setCreateDraft((current) => ({
+                    ...current,
+                    code: event.target.value,
+                  }))
+                }
+                fullWidth
+              />
+              <TextField
+                label={t("regions.fields.kind", { defaultValue: "Kind" })}
+                value={createDraft.kind}
+                onChange={(event) =>
+                  setCreateDraft((current) => ({
+                    ...current,
+                    kind: event.target.value,
+                  }))
+                }
+                select
+                fullWidth
+              >
+                <MenuItem value="region">
+                  {t("regions.kind.region", { defaultValue: "Region" })}
+                </MenuItem>
+                <MenuItem value="city">
+                  {t("regions.kind.city", { defaultValue: "City" })}
+                </MenuItem>
+              </TextField>
+              <TextField
+                label={t("regions.fields.requiredLevel", {
+                  defaultValue: "Required level",
+                })}
+                value={createDraft.requiredLevel}
+                onChange={(event) =>
+                  setCreateDraft((current) => ({
+                    ...current,
+                    requiredLevel: Math.max(1, Number(event.target.value) || 1),
+                  }))
+                }
+                type="number"
+                fullWidth
+              />
+              <TextField
+                label={t("regions.fields.isActive", { defaultValue: "Active" })}
+                value={createDraft.isActive ? "true" : "false"}
+                onChange={(event) =>
+                  setCreateDraft((current) => ({
+                    ...current,
+                    isActive: event.target.value === "true",
+                  }))
+                }
+                select
+                fullWidth
+              >
+                <MenuItem value="true">
+                  {t("regions.state.active", { defaultValue: "Active" })}
+                </MenuItem>
+                <MenuItem value="false">
+                  {t("regions.state.inactive", { defaultValue: "Inactive" })}
+                </MenuItem>
+              </TextField>
+            </Stack>
+            <TextField
+              label={t("regions.fields.image", { defaultValue: "Region image" })}
+              value={createDraft.imageUrl}
+              onChange={(event) =>
+                setCreateDraft((current) => ({
+                  ...current,
+                  imageUrl: event.target.value,
+                }))
+              }
+              fullWidth
+            />
+            <Stack direction={{ xs: "column", sm: "row" }} gap={1}>
+              <Button
+                variant="contained"
+                startIcon={<AddRoundedIcon />}
+                disabled={actionLoading || !createDraft.code.trim()}
+                onClick={async () => {
+                  const ok = await createRegion({
+                    code: createDraft.code.trim(),
+                    kind: createDraft.kind,
+                    requiredLevel: createDraft.requiredLevel,
+                    isActive: createDraft.isActive,
+                    imageUrl: createDraft.imageUrl.trim() || null,
+                    regionSlang: [],
+                    regionTraditions: [],
+                    translations: [],
+                  });
+                  if (ok) {
+                    setCreateDraft(createEmptyRegionDraft());
+                    setShowCreateForm(false);
+                    showSnackbar(
+                      t("regions.snackbar.created", {
+                        defaultValue: "Region created",
+                      }),
+                      "success",
+                    );
+                  }
+                }}
+              >
+                {t("common.create")}
+              </Button>
+              <Button variant="outlined" onClick={() => setShowCreateForm(false)}>
+                {t("common.cancel")}
+              </Button>
+            </Stack>
+          </Stack>
+        </Paper>
+      ) : null}
 
       <Paper
         sx={{

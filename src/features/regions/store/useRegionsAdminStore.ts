@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type {
   Region,
+  RegionCreateDto,
   RegionSlangCreateDto,
   RegionSlangTranslationCreateDto,
   RegionSlangTranslationUpdateDto,
@@ -37,7 +38,10 @@ type RegionsAdminState = {
   selectById: (id: number) => Promise<Region | null>;
   refreshSelected: () => Promise<Region | null>;
   clearSelected: () => void;
+  createRegion: (payload: RegionCreateDto) => Promise<boolean>;
+  createAllRegions: () => Promise<boolean>;
   updateRegion: (payload: RegionUpdateDto) => Promise<boolean>;
+  deleteRegion: (id: number) => Promise<boolean>;
   createTranslation: (payload: RegionTranslationCreateDto) => Promise<boolean>;
   updateTranslation: (payload: RegionTranslationUpdateDto) => Promise<boolean>;
   deleteTranslation: (id: number) => Promise<boolean>;
@@ -208,12 +212,46 @@ export const useRegionsAdminStore = create<RegionsAdminState>((set, get) => {
         selectedLoading: false,
       }),
 
+    createRegion: async (payload) => {
+      const result = await withAction(async () => {
+        await RegionAdminService.createRegion(payload);
+        await get().fetchAll(true);
+        return true;
+      }, "Failed to create region");
+
+      return Boolean(result);
+    },
+
+    createAllRegions: async () => {
+      const result = await withAction(async () => {
+        await RegionAdminService.createAllRegions();
+        await get().fetchAll(true);
+        return true;
+      }, "Failed to import regions");
+
+      return Boolean(result);
+    },
+
     updateRegion: async (payload) => {
       const result = await withAction(async () => {
         await RegionAdminService.updateRegion(payload);
         await fetchSelected(payload.id);
         return true;
       }, "Failed to update region");
+
+      return Boolean(result);
+    },
+
+    deleteRegion: async (id) => {
+      const result = await withAction(async () => {
+        await RegionAdminService.deleteRegion(id);
+        set((state) => ({
+          items: state.items.filter((item) => item.id !== id),
+          selectedId: state.selectedId === id ? null : state.selectedId,
+          selected: state.selectedId === id ? null : state.selected,
+        }));
+        return true;
+      }, "Failed to delete region");
 
       return Boolean(result);
     },

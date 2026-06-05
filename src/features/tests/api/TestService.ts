@@ -4,6 +4,7 @@ import type {
   CreateQuestionDto,
   CreateTestDto,
   Test,
+  UpdateQuestionDto,
   UpdateTestDto,
 } from "../model/types";
 import axios from "axios";
@@ -52,6 +53,10 @@ const TestService = {
 
   async deleteQuestion(id: number): Promise<void> {
     await $api.delete(`${BASE}/question/delete/${id}`);
+  },
+
+  async updateQuestion(payload: UpdateQuestionDto): Promise<void> {
+    await $api.put(`${BASE}/question/update`, payload);
   },
 
   async createOption(payload: CreateOptionDto): Promise<void> {

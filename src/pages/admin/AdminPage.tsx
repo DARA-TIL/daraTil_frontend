@@ -9,6 +9,7 @@ import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import RecordVoiceOverRoundedIcon from "@mui/icons-material/RecordVoiceOverRounded";
+import CreditCardRoundedIcon from "@mui/icons-material/CreditCardRounded";
 import { useTranslation } from "react-i18next";
 
 const AdminPage: React.FC = () => {
@@ -151,6 +152,18 @@ const AdminPage: React.FC = () => {
           })}
           icon={<RecordVoiceOverRoundedIcon />}
           to="/app/admin/speech-tests"
+        />
+
+        <Card
+          title={t("adminPage.cards.subscriptions.title", {
+            defaultValue: "Subscriptions and payments",
+          })}
+          subtitle={t("adminPage.cards.subscriptions.subtitle", {
+            defaultValue:
+              "Manage plans, user subscriptions, lifecycle states, and payment activation.",
+          })}
+          icon={<CreditCardRoundedIcon />}
+          to="/app/admin/subscriptions"
         />
       </Stack>
     </Box>

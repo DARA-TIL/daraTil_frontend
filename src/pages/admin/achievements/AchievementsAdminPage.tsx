@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Box, Paper, Tab, Tabs } from "@mui/material";
 import { AchievementManagementTab } from "@/features/achievements/ui/admin/AchievementManagementTab";
 import { ActionRulesManagementTab } from "@/features/actionRules/ui/admin/ActionRulesManagementTab";
+import { UserAchievementsManagementTab } from "@/features/achievements/ui/admin/UserAchievementsManagementTab";
 import { useTranslation } from "react-i18next";
 
-type AdminTab = "achievements" | "rules";
+type AdminTab = "achievements" | "progress" | "rules";
 
 const AchievementsAdminPage: React.FC = () => {
   const { t } = useTranslation("admin");
@@ -45,13 +46,21 @@ const AchievementsAdminPage: React.FC = () => {
               defaultValue: "Action rules",
             })}
           />
+          <Tab
+            value="progress"
+            label={t("achievementsAdmin.tabs.progress", {
+              defaultValue: "User progress",
+            })}
+          />
         </Tabs>
       </Paper>
 
       {tab === "achievements" ? (
         <AchievementManagementTab />
-      ) : (
+      ) : tab === "rules" ? (
         <ActionRulesManagementTab />
+      ) : (
+        <UserAchievementsManagementTab />
       )}
     </Box>
   );
