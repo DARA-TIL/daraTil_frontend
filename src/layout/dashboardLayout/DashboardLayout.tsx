@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   ButtonBase,
+  Chip,
   Drawer,
   IconButton,
   List,
@@ -21,6 +22,7 @@ import KeyboardDoubleArrowRightRoundedIcon from "@mui/icons-material/KeyboardDou
 import { useTranslation } from "react-i18next";
 import { profileMenuItems } from "@/widgets/navBar/navConfig";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { hasActiveSubscription } from "@/features/subscriptions/model/access";
 
 const expandedWidth = 264;
 const collapsedWidth = 82;
@@ -41,6 +43,7 @@ const DashboardLayout: React.FC = () => {
   const user = useAuthStore((state) => state.user);
   const role = String(user?.role ?? "").toLowerCase();
   const isAdmin = role === "admin";
+  const isPremium = hasActiveSubscription(user);
   const isAuth = useAuthStore((state) => state.isAuth);
   const isLoading = useAuthStore((state) => state.isLoading);
   const checkAuth = useAuthStore((state) => state.checkAuth);
@@ -277,23 +280,55 @@ const DashboardLayout: React.FC = () => {
               </ListItemIcon>
 
               {sidebarExpanded ? (
-                <ListItemText
-                  primary={t(item.key)}
-                  sx={{
-                    opacity: 1,
-                    "& .MuiTypography-root": {
-                      fontSize: 14,
-                      fontWeight: selected ? 700 : 600,
-                    },
-                  }}
-                />
+                <>
+                  <ListItemText
+                    primary={t(item.key)}
+                    sx={{
+                      opacity: 1,
+                      "& .MuiTypography-root": {
+                        fontSize: 14,
+                        fontWeight: selected ? 700 : 600,
+                      },
+                    }}
+                  />
+                  {item.key === "subscriptions" ? (
+                    <Chip
+                      size="small"
+                      label={t(isPremium ? "premiumStatus" : "freeStatus")}
+                      sx={{
+                        height: 21,
+                        fontSize: 10,
+                        fontWeight: 800,
+                        color: selected
+                          ? "#f9fafb"
+                          : isPremium
+                            ? "success.main"
+                            : "text.secondary",
+                        bgcolor: selected
+                          ? "rgba(255,255,255,0.16)"
+                          : isPremium
+                            ? "rgba(34,197,94,0.12)"
+                            : "action.hover",
+                      }}
+                    />
+                  ) : null}
+                </>
               ) : null}
             </ListItemButton>
           );
 
           if (!sidebarExpanded && isMdUp) {
             return (
-              <Tooltip key={item.key} title={t(item.key)} placement="right" arrow>
+              <Tooltip
+                key={item.key}
+                title={
+                  item.key === "subscriptions"
+                    ? `${t(item.key)} · ${t(isPremium ? "premiumStatus" : "freeStatus")}`
+                    : t(item.key)
+                }
+                placement="right"
+                arrow
+              >
                 {button}
               </Tooltip>
             );

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { showPremiumRequired } from "@/features/subscriptions/lib/premiumRequired";
 import { SpeechTestSessionService } from "../api/SpeechTestService";
 import type {
   CheckPronounceResponse,
@@ -96,12 +97,14 @@ export const useSpeechTestStore = create<SpeechTestState>((set, get) => ({
       });
       return test;
     } catch (error) {
-      useUiStore
-        .getState()
-        .showSnackbar(
-          fallbackMessage(error, "No pronunciation test is available right now"),
-          "warning",
-        );
+      if (!showPremiumRequired(error)) {
+        useUiStore
+          .getState()
+          .showSnackbar(
+            fallbackMessage(error, "No pronunciation test is available right now"),
+            "warning",
+          );
+      }
       set({
         currentTest: null,
         step: get().session ? "ready" : "idle",

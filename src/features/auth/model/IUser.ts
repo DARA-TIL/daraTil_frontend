@@ -1,3 +1,5 @@
+import type { Subscription } from "@/features/subscriptions/model/types";
+
 export interface IUserProgress {
   id: number;
   level: number;
@@ -21,6 +23,7 @@ export interface IUser {
   role: string;
   authProvider: string;
   progress: IUserProgress | null;
+  subscription?: Subscription | null;
 
   // NEW
   streak?: IUserStreak | null;

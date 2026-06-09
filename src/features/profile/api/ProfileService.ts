@@ -40,16 +40,12 @@ function normalizeUser(dto: unknown): IUser {
 const ProfileService = {
   async updateSelf(payload: {
     avatar?: string;
-    password?: string;
-    role?: string;
     username?: string;
   }) {
     // backend DTO в PascalCase, поэтому отправляем так
     const body: Record<string, string> = {};
     if (payload.username !== undefined) body.Username = payload.username;
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;
-    if (payload.role !== undefined) body.Role = payload.role;
-    if (payload.password !== undefined) body.Password = payload.password;
 
     const res = await $api.post<ApiData<unknown>>("/user/update", body);
     return normalizeUser(res.data.data);

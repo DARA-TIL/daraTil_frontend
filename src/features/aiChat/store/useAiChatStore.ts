@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { showPremiumRequired } from "@/features/subscriptions/lib/premiumRequired";
 import AIChatService from "../api/AIChatService";
 import { AIChatSocket } from "../api/AIChatSocket";
 import {
@@ -358,7 +359,9 @@ function handleSocketEvent(
       };
     });
 
-    useUiStore.getState().showSnackbar(message, "error");
+    if (!showPremiumRequired(message)) {
+      useUiStore.getState().showSnackbar(message, "error");
+    }
   }
 }
 
@@ -461,10 +464,12 @@ export const useAiChatStore = create<AiChatState>((set, get) => ({
 
       return created;
     } catch (error) {
-      useUiStore.getState().showSnackbar(
-        getApiErrorMessage(error) ?? "Failed to create chat",
-        "error",
-      );
+      if (!showPremiumRequired(error)) {
+        useUiStore.getState().showSnackbar(
+          getApiErrorMessage(error) ?? "Failed to create chat",
+          "error",
+        );
+      }
       return null;
     } finally {
       set(() => ({ mutatingChat: false }));

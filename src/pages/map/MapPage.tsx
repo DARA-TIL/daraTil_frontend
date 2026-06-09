@@ -19,11 +19,15 @@ import { mapFeatures, getMapFeatureByCode } from "@/features/regions/model/mapDa
 import { useRegionsStore } from "@/features/regions/store/useRegionsStore";
 import { KazakhstanInteractiveMap } from "@/features/regions/ui/KazakhstanInteractiveMap";
 import { RegionDetailsPanel } from "@/features/regions/ui/RegionDetailsPanel";
+import { useUiStore } from "@/shared/store/useUiStore";
 
 type SearchOption = {
   code: string;
+  disabled: boolean;
+  locked: boolean;
   name: string;
   kind: string;
+  requiredLevel: number;
 };
 
 const MapPage: React.FC = () => {
@@ -32,6 +36,7 @@ const MapPage: React.FC = () => {
   const { t, i18n } = useTranslation("map");
 
   const userLevel = useAuthStore((s) => s.user?.progress?.level ?? 0);
+  const showSnackbar = useUiStore((s) => s.showSnackbar);
 
   const items = useRegionsStore((s) => s.items);
   const itemsLoading = useRegionsStore((s) => s.itemsLoading);
@@ -70,16 +75,48 @@ const MapPage: React.FC = () => {
 
         return {
           code: feature.properties.code,
+          disabled: Boolean(
+            region && (!region.isActive || region.requiredLevel > userLevel),
+          ),
+          locked: Boolean(region && region.requiredLevel > userLevel),
           name:
             translation?.name ||
             feature.properties.name ||
             feature.properties.backendName ||
             feature.properties.code,
           kind: feature.properties.kind || "region",
+          requiredLevel: region?.requiredLevel ?? 0,
         };
       }),
-    [getRegionByCode, i18n.resolvedLanguage],
+    [getRegionByCode, i18n.resolvedLanguage, userLevel],
   );
+
+  const openRegion = (code: string) => {
+    const region = getRegionByCode(code);
+
+    if (region && region.requiredLevel > userLevel) {
+      showSnackbar(
+        t("messages.requiredLevel", {
+          defaultValue: "Reach level {{level}} to open this region",
+          level: region.requiredLevel,
+        }),
+        "warning",
+      );
+      return;
+    }
+
+    if (region && !region.isActive) {
+      showSnackbar(
+        t("messages.inactive", {
+          defaultValue: "This region is not available yet",
+        }),
+        "info",
+      );
+      return;
+    }
+
+    void selectByCode(code);
+  };
 
   const selectedFeature = selectedCode ? getMapFeatureByCode(selectedCode) : null;
   const selectedFallbackName =
@@ -145,9 +182,10 @@ const MapPage: React.FC = () => {
               sx={{ minWidth: { xs: "100%", lg: 320 } }}
               getOptionKey={(option) => option.code}
               getOptionLabel={(option) => option.name}
+              getOptionDisabled={(option) => option.disabled}
               onChange={(_, option) => {
                 if (!option) return;
-                void selectByCode(option.code);
+                openRegion(option.code);
               }}
               renderInput={(params) => (
                 <TextField
@@ -163,12 +201,21 @@ const MapPage: React.FC = () => {
                 return (
                 <Box component="li" key={key} {...optionProps}>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <Typography fontWeight={700}>{option.name}</Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {option.kind === "city"
-                        ? t("panel.kind.city", { defaultValue: "City" })
-                        : t("panel.kind.region", { defaultValue: "Region" })}
+                    <Typography fontWeight={700}>
+                      {option.locked
+                        ? t("tooltip.requiredLevel", {
+                            defaultValue: "Required level: {{level}}",
+                            level: option.requiredLevel,
+                          })
+                        : option.name}
                     </Typography>
+                    {!option.locked && (
+                      <Typography variant="caption" color="text.secondary">
+                        {option.kind === "city"
+                          ? t("panel.kind.city", { defaultValue: "City" })
+                          : t("panel.kind.region", { defaultValue: "Region" })}
+                      </Typography>
+                    )}
                   </Stack>
                 </Box>
                 );
@@ -187,9 +234,7 @@ const MapPage: React.FC = () => {
             selectedCode={selectedCode}
             userLevel={userLevel}
             language={normalizeRegionLanguage(appLanguage)}
-            onSelect={(code) => {
-              void selectByCode(code);
-            }}
+            onSelect={openRegion}
             onReset={clearSelected}
           />
 

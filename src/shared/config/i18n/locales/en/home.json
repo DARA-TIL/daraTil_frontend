@@ -8,9 +8,8 @@
     "ctaSecondary": "Learn More"
   },
   "stats": {
-    "lessons": "Lessons",
-    "users": "Users",
-    "words": "Words in dictionary",
+    "languages": "Languages",
+    "tools": "Learning tools",
     "regions": "Regions"
   },
   "features": {
@@ -46,7 +45,7 @@
     "sectionSubtitle": "Three simple steps to fluency in Kazakh",
     "step1": {
       "title": "Sign Up",
-      "desc": "Create an account and take an initial test to determine your level"
+      "desc": "Create a free account to save your progress and learn at your own pace"
     },
     "step2": {
       "title": "Learn Every Day",
@@ -59,11 +58,11 @@
   },
   "cta": {
     "title": "Ready to start learning?",
-    "subtitle": "Join thousands of users who are already learning Kazakh with Daratil",
+    "subtitle": "Create a free account and start learning Kazakh with structured lessons, cultural content, and an AI assistant",
     "button": "Create a free account"
   },
   "footer": {
     "description": "A platform for learning the Kazakh language using modern technology and artificial intelligence",
-    "rights": "© 2025 Daratil. All rights reserved."
+    "rights": "© {{year}} Daratil. All rights reserved."
   }
 }

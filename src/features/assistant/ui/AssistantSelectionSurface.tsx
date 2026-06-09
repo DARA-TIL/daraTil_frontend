@@ -17,6 +17,7 @@ import type {
 import { WordAssistantPopover } from "./WordAssistantPopover";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import { useUiStore } from "@/shared/store/useUiStore";
+import { showPremiumRequired } from "@/features/subscriptions/lib/premiumRequired";
 
 type Props = {
   block: string;
@@ -174,13 +175,22 @@ export const AssistantSelectionSurface: React.FC<Props> = ({
       } catch (requestError) {
         if (requestIdRef.current !== requestId) return;
 
-        setError(
-          getApiErrorMessage(requestError) ??
-            t("errors.requestFailed", {
+        if (showPremiumRequired(requestError)) {
+          setError(
+            t("errors.premiumRequired", {
               defaultValue:
-                "Could not process the selected word. Please try again.",
+                "Free daily limit reached. Open subscriptions to continue.",
             }),
-        );
+          );
+        } else {
+          setError(
+            getApiErrorMessage(requestError) ??
+              t("errors.requestFailed", {
+                defaultValue:
+                  "Could not process the selected word. Please try again.",
+              }),
+          );
+        }
       } finally {
         if (requestIdRef.current === requestId) {
           setLoadingAction(null);

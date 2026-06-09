@@ -15,5 +15,7 @@
   "notifications": "Notifications",
   "settings": "Settings",
   "events": "Events",
-  "subscriptions": "Subscriptions"
+  "subscriptions": "Subscriptions",
+  "premiumStatus": "Premium",
+  "freeStatus": "Free"
 }

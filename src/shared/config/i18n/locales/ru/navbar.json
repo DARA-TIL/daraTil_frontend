@@ -15,5 +15,7 @@
   "notifications": "Уведомления",
   "settings": "Настройки",
   "events": "Ивенты",
-  "subscriptions": "Подписки"
+  "subscriptions": "Подписки",
+  "premiumStatus": "Premium",
+  "freeStatus": "Бесплатно"
 }

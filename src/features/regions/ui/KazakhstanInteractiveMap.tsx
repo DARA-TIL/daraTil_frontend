@@ -5,6 +5,7 @@ import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
 import NearMeRoundedIcon from "@mui/icons-material/NearMeRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import LocationCityRoundedIcon from "@mui/icons-material/LocationCityRounded";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useTranslation } from "react-i18next";
 import { geoCentroid } from "d3-geo";
 import type { GeoPermissibleObjects } from "d3-geo";
@@ -33,6 +34,7 @@ type AnimatedViewport = {
 type TooltipState = {
   label: string;
   kind: string;
+  locked: boolean;
   x: number;
   y: number;
 } | null;
@@ -60,8 +62,8 @@ function getRegionVisualState(
   region: Region | null,
   userLevel: number,
 ): "locked" | "inactive" | "available" {
-  if (region && !region.isActive) return "inactive";
   if (region && region.requiredLevel > userLevel) return "locked";
+  if (region && !region.isActive) return "inactive";
   return "available";
 }
 
@@ -312,6 +314,7 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
                   const properties = geo.properties as MapRegionProperties;
                   const region = regionsByCode[properties.code] ?? null;
                   const visualState = getRegionVisualState(region, userLevel);
+                  const canOpen = visualState === "available";
                   const isHovered = hoveredCode === properties.code;
                   const isSelected = selectedCode === properties.code;
                   const shouldDim =
@@ -341,16 +344,25 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      onClick={() => onSelect(properties.code)}
+                      onClick={() => {
+                        if (canOpen) onSelect(properties.code);
+                      }}
                       onMouseEnter={(event) => {
                         setHoveredCode(properties.code);
                         setTooltip({
-                          label: getMapRegionName(
-                            properties,
-                            region,
-                            previewLanguage,
-                          ),
+                          label:
+                            visualState === "locked"
+                              ? t("tooltip.requiredLevel", {
+                                  defaultValue: "Required level: {{level}}",
+                                  level: region?.requiredLevel ?? 0,
+                                })
+                              : getMapRegionName(
+                                  properties,
+                                  region,
+                                  previewLanguage,
+                                ),
                           kind: properties.kind || "region",
+                          locked: visualState === "locked",
                           x: event.clientX,
                           y: event.clientY,
                         });
@@ -377,7 +389,7 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
                           strokeWidth: isSelected ? 2.8 : isHovered ? 2.1 : 1.2,
                           opacity: shouldDim ? 0.55 : 1,
                           outline: "none",
-                          cursor: "pointer",
+                          cursor: canOpen ? "pointer" : "not-allowed",
                           transition:
                             isZoomAnimating
                               ? "none"
@@ -389,7 +401,7 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
                           strokeWidth: isSelected ? 2.8 : 2.1,
                           opacity: 1,
                           outline: "none",
-                          cursor: "pointer",
+                          cursor: canOpen ? "pointer" : "not-allowed",
                         },
                         pressed: {
                           fill: alpha(theme.palette.primary.dark, 0.92),
@@ -427,15 +439,21 @@ export const KazakhstanInteractiveMap: React.FC<Props> = ({
           }}
         >
           <Stack direction="row" spacing={0.75} alignItems="center">
-            <NearMeRoundedIcon sx={{ fontSize: 14 }} />
+            {tooltip.locked ? (
+              <LockOutlinedIcon sx={{ fontSize: 14 }} />
+            ) : (
+              <NearMeRoundedIcon sx={{ fontSize: 14 }} />
+            )}
             <Typography variant="caption" fontWeight={700}>
               {tooltip.label}
             </Typography>
-            <Typography variant="caption" sx={{ opacity: 0.8 }}>
-              {tooltip.kind === "city"
-                ? t("panel.kind.city", { defaultValue: "City" })
-                : t("panel.kind.region", { defaultValue: "Region" })}
-            </Typography>
+            {!tooltip.locked && (
+              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                {tooltip.kind === "city"
+                  ? t("panel.kind.city", { defaultValue: "City" })
+                  : t("panel.kind.region", { defaultValue: "Region" })}
+              </Typography>
+            )}
           </Stack>
         </Box>
       ) : null}

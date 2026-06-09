@@ -36,15 +36,11 @@ const UserService = {
 
   async updateSelf(payload: {
     avatar?: string;
-    password?: string;
-    role?: string;
     username?: string;
   }) {
     const body: Record<string, string> = {};
     if (payload.username !== undefined) body.Username = payload.username;
-    if (payload.role !== undefined) body.Role = payload.role;
     if (payload.avatar !== undefined) body.Avatar = payload.avatar;
-    if (payload.password !== undefined) body.Password = payload.password;
 
     const res = await $api.post<ApiData<UserDto>>(`/user/update`, body);
     return normalizeUser(res.data.data);

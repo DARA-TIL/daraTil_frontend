@@ -15,6 +15,10 @@ import {
 } from "@/features/auth/model/streak";
 import { getRecord, isRecord, unwrapApiData } from "@/shared/lib/unknownRecord";
 import i18n from "@/shared/config/i18n/i18n";
+import type {
+  Subscription,
+  SubscriptionPlan,
+} from "@/features/subscriptions/model/types";
 
 function unwrapAuth(payload: AuthResponse | unknown): AuthPayload | unknown {
   return unwrapApiData(payload);
@@ -32,6 +36,45 @@ function extractRefreshToken(payload: AuthResponse | unknown): string | null {
   return typeof p.refreshToken === "string" ? p.refreshToken : null;
 }
 
+function normalizeSubscriptionPlan(payload: unknown): SubscriptionPlan | null {
+  if (!isRecord(payload)) return null;
+
+  return {
+    id: Number(payload.id ?? payload.ID ?? 0),
+    name: String(payload.name ?? payload.Name ?? ""),
+    description:
+      typeof (payload.description ?? payload.Description) === "string"
+        ? String(payload.description ?? payload.Description)
+        : null,
+    price: Number(payload.price ?? payload.Price ?? 0),
+    durationDays: Number(payload.durationDays ?? payload.DurationDays ?? 0),
+    isActive: Boolean(payload.isActive ?? payload.IsActive),
+    createdAt: String(payload.createdAt ?? payload.CreatedAt ?? ""),
+    updatedAt: String(payload.updatedAt ?? payload.UpdatedAt ?? ""),
+  };
+}
+
+function normalizeSubscription(payload: unknown): Subscription | null {
+  if (!isRecord(payload)) return null;
+
+  const plan = payload.plan ?? payload.Plan;
+
+  return {
+    id: Number(payload.id ?? payload.ID ?? 0),
+    userId: Number(payload.userId ?? payload.UserID ?? 0),
+    status: String(payload.status ?? payload.Status ?? ""),
+    planId: Number(payload.planId ?? payload.PlanID ?? 0),
+    plan: normalizeSubscriptionPlan(plan),
+    activeUntil: String(payload.activeUntil ?? payload.ActiveUntil ?? ""),
+    cancelledAt:
+      typeof (payload.cancelledAt ?? payload.CancelledAt) === "string"
+        ? String(payload.cancelledAt ?? payload.CancelledAt)
+        : null,
+    createdAt: String(payload.createdAt ?? payload.CreatedAt ?? ""),
+    updatedAt: String(payload.updatedAt ?? payload.UpdatedAt ?? ""),
+  };
+}
+
 function normalizeUserFromBackend(payload: unknown): IUser | null {
   if (!payload) return null;
 
@@ -42,6 +85,7 @@ function normalizeUserFromBackend(payload: unknown): IUser | null {
 
   const p = getRecord(u, "progress") ?? getRecord(u, "Progress");
   const st = getRecord(u, "streak") ?? getRecord(u, "Streak");
+  const subscription = u.subscription ?? u.Subscription;
   const streakStatus = root.streak;
 
   return {
@@ -51,6 +95,7 @@ function normalizeUserFromBackend(payload: unknown): IUser | null {
     avatar: String(u.avatar ?? u.Avatar ?? ""),
     role: String(u.role ?? u.Role ?? ""),
     authProvider: String(u.authProvider ?? u.AuthProvider ?? ""),
+    subscription: normalizeSubscription(subscription),
     streakStatus:
       typeof streakStatus === "string"
         ? toCanonicalStreakStatus(streakStatus)
@@ -139,7 +184,6 @@ interface AuthState {
   checkAuth: () => Promise<IUser | null>;
   updateProfile: (data: {
     avatar?: string;
-    password?: string;
     username?: string;
   }) => Promise<IUser | null>;
 }

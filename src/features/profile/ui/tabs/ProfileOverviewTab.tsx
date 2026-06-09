@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Autocomplete,
   Avatar,
   Box,
   Button,
   Chip,
+  Divider,
   Grid,
+  LinearProgress,
   Stack,
   TextField,
   Typography,
@@ -15,11 +17,14 @@ import { useTranslation } from "react-i18next";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 
 import type { Achievement } from "@/features/achievements/model/types";
 import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUserProfileStore } from "@/features/profile/store/useUserProfileStore";
+import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useUiStore } from "@/shared/store/useUiStore";
 import ProfileSectionCard from "../ProfileSectionCard";
 
@@ -59,8 +64,12 @@ const ProfileOverviewTab: React.FC = () => {
 
   const [username, setUsername] = useState(user?.username ?? "");
   const [avatar, setAvatar] = useState(user?.avatar ?? "");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarUploading, setAvatarUploading] = useState(false);
   const [selectedPinnedIds, setSelectedPinnedIds] = useState<number[]>([]);
   const [edit, setEdit] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -71,6 +80,18 @@ const ProfileOverviewTab: React.FC = () => {
   useEffect(() => {
     setSelectedPinnedIds(profile?.pinnedAchievements.map((item) => item.id) ?? []);
   }, [profile]);
+
+  useEffect(() => {
+    if (!avatarFile) {
+      setAvatarPreview("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(avatarFile);
+    setAvatarPreview(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [avatarFile]);
 
   const level = user?.progress?.level ?? 0;
   const xpTotal = user?.progress?.xpTotal ?? 0;
@@ -157,33 +178,108 @@ const ProfileOverviewTab: React.FC = () => {
 
   const hasAccountChanges =
     username.trim() !== (user.username ?? "") ||
-    avatar.trim() !== (user.avatar ?? "");
+    avatar.trim() !== (user.avatar ?? "") ||
+    Boolean(avatarFile);
   const hasPinnedChanges = !areEqualIdLists(selectedPinnedIds, currentPinnedIds);
   const pinnedSelectionValid =
     !hasPinnedChanges ||
     (selectedPinnedIds.length > 0 && selectedPinnedIds.length <= 3);
+  const usernameValid = username.trim().length >= 3;
   const saveDisabled =
     !edit ||
     profileSaving ||
+    avatarUploading ||
     (!hasAccountChanges && !hasPinnedChanges) ||
-    !pinnedSelectionValid;
+    !pinnedSelectionValid ||
+    !usernameValid;
 
   const resetForm = () => {
     setUsername(user.username ?? "");
     setAvatar(user.avatar ?? "");
+    setAvatarFile(null);
     setSelectedPinnedIds(currentPinnedIds);
     setEdit(false);
   };
 
+  const onAvatarFileChange = (file: File | null) => {
+    if (!file) {
+      setAvatarFile(null);
+      return;
+    }
+
+    if (!file.type.toLowerCase().startsWith("image/")) {
+      showSnackbar(
+        t("messages.avatarType", {
+          defaultValue: "Please select an image file",
+        }),
+        "warning",
+      );
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showSnackbar(
+        t("messages.avatarTooLarge", {
+          defaultValue: "Avatar must be smaller than 5 MB",
+        }),
+        "warning",
+      );
+      return;
+    }
+
+    setAvatarFile(file);
+  };
+
+  const uploadAvatarIfNeeded = async (): Promise<string | null> => {
+    if (!avatarFile) return avatar.trim();
+
+    try {
+      setAvatarUploading(true);
+      const uploaded = await uploadToCloudinary(avatarFile, {
+        kind: "image",
+        folder: "daratil/users/avatars",
+      });
+      setAvatar(uploaded.secureUrl);
+      return uploaded.secureUrl;
+    } catch {
+      showSnackbar(
+        t("messages.avatarUploadFailed", {
+          defaultValue: "Failed to upload avatar",
+        }),
+        "error",
+      );
+      return null;
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   const onSave = async () => {
+    if (!usernameValid) {
+      showSnackbar(
+        t("messages.usernameTooShort", {
+          defaultValue: "Username must contain at least 3 characters",
+        }),
+        "warning",
+      );
+      return;
+    }
+
     let success = true;
 
     if (hasAccountChanges) {
+      const uploadedAvatar = await uploadAvatarIfNeeded();
+      if (avatarFile && uploadedAvatar === null) return;
+
       const updated = await updateProfile({
         username: username.trim(),
-        avatar: avatar.trim(),
+        avatar: uploadedAvatar ?? avatar.trim(),
       });
       success = Boolean(updated) && success;
+
+      if (updated) {
+        setAvatarFile(null);
+      }
     }
 
     if (hasPinnedChanges) {
@@ -245,7 +341,7 @@ const ProfileOverviewTab: React.FC = () => {
           >
             <Stack direction="row" spacing={2.5} alignItems="center">
               <Avatar
-                src={avatar || user.avatar}
+                src={avatarPreview || avatar || user.avatar}
                 sx={{
                   width: 96,
                   height: 96,
@@ -312,52 +408,150 @@ const ProfileOverviewTab: React.FC = () => {
                   ? t("overview.cancel", { defaultValue: "Cancel" })
                   : t("overview.edit", { defaultValue: "Edit profile" })}
               </Button>
-
-              <Button
-                variant="contained"
-                startIcon={<SaveOutlinedIcon />}
-                disabled={saveDisabled}
-                onClick={onSave}
-                sx={{
-                  background: "rgba(15,23,42,0.85)",
-                  color: "#fff",
-                  boxShadow: "0 14px 30px rgba(0,0,0,0.22)",
-                }}
-              >
-                {t("overview.save", { defaultValue: "Save changes" })}
-              </Button>
             </Stack>
           </Stack>
+        </ProfileSectionCard>
+      </Grid>
 
-          {edit && (
-            <Stack spacing={2} mt={3} sx={{ maxWidth: 720 }}>
-              <TextField
-                label={t("overview.username", { defaultValue: "Username" })}
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "rgba(255,255,255,0.10)",
-                  },
-                  "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.85)" },
-                  "& .MuiOutlinedInput-input": { color: "#fff" },
-                }}
-              />
+      {edit && (
+        <Grid size={{ xs: 12 }}>
+          <ProfileSectionCard>
+            <Stack spacing={2.5}>
+              <Box>
+                <Typography fontWeight={900} fontSize={18}>
+                  {t("overview.settingsTitle", {
+                    defaultValue: "Profile settings",
+                  })}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t("overview.settingsSubtitle", {
+                    defaultValue:
+                      "Update your public profile and choose featured achievements.",
+                  })}
+                </Typography>
+              </Box>
 
-              <TextField
-                label={t("overview.avatar", { defaultValue: "Avatar URL" })}
-                value={avatar}
-                onChange={(event) => setAvatar(event.target.value)}
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "rgba(255,255,255,0.10)",
-                  },
-                  "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.85)" },
-                  "& .MuiOutlinedInput-input": { color: "#fff" },
-                }}
-              />
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <Stack spacing={1.5} alignItems={{ xs: "center", md: "flex-start" }}>
+                    <Avatar
+                      src={avatarPreview || avatar || user.avatar}
+                      sx={{
+                        width: 128,
+                        height: 128,
+                        fontSize: 44,
+                        fontWeight: 900,
+                        border: "1px solid",
+                        borderColor: theme.customColors.sidebarBorder,
+                      }}
+                    >
+                      {username.trim().charAt(0).toUpperCase() ||
+                        user.username.charAt(0).toUpperCase()}
+                    </Avatar>
+
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={(event) => {
+                        onAvatarFileChange(event.target.files?.[0] ?? null);
+                        event.target.value = "";
+                      }}
+                    />
+
+                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      <Button
+                        variant="outlined"
+                        startIcon={<CloudUploadOutlinedIcon />}
+                        onClick={() => avatarInputRef.current?.click()}
+                        disabled={avatarUploading}
+                      >
+                        {avatarFile
+                          ? t("overview.changeAvatar", {
+                              defaultValue: "Change file",
+                            })
+                          : t("overview.uploadAvatar", {
+                              defaultValue: "Upload avatar",
+                            })}
+                      </Button>
+                      {(avatar || avatarFile) && (
+                        <Button
+                          color="error"
+                          startIcon={<DeleteOutlineRoundedIcon />}
+                          onClick={() => {
+                            setAvatarFile(null);
+                            setAvatar("");
+                          }}
+                          disabled={avatarUploading}
+                        >
+                          {t("overview.removeAvatar", {
+                            defaultValue: "Remove",
+                          })}
+                        </Button>
+                      )}
+                    </Stack>
+
+                    <Typography variant="caption" color="text.secondary">
+                      {avatarFile
+                        ? t("overview.selectedAvatar", {
+                            defaultValue: "{{name}}, {{size}} KB",
+                            name: avatarFile.name,
+                            size: Math.round(avatarFile.size / 1024),
+                          })
+                        : t("overview.avatarHelper", {
+                            defaultValue: "JPG, PNG or WebP, up to 5 MB.",
+                          })}
+                    </Typography>
+
+                    {avatarUploading && <LinearProgress sx={{ width: "100%" }} />}
+                  </Stack>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 8 }}>
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12 }}>
+                      <TextField
+                        label={t("overview.username", {
+                          defaultValue: "Username",
+                        })}
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                        error={username.trim().length > 0 && !usernameValid}
+                        helperText={
+                          !usernameValid
+                            ? t("overview.usernameHelper", {
+                                defaultValue: "Use at least 3 characters.",
+                              })
+                            : " "
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField
+                        label={t("overview.email", { defaultValue: "Email" })}
+                        value={user.email}
+                        disabled
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField
+                        label={t("overview.authProvider", {
+                          defaultValue: "Sign-in method",
+                        })}
+                        value={user.authProvider || "email"}
+                        disabled
+                        fullWidth
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Divider />
 
               <Autocomplete
                 multiple
@@ -402,18 +596,6 @@ const ProfileOverviewTab: React.FC = () => {
                               "Select 1 to 3 unlocked achievements. Changes will be saved after you press Save.",
                           })
                     }
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        backgroundColor: "rgba(255,255,255,0.10)",
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "rgba(255,255,255,0.85)",
-                      },
-                      "& .MuiOutlinedInput-input": { color: "#fff" },
-                      "& .MuiFormHelperText-root": {
-                        color: "rgba(255,255,255,0.75)",
-                      },
-                    }}
                   />
                 )}
                 renderOption={(props, option) => {
@@ -453,10 +635,30 @@ const ProfileOverviewTab: React.FC = () => {
                   );
                 }}
               />
+
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent="flex-end"
+                flexWrap="wrap"
+                useFlexGap
+              >
+                <Button onClick={resetForm} disabled={avatarUploading || profileSaving}>
+                  {t("overview.cancel", { defaultValue: "Cancel" })}
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<SaveOutlinedIcon />}
+                  disabled={saveDisabled}
+                  onClick={onSave}
+                >
+                  {t("overview.save", { defaultValue: "Save changes" })}
+                </Button>
+              </Stack>
             </Stack>
-          )}
-        </ProfileSectionCard>
-      </Grid>
+          </ProfileSectionCard>
+        </Grid>
+      )}
 
       <Grid size={{ xs: 12, md: 7 }}>
         <ProfileSectionCard>

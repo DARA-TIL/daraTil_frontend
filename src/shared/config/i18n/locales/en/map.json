@@ -13,6 +13,13 @@
     "selected": "Selected",
     "locked": "Locked"
   },
+  "tooltip": {
+    "requiredLevel": "Required level: {{level}}"
+  },
+  "messages": {
+    "requiredLevel": "Reach level {{level}} to open this region",
+    "inactive": "This region is not available yet"
+  },
   "tabs": {
     "overview": "Overview",
     "dialects": "Dialects",

@@ -15,5 +15,7 @@
   "notifications": "Хабарламалар",
   "settings": "Баптаулар",
   "events": "Ивенттер",
-  "subscriptions": "Жазылымдар"
+  "subscriptions": "Жазылымдар",
+  "premiumStatus": "Premium",
+  "freeStatus": "Тегін"
 }

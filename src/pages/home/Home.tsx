@@ -23,17 +23,19 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { usePrefersReducedMotion } from "@/shared/lib/usePrefersReducedMotion";
+import { NAVBAR_HEIGHT, PAGE_PX_NEGATIVE } from "@/shared/config/layout";
 import daratilIcon from "@/shared/assets/image/daratil_icon.jpg";
 
 /* ───────────────── helpers ───────────────── */
 
 const FEATURES = [
-  { key: "lessons",       icon: AutoStoriesIcon,      gradient: "linear-gradient(135deg,#2563eb,#3b82f6)" },
-  { key: "ai",            icon: SmartToyIcon,          gradient: "linear-gradient(135deg,#7c3aed,#a855f7)" },
-  { key: "pronunciation", icon: RecordVoiceOverIcon,   gradient: "linear-gradient(135deg,#059669,#10b981)" },
-  { key: "dictionary",    icon: MenuBookIcon,          gradient: "linear-gradient(135deg,#d97706,#f59e0b)" },
-  { key: "folklore",      icon: TheaterComedyIcon,     gradient: "linear-gradient(135deg,#dc2626,#f87171)" },
-  { key: "map",           icon: MapIcon,               gradient: "linear-gradient(135deg,#0891b2,#22d3ee)" },
+  { key: "lessons",       icon: AutoStoriesIcon,      gradient: "linear-gradient(135deg,#2563eb,#3b82f6)", route: "/app/lessons" },
+  { key: "ai",            icon: SmartToyIcon,          gradient: "linear-gradient(135deg,#7c3aed,#a855f7)", route: "/app/ai-chat" },
+  { key: "pronunciation", icon: RecordVoiceOverIcon,   gradient: "linear-gradient(135deg,#059669,#10b981)", route: "/app/pronunciation" },
+  { key: "dictionary",    icon: MenuBookIcon,          gradient: "linear-gradient(135deg,#d97706,#f59e0b)", route: "/app/dictionary" },
+  { key: "folklore",      icon: TheaterComedyIcon,     gradient: "linear-gradient(135deg,#dc2626,#f87171)", route: "/app/folklore" },
+  { key: "map",           icon: MapIcon,               gradient: "linear-gradient(135deg,#0891b2,#22d3ee)", route: "/app/map" },
 ] as const;
 
 const STEPS = [
@@ -44,11 +46,21 @@ const STEPS = [
 
 /* ───────────────── animated counter ───────────────── */
 
-const AnimatedNumber: React.FC<{ target: number }> = ({ target }) => {
+const AnimatedNumber: React.FC<{ target: number; suffix?: string }> = ({
+  target,
+  suffix = "",
+}) => {
   const [value, setValue] = React.useState(0);
   const ref = React.useRef<HTMLSpanElement>(null);
+  const reduceMotion = usePrefersReducedMotion();
 
   React.useEffect(() => {
+    // Respect reduced-motion: show the final value without counting up.
+    if (reduceMotion) {
+      setValue(target);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -71,9 +83,14 @@ const AnimatedNumber: React.FC<{ target: number }> = ({ target }) => {
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [target]);
+  }, [target, reduceMotion]);
 
-  return <span ref={ref}>{value.toLocaleString()}+</span>;
+  return (
+    <span ref={ref}>
+      {value.toLocaleString()}
+      {suffix}
+    </span>
+  );
 };
 
 /* ───────────────── main component ───────────────── */
@@ -84,10 +101,15 @@ const Home: React.FC = () => {
   const theme = useTheme();
   const isAuth = useAuthStore((s) => s.isAuth);
   const isDark = theme.palette.mode === "dark";
+  const reduceMotion = usePrefersReducedMotion();
 
   const handleCtaClick = () => {
     navigate(isAuth ? "/app" : "/register");
   };
+
+  /* ─── motion helpers (disabled under prefers-reduced-motion) ─── */
+  const hoverLift = (y: number) => (reduceMotion ? "none" : `translateY(${y}px)`);
+  const motionTransition = (value: string) => (reduceMotion ? "none" : value);
 
   /* ─── section-level common styles ─── */
   const sectionSx = {
@@ -97,13 +119,13 @@ const Home: React.FC = () => {
   return (
     <Box
       sx={{
-        // offset from the fixed NavBar (74px toolbar)
-        pt: "74px",
+        // offset from the fixed NavBar (shared constant keeps it in sync)
+        pt: `${NAVBAR_HEIGHT}px`,
         minHeight: "100vh",
         bgcolor: "background.default",
         overflow: "hidden",
         // break out of RootLayout padding to span full width
-        mx: { xs: -2, md: -4 },
+        mx: PAGE_PX_NEGATIVE,
         px: 0,
       }}
     >
@@ -185,31 +207,32 @@ const Home: React.FC = () => {
           </Box>
 
           <Typography
-            variant="h2"
-            sx={{
-              fontWeight: 900,
-              fontSize: { xs: "2rem", sm: "2.75rem", md: "3.5rem" },
-              lineHeight: 1.15,
-              mb: 1,
-              color: "text.primary",
-            }}
-          >
-            {t("hero.title")}
-          </Typography>
-
-          <Typography
+            component="h1"
             variant="h2"
             sx={{
               fontWeight: 900,
               fontSize: { xs: "2rem", sm: "2.75rem", md: "3.5rem" },
               lineHeight: 1.15,
               mb: 3,
-              background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
             }}
           >
-            {t("hero.titleAccent")}
+            <Box component="span" sx={{ display: "block", color: "text.primary" }}>
+              {t("hero.title")}
+            </Box>
+            <Box
+              component="span"
+              sx={{
+                display: "block",
+                // fallback colour for browsers without -webkit text clipping
+                color: "#7c3aed",
+                background: "linear-gradient(135deg,#2563eb,#7c3aed)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              {t("hero.titleAccent")}
+            </Box>
           </Typography>
 
           <Typography
@@ -248,9 +271,9 @@ const Home: React.FC = () => {
                 "&:hover": {
                   background: "linear-gradient(135deg,#1d4ed8,#4338ca)",
                   boxShadow: "0 18px 40px rgba(37,99,235,0.45)",
-                  transform: "translateY(-2px)",
+                  transform: hoverLift(-2),
                 },
-                transition: "all 260ms ease",
+                transition: motionTransition("all 260ms ease"),
               }}
             >
               {t("hero.cta")}
@@ -278,9 +301,9 @@ const Home: React.FC = () => {
                   bgcolor: isDark
                     ? "rgba(37,99,235,0.08)"
                     : "rgba(37,99,235,0.05)",
-                  transform: "translateY(-2px)",
+                  transform: hoverLift(-2),
                 },
-                transition: "all 260ms ease",
+                transition: motionTransition("all 260ms ease"),
               }}
             >
               {t("hero.ctaSecondary")}
@@ -301,27 +324,30 @@ const Home: React.FC = () => {
           borderBottom: `1px solid ${isDark ? "rgba(51,65,85,0.3)" : "rgba(226,232,240,0.9)"}`,
         }}
       >
-        <Container maxWidth="lg">
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={{ xs: 3, sm: 0 }}
-            justifyContent="space-around"
-            alignItems="center"
+        <Container maxWidth="md">
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+              gap: { xs: 3, sm: 4 },
+              alignItems: "center",
+            }}
           >
             {[
-              { label: t("stats.lessons"), value: 50 },
-              { label: t("stats.users"), value: 1200 },
-              { label: t("stats.words"), value: 5000 },
+              { label: t("stats.languages"), value: 3 },
+              { label: t("stats.tools"), value: 6 },
               { label: t("stats.regions"), value: 16 },
             ].map((stat) => (
-              <Box key={stat.label} sx={{ textAlign: "center", minWidth: 120 }}>
+              <Box key={stat.label} sx={{ textAlign: "center" }}>
                 <Typography
                   variant="h3"
                   sx={{
                     fontWeight: 800,
                     fontSize: { xs: "2rem", md: "2.5rem" },
+                    color: "#2563eb",
                     background: "linear-gradient(135deg,#2563eb,#7c3aed)",
                     WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
                 >
@@ -335,7 +361,7 @@ const Home: React.FC = () => {
                 </Typography>
               </Box>
             ))}
-          </Stack>
+          </Box>
         </Container>
       </Box>
 
@@ -378,10 +404,20 @@ const Home: React.FC = () => {
               gap: { xs: 2.5, md: 3 },
             }}
           >
-            {FEATURES.map(({ key, icon: Icon, gradient }) => (
+            {FEATURES.map(({ key, icon: Icon, gradient, route }) => (
               <Paper
                 key={key}
                 elevation={0}
+                role="button"
+                tabIndex={0}
+                aria-label={t(`features.${key}.title`)}
+                onClick={() => navigate(route)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(route);
+                  }
+                }}
                 sx={{
                   p: { xs: 3, md: 3.5 },
                   borderRadius: 5,
@@ -390,16 +426,20 @@ const Home: React.FC = () => {
                     ? "rgba(15,23,42,0.6)"
                     : "rgba(255,255,255,0.9)",
                   backdropFilter: "blur(8px)",
-                  transition: "all 300ms ease",
-                  cursor: "default",
+                  transition: motionTransition("all 300ms ease"),
+                  cursor: "pointer",
                   "&:hover": {
-                    transform: "translateY(-6px)",
+                    transform: hoverLift(-6),
                     boxShadow: isDark
                       ? "0 20px 50px rgba(0,0,0,0.5)"
                       : "0 20px 50px rgba(15,23,42,0.12)",
                     borderColor: isDark
                       ? "rgba(99,102,241,0.4)"
                       : "rgba(99,102,241,0.3)",
+                  },
+                  "&:focus-visible": {
+                    outline: `2px solid ${theme.palette.primary.main}`,
+                    outlineOffset: 2,
                   },
                 }}
               >
@@ -496,9 +536,9 @@ const Home: React.FC = () => {
                   bgcolor: isDark
                     ? "rgba(15,23,42,0.7)"
                     : "#fff",
-                  transition: "all 300ms ease",
+                  transition: motionTransition("all 300ms ease"),
                   "&:hover": {
-                    transform: "translateY(-4px)",
+                    transform: hoverLift(-4),
                     boxShadow: isDark
                       ? "0 16px 40px rgba(0,0,0,0.4)"
                       : "0 16px 40px rgba(15,23,42,0.10)",
@@ -649,9 +689,9 @@ const Home: React.FC = () => {
                 "&:hover": {
                   background: "linear-gradient(135deg,#1d4ed8,#6d28d9)",
                   boxShadow: "0 18px 40px rgba(37,99,235,0.45)",
-                  transform: "translateY(-2px)",
+                  transform: hoverLift(-2),
                 },
-                transition: "all 260ms ease",
+                transition: motionTransition("all 260ms ease"),
               }}
             >
               {t("cta.button")}
@@ -716,7 +756,7 @@ const Home: React.FC = () => {
                 pt: { md: 5 },
               }}
             >
-              {t("footer.rights")}
+              {t("footer.rights", { year: new Date().getFullYear() })}
             </Typography>
           </Stack>
         </Container>

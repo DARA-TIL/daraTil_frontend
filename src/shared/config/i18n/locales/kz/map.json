@@ -13,6 +13,13 @@
     "selected": "Таңдалған",
     "locked": "Жабық"
   },
+  "tooltip": {
+    "requiredLevel": "Қажетті деңгей: {{level}}"
+  },
+  "messages": {
+    "requiredLevel": "Бұл өңірді ашу үшін {{level}} деңгейге жетіңіз",
+    "inactive": "Бұл өңір әзірге қолжетімсіз"
+  },
   "tabs": {
     "overview": "Шолу",
     "dialects": "Диалектілер",

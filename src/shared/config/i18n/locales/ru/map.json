@@ -13,6 +13,13 @@
     "selected": "Выбрано",
     "locked": "Закрыто"
   },
+  "tooltip": {
+    "requiredLevel": "Требуемый уровень: {{level}}"
+  },
+  "messages": {
+    "requiredLevel": "Достигните уровня {{level}}, чтобы открыть этот регион",
+    "inactive": "Этот регион пока недоступен"
+  },
   "tabs": {
     "overview": "Обзор",
     "dialects": "Диалекты",

@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import AuthService from "@/features/auth/api/AuthService";
@@ -20,10 +20,13 @@ type Step = 1 | 2 | 3;
 const ForgotPassword: React.FC = () => {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const showSnackbar = useUiStore((s) => s.showSnackbar);
+  const returnTo = searchParams.get("returnTo");
+  const safeReturnTo = returnTo?.startsWith("/") ? returnTo : "/login";
 
   const [step, setStep] = useState<Step>(1);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => searchParams.get("email") ?? "");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,7 +35,7 @@ const ForgotPassword: React.FC = () => {
   const [fieldError, setFieldError] = useState<string>("");
 
   const handleBackToLogin = () => {
-    navigate("/login");
+    navigate(safeReturnTo);
   };
 
   // 1) запрос кода
@@ -113,7 +116,7 @@ const ForgotPassword: React.FC = () => {
     try {
       await AuthService.confirmPasswordReset(password);
       showSnackbar(t("forgot.passwordChanged"), "success");
-      navigate("/login");
+      navigate(safeReturnTo);
     } catch (error: unknown) {
       let msg = t("forgot.genericError");
 

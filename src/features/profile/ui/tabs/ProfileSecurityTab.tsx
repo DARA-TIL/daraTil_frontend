@@ -1,52 +1,63 @@
-import React, { useState } from "react";
-import { Grid, Stack, TextField, Typography, Button } from "@mui/material";
+import React from "react";
+import { Alert, Button, Grid, Stack, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
 import ProfileSectionCard from "../ProfileSectionCard";
-import { useUiStore } from "@/shared/store/useUiStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 const ProfileSecurityTab: React.FC = () => {
   const { t } = useTranslation("profile");
-  const show = useUiStore((s) => s.showSnackbar);
+  const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
 
-  const [password, setPassword] = useState("");
-
-  const updateProfile = useAuthStore((s) => s.updateProfile);
-
-  const onChangePassword = async () => {
-    if (!password.trim()) {
-      show(
-        t("security.passwordRequired", {
-          defaultValue: "Password is required",
-        }),
-        "warning",
-      );
-      return;
-    }
-    await updateProfile({ password: password.trim() });
-    setPassword("");
-  };
+  if (!user) return null;
 
   return (
     <Grid container spacing={3}>
       <Grid size={{ xs: 12, md: 6 }}>
         <ProfileSectionCard>
-          <Typography fontWeight={800} mb={2}>
+          <Typography fontWeight={800} mb={0.75}>
             {t("security.title", { defaultValue: "Change password" })}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={2}>
+            {t("security.subtitle", {
+              defaultValue:
+                "We will send a verification code to your account email before changing the password.",
+            })}
           </Typography>
 
           <Stack spacing={2}>
             <TextField
-              label={t("security.newPassword", { defaultValue: "New password" })}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              label={t("overview.email", { defaultValue: "Email" })}
+              value={user.email}
+              disabled
               fullWidth
             />
 
-            <Button variant="contained" onClick={onChangePassword}>
-              {t("security.updatePassword", {
-                defaultValue: "Update password",
+            {user.authProvider && user.authProvider !== "local" && (
+              <Alert severity="info">
+                {t("security.providerHint", {
+                  defaultValue:
+                    "This account uses {{provider}} sign-in. You can still request a password reset if a password is configured.",
+                  provider: user.authProvider,
+                })}
+              </Alert>
+            )}
+
+            <Button
+              variant="contained"
+              startIcon={<LockResetOutlinedIcon />}
+              onClick={() =>
+                navigate(
+                  `/forgot-password?email=${encodeURIComponent(
+                    user.email,
+                  )}&returnTo=${encodeURIComponent("/app/profile")}`,
+                )
+              }
+            >
+              {t("security.startPasswordReset", {
+                defaultValue: "Send verification code",
               })}
             </Button>
           </Stack>

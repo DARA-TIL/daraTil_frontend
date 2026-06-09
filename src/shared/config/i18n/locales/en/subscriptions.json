@@ -1,0 +1,88 @@
+{
+  "title": "Subscription",
+  "subtitle": "Compare access levels and choose the right Premium duration.",
+  "refresh": "Refresh",
+  "loading": "Loading plans...",
+  "status": {
+    "premium": "Premium is active",
+    "free": "You are currently on the free plan",
+    "activeUntil": "Unlimited AI access is active until {{date}}.",
+    "freeDescription": "Core learning remains available, while AI features have daily limits."
+  },
+  "free": {
+    "title": "Free",
+    "subtitle": "For getting started and regular learning",
+    "price": "0 KZT",
+    "limit": "Limits reset daily: 5 requests each for AI chat, word explanations, and pronunciation tasks.",
+    "learning": {
+      "title": "Core learning",
+      "description": "Lessons, region map, dictionary, folklore, events, and progress."
+    },
+    "ai": {
+      "title": "AI chat",
+      "description": "Up to 5 messages per day."
+    },
+    "explain": {
+      "title": "Word explanations",
+      "description": "Up to 5 AI explanations per day."
+    },
+    "speech": {
+      "title": "Pronunciation practice",
+      "description": "Up to 5 new tasks per day."
+    }
+  },
+  "premium": {
+    "title": "Premium",
+    "subtitle": "Practice freely without daily limits",
+    "active": "Active",
+    "unlimited": "Unlimited",
+    "ai": {
+      "title": "Unlimited AI chat",
+      "description": "Ask as many questions as your learning requires."
+    },
+    "explain": {
+      "title": "Unlimited word explanations",
+      "description": "Explore unfamiliar words without a daily limit."
+    },
+    "speech": {
+      "title": "Unlimited pronunciation",
+      "description": "Practice and receive new tasks without limits."
+    },
+    "everything": {
+      "title": "Everything in Free",
+      "description": "Keep full access to all core learning materials."
+    }
+  },
+  "plans": {
+    "title": "Choose Premium duration",
+    "subtitle": "Daily AI limits are removed immediately after activation.",
+    "extendTitle": "Extend Premium",
+    "extendSubtitle": "The new duration will be added to your active subscription.",
+    "defaultDescription": "Unlimited access to Premium features.",
+    "duration": "Access for {{count}} days",
+    "choose": "Choose plan",
+    "extend": "Extend",
+    "creating": "Creating payment...",
+    "empty": "No plans are currently available."
+  },
+  "payment": {
+    "title": "Payment is ready for confirmation",
+    "details": "Payment #{{id}} for {{amount}}.",
+    "open": "Open payment",
+    "activate": "Activate test payment",
+    "activating": "Activating..."
+  },
+  "messages": {
+    "loadFailed": "Failed to load subscriptions",
+    "mockCreated": "Test payment created. Confirm activation below.",
+    "paymentOpened": "Payment page opened",
+    "paymentCreated": "Payment created",
+    "paymentFailed": "Failed to create payment",
+    "activated": "Premium activated successfully",
+    "confirmFailed": "Failed to confirm payment"
+  },
+  "premiumLimit": {
+    "message": "Your free daily limit is reached. Upgrade to Premium to continue without limits.",
+    "action": "View plans"
+  }
+}

@@ -23,6 +23,7 @@ import NotificationsMenu from "@/features/notifications/ui/NotificationsMenu";
 
 import { useTheme } from "@mui/material/styles";
 import { useColorMode } from "@/shared/theme/sharedColorMode";
+import { NAVBAR_HEIGHT } from "@/shared/config/layout";
 import daratilIcon from "@/shared/assets/image/daratil_icon.jpg";
 
 const NavBar = () => {
@@ -109,7 +110,7 @@ const NavBar = () => {
     >
       <Toolbar
         sx={{
-          minHeight: 74,
+          minHeight: NAVBAR_HEIGHT,
           display: "flex",
           justifyContent: "space-between",
           px: { xs: 1.5, sm: 2.5, md: 3.25 },
