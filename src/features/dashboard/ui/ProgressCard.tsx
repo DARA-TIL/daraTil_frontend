@@ -1,11 +1,18 @@
 import React, { useEffect } from "react";
-import { Box, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import TranslateRoundedIcon from "@mui/icons-material/TranslateRounded";
+import LocalFireDepartmentRoundedIcon from "@mui/icons-material/LocalFireDepartmentRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUserProfileStore } from "@/features/profile/store/useUserProfileStore";
+import { useSavedWordsCount } from "@/features/dictionary/lib/useSavedWordsCount";
 
 export const ProgressCard: React.FC = () => {
   const { t } = useTranslation("profile");
+  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const profile = useUserProfileStore((s) => s.profile);
   const fetchProfile = useUserProfileStore((s) => s.fetchByUserId);
@@ -19,10 +26,42 @@ export const ProgressCard: React.FC = () => {
   const currentXp = user?.progress?.xpTotal ?? 0;
   const nextXp = Math.max(user?.progress?.xpForNextLevel ?? 1, 1);
   const progress = Math.min(100, Math.round((currentXp / nextXp) * 100));
+  const xpRemaining = Math.max(nextXp - currentXp, 0);
+  const nextLevel = level + 1;
 
   const completedLessons = profile?.lessonsCompleted ?? 0;
-  const wordsLearned = profile?.wordsLearned ?? 0;
+  const wordsLearned = useSavedWordsCount();
   const currentStreak = user?.streak?.currentStreak ?? 0;
+
+  const statTiles = [
+    {
+      key: "lessons",
+      label: t("cards.completedLessons"),
+      display: completedLessons,
+      Icon: SchoolRoundedIcon,
+      light: { bg: "rgba(59,130,246,0.12)", border: "rgba(59,130,246,0.4)", color: "#1d4ed8" },
+      dark: { bg: "rgba(59,130,246,0.4)", border: "rgba(191,219,254,0.9)", color: "#bfdbfe" },
+    },
+    {
+      key: "words",
+      label: t("cards.wordsLearned"),
+      display: wordsLearned,
+      Icon: TranslateRoundedIcon,
+      light: { bg: "rgba(34,197,94,0.12)", border: "rgba(34,197,94,0.55)", color: "#15803d" },
+      dark: { bg: "rgba(34,197,94,0.32)", border: "rgba(187,247,208,0.9)", color: "#bbf7d0" },
+    },
+    {
+      key: "streak",
+      label: t("cards.profileStreak", { defaultValue: "Streak" }),
+      display: t("cards.streakCurrentValue", {
+        defaultValue: "{{count}} days",
+        count: currentStreak,
+      }),
+      Icon: LocalFireDepartmentRoundedIcon,
+      light: { bg: "rgba(234,179,8,0.12)", border: "rgba(234,179,8,0.6)", color: "#92400e" },
+      dark: { bg: "rgba(250,204,21,0.25)", border: "rgba(254,240,138,0.9)", color: "#fef9c3" },
+    },
+  ];
 
   return (
     <Paper
@@ -175,118 +214,112 @@ export const ProgressCard: React.FC = () => {
 
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        justifyContent="space-between"
-        sx={{ position: "relative", zIndex: 1 }}
+        spacing={1.5}
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          flexGrow: 1,
+          alignItems: "stretch",
+          mt: 0.5,
+        }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
+        {statTiles.map(({ key, label, display, Icon, light, dark }) => (
           <Box
+            key={key}
             sx={(theme) => ({
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background:
-                theme.palette.mode === "light"
-                  ? "rgba(59,130,246,0.12)"
-                  : "rgba(59,130,246,0.4)",
-              border: `1px solid ${
-                theme.palette.mode === "light"
-                  ? "rgba(59,130,246,0.4)"
-                  : "rgba(191,219,254,0.9)"
-              }`,
+              flex: 1,
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 13,
-              fontWeight: 600,
-              color: theme.palette.mode === "light" ? "#1d4ed8" : "#bfdbfe",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: 2,
+              p: 2.5,
+              minHeight: 150,
+              borderRadius: 3,
+              border: `1px solid ${theme.customColors.sidebarBorder}`,
+              backgroundColor:
+                theme.palette.mode === "light"
+                  ? "rgba(248,250,252,0.7)"
+                  : "rgba(15,23,42,0.5)",
             })}
           >
-            {completedLessons}
-          </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
-              {t("cards.completedLessons")}
-            </Typography>
-            <Typography variant="subtitle2" fontWeight={600}>
-              {completedLessons}
-            </Typography>
-          </Box>
-        </Box>
+            <Stack direction="row" spacing={1.25} alignItems="center">
+              <Box
+                sx={(theme) => {
+                  const accent =
+                    theme.palette.mode === "light" ? light : dark;
+                  return {
+                    width: 42,
+                    height: 42,
+                    borderRadius: "50%",
+                    background: accent.bg,
+                    border: `1px solid ${accent.border}`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: accent.color,
+                    flexShrink: 0,
+                  };
+                }}
+              >
+                <Icon sx={{ fontSize: 22 }} />
+              </Box>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                fontWeight={700}
+              >
+                {label}
+              </Typography>
+            </Stack>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
-          <Box
-            sx={(theme) => ({
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background:
-                theme.palette.mode === "light"
-                  ? "rgba(34,197,94,0.12)"
-                  : "rgba(34,197,94,0.32)",
-              border: `1px solid ${
-                theme.palette.mode === "light"
-                  ? "rgba(34,197,94,0.55)"
-                  : "rgba(187,247,208,0.9)"
-              }`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 13,
-              fontWeight: 600,
-              color: theme.palette.mode === "light" ? "#15803d" : "#bbf7d0",
-            })}
-          >
-            {wordsLearned}
-          </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
-              {t("cards.wordsLearned")}
-            </Typography>
-            <Typography variant="subtitle2" fontWeight={600}>
-              {wordsLearned}
+            <Typography variant="h4" fontWeight={800} sx={{ lineHeight: 1.05 }}>
+              {display}
             </Typography>
           </Box>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
-          <Box
-            sx={(theme) => ({
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background:
-                theme.palette.mode === "light"
-                  ? "rgba(234,179,8,0.12)"
-                  : "rgba(250,204,21,0.25)",
-              border: `1px solid ${
-                theme.palette.mode === "light"
-                  ? "rgba(234,179,8,0.6)"
-                  : "rgba(254,240,138,0.9)"
-              }`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 13,
-              fontWeight: 600,
-              color: theme.palette.mode === "light" ? "#92400e" : "#fef9c3",
-            })}
-          >
-            {currentStreak}
-          </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
-              {t("cards.profileStreak", { defaultValue: "Streak" })}
-            </Typography>
-            <Typography variant="subtitle2" fontWeight={600}>
-              {t("cards.streakCurrentValue", {
-                defaultValue: "{{count}} days",
-                count: currentStreak,
-              })}
-            </Typography>
-          </Box>
-        </Box>
+        ))}
       </Stack>
+
+      <Box
+        sx={(theme) => ({
+          mt: 2,
+          p: 2,
+          borderRadius: 3,
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          alignItems: { xs: "stretch", sm: "center" },
+          justifyContent: "space-between",
+          gap: 1.5,
+          position: "relative",
+          zIndex: 1,
+          border: `1px solid ${theme.customColors.sidebarBorder}`,
+          backgroundImage: theme.gradients.cardSoft,
+        })}
+      >
+        <Box>
+          <Typography fontWeight={800}>
+            {t("cards.keepGoingTitle", { defaultValue: "Keep going" })}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {t("cards.xpToNextLevel", {
+              defaultValue: "{{remaining}} XP left to level {{level}}",
+              remaining: xpRemaining,
+              level: nextLevel,
+            })}
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          endIcon={<ArrowForwardRoundedIcon />}
+          onClick={() => navigate("/app/lessons")}
+          sx={{
+            borderRadius: 999,
+            alignSelf: { xs: "flex-start", sm: "center" },
+            flexShrink: 0,
+          }}
+        >
+          {t("cards.continueLearning", { defaultValue: "Continue learning" })}
+        </Button>
+      </Box>
     </Paper>
   );
 };

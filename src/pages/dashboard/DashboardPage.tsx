@@ -32,8 +32,8 @@ const DashboardPage: React.FC = () => {
       >
         <Grid size={{ xs: 12, xl: 7 }}>
           <Stack spacing={2.5} sx={{ height: "100%" }}>
-            <Box sx={{ minHeight: { xs: "auto", xl: 520 } }}>
-              <LessonsMapCard />
+            <Box sx={{ minHeight: { xs: "auto", xl: 520 }, display: "flex" }}>
+              <ProgressCard />
             </Box>
           </Stack>
         </Grid>
@@ -76,7 +76,9 @@ const DashboardPage: React.FC = () => {
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <ProgressCard />
+          <Box sx={{ height: { xs: 380, xl: 420 } }}>
+            <LessonsMapCard />
+          </Box>
         </Grid>
       </Grid>
     </Box>

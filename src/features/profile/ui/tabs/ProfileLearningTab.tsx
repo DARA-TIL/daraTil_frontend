@@ -4,6 +4,7 @@ import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUserProfileStore } from "@/features/profile/store/useUserProfileStore";
+import { useSavedWordsCount } from "@/features/dictionary/lib/useSavedWordsCount";
 import ProfileSectionCard from "../ProfileSectionCard";
 
 const ProfileLearningTab: React.FC = () => {
@@ -11,6 +12,7 @@ const ProfileLearningTab: React.FC = () => {
   const { t } = useTranslation("profile");
   const user = useAuthStore((s) => s.user);
   const profile = useUserProfileStore((s) => s.profile);
+  const wordsLearned = useSavedWordsCount();
 
   if (!user) return null;
 
@@ -18,7 +20,6 @@ const ProfileLearningTab: React.FC = () => {
   const xpNext = Math.max(user.progress?.xpForNextLevel ?? 1, 1);
   const percent = Math.min(100, Math.round((xpTotal / xpNext) * 100));
   const lessonsCompleted = profile?.lessonsCompleted ?? 0;
-  const wordsLearned = profile?.wordsLearned ?? 0;
   const currentStreak = user.streak?.currentStreak ?? 0;
   const longestStreak = user.streak?.longestStreak ?? 0;
   const pinnedCount = profile?.pinnedAchievements.length ?? 0;

@@ -24,6 +24,7 @@ import type { Achievement } from "@/features/achievements/model/types";
 import { useAchievementsStore } from "@/features/achievements/store/useAchievementsStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useUserProfileStore } from "@/features/profile/store/useUserProfileStore";
+import { useSavedWordsCount } from "@/features/dictionary/lib/useSavedWordsCount";
 import { uploadToCloudinary } from "@/shared/services/cloudinary";
 import { useUiStore } from "@/shared/store/useUiStore";
 import ProfileSectionCard from "../ProfileSectionCard";
@@ -98,7 +99,7 @@ const ProfileOverviewTab: React.FC = () => {
   const currentStreak = user?.streak?.currentStreak ?? 0;
   const longestStreak = user?.streak?.longestStreak ?? 0;
   const lessonsCompleted = profile?.lessonsCompleted ?? 0;
-  const wordsLearned = profile?.wordsLearned ?? 0;
+  const wordsLearned = useSavedWordsCount();
   const pinnedAchievements = useMemo(
     () => profile?.pinnedAchievements ?? [],
     [profile?.pinnedAchievements],
